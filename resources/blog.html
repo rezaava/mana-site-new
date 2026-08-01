@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-theme="dark">
+    <head>
+        <link rel="icon" type="image/x-icon" href="/img/mana.png">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>وبلاگ | مانا</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/estedad-font@v7.0.0/dist/font-face.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+        <link rel="stylesheet" href="/css/blog.css">
+    </head>
+    <body>
+        <div class="cur-dot" id="curDot"></div>
+        <div class="cur-ring" id="curRing"></div>
+        <div class="scroll-progress" id="scrollProgress"></div>
+        <!-- ============ HEADER ============ -->
+        <header class="site-header" id="siteHeader">
+            <div class="container-x nav-wrap">
+                <a href="#home" class="brand">
+                    <span class="mark">
+                        <img src="/img/mana.png" alt="">
+                    </i>
+                </span>
+            </a>
+            <nav class="main-nav">
+                <a href="index.html">خانه</a>
+                <a href="index.html#services">خدمات</a>
+                <a href="index.html#folio">نمونه‌کار</a>
+                <a href="index.html#team">تیم</a>
+                <a href="index.html#contact">تماس</a>
+                <a href="blog.html" class="active">وبلاگ</a>
+            </nav>
+            <div class="header-cta">
+                <div class="theme-switch" id="themeSwitch">
+                    <div class="knob">
+                        <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    </div>
+                </div>
+                <a href="index.html#contact" class="btn-flow">
+                    <i class="fa-solid fa-arrow-left"></i> مشاوره رایگان
+                </a
+          >
+                <button class="burger" id="burgerBtn">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+    <div class="mnav-backdrop" id="mnavBackdrop"></div>
+    <div class="mnav-panel" id="mnavPanel">
+        <div class="mnav-handle"></div>
+        <div class="top">
+            <h6>منوی سریع</h6>
+            <button class="burger" id="closeDrawer">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <nav>
+            <a href="index.html" data-close>
+                <i class="fa-solid fa-house"></i> خانه
+            </a
+        >
+            <a href="index.html#services" data-close>
+                <i class="fa-solid fa-layer-group"></i> خدمات
+            </a
+        >
+            <a href="index.html#folio" data-close>
+                <i class="fa-solid fa-briefcase"></i> نمونه‌کار
+            </a
+        >
+            <a href="index.html#team" data-close>
+                <i class="fa-solid fa-people-group"></i> تیم
+            </a
+        >
+            <a href="blog.html" class="active" data-close>
+                <i class="fa-solid fa-pen-nib"></i> وبلاگ
+            </a
+        >
+            <a href="index.html#contact" data-close>
+                <i class="fa-solid fa-phone"></i> تماس
+            </a
+        >
+        </nav>
+        <div class="foot">
+            <div class="theme-switch" id="themeSwitchMobile">
+                <div class="knob">
+                    <i class="fa-solid fa-moon"></i>
+                </div>
+            </div>
+            <a href="index.html#contact" class="btn-flow" data-close>مشاوره رایگان
+                <i class="fa-solid fa-arrow-left">
+                </i
+        >
+            </a>
+        </div>
+    </div>
+    <!-- ============ BLOG HERO ============ -->
+    <section class="blog-hero">
+        <div class="container-x">
+            <div class="breadcrumb-x reveal in">
+                <a href="index.html">خانه</a>
+                <i class="fa-solid fa-chevron-left"></i>
+                <span class="cur">وبلاگ</span>
+            </div>
+            <span class="eyebrow reveal in">
+                <i class="fa-solid fa-pen-nib"></i> وبلاگ مانا
+            </span
+        >
+            <h1 class="reveal in">
+                مقالات، راهنماها و
+                <span class="grad-text">تجربه‌های فنی تیم ما</span>
+            </h1>
+            <p class="section-sub reveal in reveal-delay-1">
+                آخرین یافته‌ها درباره‌ی هوش مصنوعی، طراحی محصول، توسعه‌ی نرم‌افزار و
+          رشد دیجیتال کسب‌وکارها را اینجا بخوانید.
+            </p>
+            <div class="blog-search reveal in reveal-delay-2">
+                <input type="text" id="searchInput" placeholder="جست‌وجو در مقالات...">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+        </div>
+    </section>
+    <!-- ============ FEATURED POST ============ -->
+    <section class="featured-wrap">
+        <div class="container-x">
+            <div class="featured-card reveal">
+                <div class="featured-visual">
+                    <div class="deco"></div>
+                    <span class="fbadge">مقاله ویژه</span>
+                    <!-- <i class="fa-solid fa-rocket"></i> -->
+                    <img src="/img/blog8.jpg" alt="blog">
+                </div>
+                <div class="featured-body">
+                    <span class="tag">هوش مصنوعی</span>
+                    <h2>چک‌لیست کامل راه‌اندازی محصول دیجیتال از صفر تا صد</h2>
+                    <p>
+                        از تعریف MVP تا انتخاب استک فنی و استراتژی عرضه؛ در این مقاله تمام
+              مراحلی که یک تیم محصول باید برای ساخت و عرضه‌ی موفق یک محصول
+              دیجیتال طی کند را مرور می‌کنیم.
+                    </p>
+                    <div class="featured-meta">
+                        <span>
+                            <i class="fa-regular fa-calendar"></i> ۲ مرداد ۱۴۰۴
+                        </span>
+                        <span>
+                            <i class="fa-regular fa-clock"></i> ۵ دقیقه مطالعه
+                        </span>
+                    </div>
+                    <a href="/singleblog.html" class="btn-flow">مطالعه مقاله
+                        <i class="fa-solid fa-arrow-left">
+                        </i
+            >
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ============ FILTER BAR ============ -->
+    <section class="filter-bar">
+        <div class="container-x">
+            <div class="filter-row reveal">
+                <div class="filter-tabs" id="filterTabs">
+                    <button class="filter-tab active" data-cat="all">همه مقالات</button>
+                    <button class="filter-tab" data-cat="ai">هوش مصنوعی</button>
+                    <button class="filter-tab" data-cat="ux">طراحی UX/UI</button>
+                    <button class="filter-tab" data-cat="dev">توسعه نرم‌افزار</button>
+                    <button class="filter-tab" data-cat="mobile">موبایل</button>
+                    <button class="filter-tab" data-cat="security">امنیت</button>
+                </div>
+                <span class="filter-count" id="filterCount">۹ مقاله</span>
+            </div>
+        </div>
+    </section>
+    <!-- ============ ARTICLES GRID ============ -->
+    <section class="articles">
+        <div class="container-x">
+            <div class="art-grid" id="artGrid">
+                <a
+                    href="/singleblog.html"
+                    class="art-card"
+                    data-cat="ai"
+                    data-title="راهنمای انتخاب استک فنی مناسب استارتاپ"
+                >
+                    <div class="art-thumb g1">
+                        <span class="cat">هوش مصنوعی
+                        </span
+              >
+                        <img src="/img/blog1.jpg" alt="blog">
+                        <!-- <i class="fa-solid fa-robot"></i> -->
+                    </div>
+                    <div class="art-body">
+                        <div class="art-meta">
+                            <span>
+                                <i class="fa-regular fa-calendar"></i> ۲۸ تیر ۱۴۰۴
+                            </span
+                >
+                            <span>
+                                <i class="fa-regular fa-clock"></i> ۶ دقیقه
+                            </span>
+                        </div>
+                        <h4>راهنمای انتخاب استک فنی مناسب استارتاپ</h4>
+                        <p>
+                            چگونه بین گزینه‌های مختلف فنی، بهترین انتخاب را برای مرحله‌ی رشد
+                استارتاپ خود داشته باشیم.
+                        </p>
+                        <span class="art-link">مطالعه مقاله
+                            <i class="fa-solid fa-arrow-up-left">
+                            </i
+              >
+                        </span>
+                    </div>
+                </a>
+                <a
+                    href="/singleblog.html"
+                    class="art-card"
+                    data-cat="ux"
+                    data-title="۷ اشتباه رایج در طراحی UX اپلیکیشن"
+                >
+                    <div class="art-thumb g2">
+                        <span class="cat">طراحی UX/UI
+                        </span
+              >
+                        <img src="/img/blog2.jpg" alt="blog">
+                        <!-- <i class="fa-solid fa-pen-ruler"></i> -->
+                    </div>
+                    <div class="art-body">
+                        <div class="art-meta">
+                            <span>
+                                <i class="fa-regular fa-calendar"></i> ۲۲ تیر ۱۴۰۴
+                            </span
+                >
+                            <span>
+                                <i class="fa-regular fa-clock"></i> ۴ دقیقه
+                            </span>
+                        </div>
+                        <h4>۷ اشتباه رایج در طراحی UX اپلیکیشن</h4>
+                        <p>
+                            بررسی خطاهایی که بیشتر تیم‌های محصول در طراحی تجربه‌ی کاربری
+                مرتکب می‌شوند و راه رفع آن‌ها.
+                        </p>
+                        <span class="art-link">مطالعه مقاله
+                            <i class="fa-solid fa-arrow-up-left">
+                            </i
+              >
+                        </span>
+                    </div>
+                </a>
+                <a
+                    href="/singleblog.html"
+                    class="art-card"
+                    data-cat="ai"
+                    data-title="چگونه هوش مصنوعی فروش را متحول می‌کند؟"
+                >
+                    <div class="art-thumb g3">
+                        <span class="cat">هوش مصنوعی
+                        </span
+              >
+                        <img src="/img/blog3.jpg" alt="blog">
+                        <!-- <i class="fa-solid fa-chart-line"></i> -->
+                    </div>
+                    <div class="art-body">
+                        <div class="art-meta">
+                            <span>
+                                <i class="fa-regular fa-calendar"></i> ۱۸ تیر ۱۴۰۴
+                            </span
+                >
+                            <span>
+                                <i class="fa-regular fa-clock"></i> ۷ دقیقه
+                            </span>
+                        </div>
+                        <h4>چگونه هوش مصنوعی فروش را متحول می‌کند؟</h4>
+                        <p>
+                            نگاهی به کاربردهای عملی هوش مصنوعی در پیش‌بینی فروش و شخصی‌سازی
+                تجربه‌ی مشتری.
+                        </p>
+                        <span class="art-link">مطالعه مقاله
+                            <i class="fa-solid fa-arrow-up-left">
+                            </i
+              >
+                        </span>
+                    </div>
+                </a>
+                <a
+                    href="/singleblog.html"
+                    class="art-card"
+                    data-cat="security"
+                    data-title="امنیت داده در معماری ابری چند-مستاجری"
+                >
+                    <div class="art-thumb g4">
+                        <span class="cat">امنیت
+                        </span
+              >
+                        <img src="/img/blog4.jpg" alt="blog">
+                        <!-- <i class="fa-solid fa-shield-halved"></i> -->
+                    </div>
+                    <div class="art-body">
+                        <div class="art-meta">
+                            <span>
+                                <i class="fa-regular fa-calendar"></i> ۱۲ تیر ۱۴۰۴
+                            </span
+                >
+                            <span>
+                                <i class="fa-regular fa-clock"></i> ۸ دقیقه
+                            </span>
+                        </div>
+                        <h4>امنیت داده در معماری ابری چند-مستاجری</h4>
+                        <p>
+                            اصول طراحی امن برای سامانه‌هایی که داده‌ی چند مشتری را در یک
+                زیرساخت مشترک نگه می‌دارند.
+                        </p>
+                        <span class="art-link">مطالعه مقاله
+                            <i class="fa-solid fa-arrow-up-left">
+                            </i
+              >
+                        </span>
+                    </div>
+                </a>
+                <a
+                    href="/singleblog.html"
+                    class="art-card"
+                    data-cat="mobile"
+                    data-title="بهترین روش‌های پیاده‌سازی چت‌بات هوشمند"
+                >
+                    <div class="art-thumb g5">
+                        <span class="cat">هوش مصنوعی
+                        </span
+              >
+                        <img src="/img/blog5.jpg" alt="blog">
+                        <!-- <i class="fa-solid fa-comment-dots"></i> -->
+                    </div>
+                    <div class="art-body">
+                        <div class="art-meta">
+                            <span>
+                                <i class="fa-regular fa-calendar"></i> ۸ تیر ۱۴۰۴
+                            </span
+                >
+                            <span>
+                                <i class="fa-regular fa-clock"></i> ۵ دقیقه
+                            </span>
+                        </div>
+                        <h4>بهترین روش‌های پیاده‌سازی چت‌بات هوشمند</h4>
+                        <p>
+                            نکاتی کلیدی برای طراحی چت‌بات‌هایی که تجربه‌ی طبیعی و مفیدی برای
+                کاربر می‌سازند.
+                        </p>
+                        <span class="art-link">مطالعه مقاله
+                            <i class="fa-solid fa-arrow-up-left">
+                            </i
+              >
+                        </span>
+                    </div>
+                </a>
+                <a
+                    href="/singleblog.html"
+                    class="art-card"
+                    data-cat="mobile"
+                    data-title="روند طراحی اپلیکیشن‌های موبایل در ۲۰۲۶"
+                >
+                    <div class="art-thumb g6">
+                        <span class="cat">موبایل
+                        </span
+              >
+                        <img src="/img/blog6.jpg" alt="blog">
+                        <!-- <i class="fa-solid fa-mobile-screen"></i> -->
+                    </div>
+                    <div class="art-body">
+                        <div class="art-meta">
+                            <span>
+                                <i class="fa-regular fa-calendar"></i> ۳ تیر ۱۴۰۴
+                            </span
+                >
+                            <span>
+                                <i class="fa-regular fa-clock"></i> ۴ دقیقه
+                            </span>
+                        </div>
+                        <h4>روند طراحی اپلیکیشن‌های موبایل در ۲۰۲۶</h4>
+                        <p>
+                            مروری بر جدیدترین الگوهای بصری و تعاملی که تجربه‌ی اپلیکیشن‌های
+                موبایل را شکل می‌دهند.
+                        </p>
+                        <span class="art-link">مطالعه مقاله
+                            <i class="fa-solid fa-arrow-up-left">
+                            </i
+              >
+                        </span>
+                    </div>
+                </a>
+                <a
+                    href="/singleblog.html"
+                    class="art-card"
+                    data-cat="dev"
+                    data-title="مقایسه‌ی معماری میکروسرویس و مونولیت"
+                >
+                    <div class="art-thumb g7">
+                        <span class="cat">توسعه نرم‌افزار
+                        </span
+              >
+                        <img src="/img/blog7.jpg" alt="blog">
+                        <!-- <i class="fa-solid fa-diagram-project"></i> -->
+                    </div>
+                    <div class="art-body">
+                        <div class="art-meta">
+                            <span>
+                                <i class="fa-regular fa-calendar"></i> ۲۸ خرداد ۱۴۰۴
+                            </span
+                >
+                            <span>
+                                <i class="fa-regular fa-clock"></i> ۹ دقیقه
+                            </span>
+                        </div>
+                        <h4>مقایسه‌ی معماری میکروسرویس و مونولیت</h4>
+                        <p>
+                            کدام معماری برای مرحله‌ی فعلی محصول شما مناسب‌تر است؟ بررسی
+                مزایا و معایب هرکدام.
+                        </p>
+                        <span class="art-link">مطالعه مقاله
+                            <i class="fa-solid fa-arrow-up-left">
+                            </i
+              >
+                        </span>
+                    </div>
+                </a>
+                <a
+                    href="/singleblog.html"
+                    class="art-card"
+                    data-cat="ux"
+                    data-title="طراحی دسترس‌پذیر؛ چرا اهمیت دارد؟"
+                >
+                    <div class="art-thumb g8">
+                        <span class="cat">طراحی UX/UI
+                        </span
+              >
+                        <img src="/img/blog2.jpg" alt="blog">
+                        <!-- <i class="fa-solid fa-universal-access"></i> -->
+                    </div>
+                    <div class="art-body">
+                        <div class="art-meta">
+                            <span>
+                                <i class="fa-regular fa-calendar"></i> ۲۰ خرداد ۱۴۰۴
+                            </span
+                >
+                            <span>
+                                <i class="fa-regular fa-clock"></i> ۶ دقیقه
+                            </span>
+                        </div>
+                        <h4>طراحی دسترس‌پذیر؛ چرا اهمیت دارد؟</h4>
+                        <p>
+                            اصول اولیه‌ی طراحی محصولاتی که همه‌ی کاربران، صرف‌نظر از
+                توانایی‌هایشان، بتوانند از آن استفاده کنند.
+                        </p>
+                        <span class="art-link">مطالعه مقاله
+                            <i class="fa-solid fa-arrow-up-left">
+                            </i
+              >
+                        </span>
+                    </div>
+                </a>
+                <a
+                    href="/singleblog.html"
+                    class="art-card"
+                    data-cat="security"
+                    data-title="آشنایی با احراز هویت چندعاملی"
+                >
+                    <div class="art-thumb g9">
+                        <span class="cat">امنیت
+                        </span
+              >
+                        <img src="/img/blog3.jpg" alt="blog">
+                        <!-- <i class="fa-solid fa-fingerprint"></i> -->
+                    </div>
+                    <div class="art-body">
+                        <div class="art-meta">
+                            <span>
+                                <i class="fa-regular fa-calendar"></i> ۱۵ خرداد ۱۴۰۴
+                            </span
+                >
+                            <span>
+                                <i class="fa-regular fa-clock"></i> ۵ دقیقه
+                            </span>
+                        </div>
+                        <h4>آشنایی با احراز هویت چندعاملی</h4>
+                        <p>
+                            چرا MFA یکی از ساده‌ترین و مؤثرترین راه‌های افزایش امنیت
+                حساب‌های کاربری است.
+                        </p>
+                        <span class="art-link">مطالعه مقاله
+                            <i class="fa-solid fa-arrow-up-left">
+                            </i
+              >
+                        </span>
+                    </div>
+                </a>
+            </div>
+            <div class="load-more-wrap reveal" id="loadMoreWrap">
+                <a href="#" class="btn-ghost" id="loadMoreBtn">
+                    <i class="fa-solid fa-rotate"></i> نمایش مقالات بیشتر
+                </a
+          >
+            </div>
+        </div>
+    </section>
+    <!-- ============ SIDEBAR EXTRAS ============ -->
+    <section class="blog-extra">
+        <div class="container-x">
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="extra-card reveal">
+                        <h5>
+                            <i class="fa-solid fa-fire"></i> محبوب‌ترین مقالات
+                        </h5>
+                        <div class="pop-item">
+                            <div class="pn">۰۱</div>
+                            <a href="/singleblog.html">
+                                <div>
+                                    <h6>چک‌لیست راه‌اندازی محصول دیجیتال</h6>
+                                    <span>۵ دقیقه مطالعه</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="pop-item">
+                            <div class="pn">۰۲</div>
+                            <a href="/singleblog.html">
+                                <div>
+                                    <h6>چگونه هوش مصنوعی فروش را متحول می‌کند؟</h6>
+                                    <span>۷ دقیقه مطالعه</span>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="pop-item">
+                            <div class="pn">۰۳</div>
+                            <a href="/singleblog.html">
+                                <div>
+                                    <h6>مقایسه معماری میکروسرویس و مونولیت</h6>
+                                    <span>۹ دقیقه مطالعه</span>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="extra-card reveal reveal-delay-1">
+                        <h5>
+                            <i class="fa-solid fa-layer-group"></i> دسته‌بندی‌ها
+                        </h5>
+                        <div class="cat-list">
+                            <a href="#">هوش مصنوعی
+                                <span class="cnt">۳</span>
+                            </a>
+                            <a href="#">طراحی UX/UI
+                                <span class="cnt">۲</span>
+                            </a>
+                            <a href="#">توسعه نرم‌افزار
+                                <span class="cnt">۱</span>
+                            </a>
+                            <a href="#">موبایل
+                                <span class="cnt">۲</span>
+                            </a>
+                            <a href="#">امنیت
+                                <span class="cnt">۲</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="extra-card reveal reveal-delay-2">
+                        <h5>
+                            <i class="fa-solid fa-tags"></i> برچسب‌های پرطرفدار
+                        </h5>
+                        <div class="tag-cloud">
+                            <a href="#">استارتاپ</a>
+                            <a href="#">React
+                            </a
+                >
+                            <a href="#">امنیت سایبری</a>
+                            <a href="#">تجربه کاربری</a>
+                            <a href="#">اتوماسیون</a>
+                            <a href="#">رابط کاربری
+                            </a
+                >
+                            <a href="#">اپلیکیشن</a>
+                            <a href="#">داده</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- ============ FINAL CTA ============ -->
+    <section class="final-cta">
+        <div class="container-x">
+            <div class="cta-banner reveal">
+                <h2>ایده‌ای برای پروژه‌ی بعدی‌تان دارید؟</h2>
+                <p>
+                    تیم نوین‌آی آماده است تا در کنار شما، ایده را به یک محصول دیجیتال
+            واقعی تبدیل کند.
+                </p>
+                <a href="index.html#contact" class="btn-flow">شروع گفتگو
+                    <i class="fa-solid fa-arrow-left">
+                    </i
+          >
+                </a>
+            </div>
+        </div>
+    </section>
+    <!-- ============ FOOTER ============ -->
+    <footer class="site-footer">
+        <!-- <div class="footer-wave">
+        <svg viewBox="0 0 1440 70" preserveAspectRatio="none">
+          <path
+            d="M0,40 C240,90 480,0 720,20 C960,40 1200,90 1440,30 L1440,70 L0,70 Z"
+            fill="var(--bg-soft)"
+          ></path>
+        </svg>
+      </div> -->
+        <div class="footer-inner">
+            <div class="container-x">
+                <div class="footer-island reveal">
+                    <div class="dots"></div>
+                    <div class="footer-newsletter">
+                        <div class="fn-text">
+                            <div class="fn-ic">
+                                <i class="fa-solid fa-envelope-open-text"></i>
+                            </div>
+                            <div>
+                                <strong>از آخرین اخبار و تخفیف‌ها باخبر شوید!</strong>
+                                <span class="sub">هر هفته یک ایمیل، بدون اسپم</span>
+                            </div>
+                        </div>
+                        <form onsubmit="return false;">
+                            <input type="email" placeholder="آدرس ایمیل شما...">
+                            <button type="submit">ارسال</button>
+                        </form>
+                    </div>
+                    <div class="footer-3col">
+                        <div class="footer-col">
+                            <h5>لینک‌های سریع</h5>
+                            <ul>
+                                <li>
+                                    <a href="#home">
+                                        <i class="fa-solid fa-caret-left"></i> خانه
+                                    </a
+                    >
+                                </li>
+                                <li>
+                                    <a href="#folio">
+                                        <i class="fa-solid fa-caret-left"></i> نمونه‌کارها
+                                    </a
+                    >
+                                </li>
+                                <li>
+                                    <a href="#team">
+                                        <i class="fa-solid fa-caret-left"></i> تیم ما
+                                    </a
+                    >
+                                </li>
+                                <li>
+                                    <a href="#blog">
+                                        <i class="fa-solid fa-caret-left"></i> وبلاگ
+                                    </a
+                    >
+                                </li>
+                                <li>
+                                    <a href="#contact">
+                                        <i class="fa-solid fa-caret-left"></i> تماس با ما
+                                    </a
+                    >
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="footer-col footer-center">
+                            <a href="#home" class="footer-brand">
+                                مانا
+                            </a
+                >
+                            <p class="footer-tag">
+                                ارائه‌ی راهکارهای هوشمند دیجیتال؛ از ایده تا اجرا، همراه
+                  کسب‌وکار شما برای ساختن آینده‌ای دیجیتال.
+                            </p>
+                            <div class="footer-social">
+                                <a href="#">
+                                    <i class="fa-brands fa-telegram"></i>
+                                </a>
+                                <a href="#">
+                                    <i class="fa-brands fa-instagram"></i>
+                                </a>
+                                <a href="#">
+                                    <i class="fa-brands fa-whatsapp"></i>
+                                </a>
+                                <a href="#">
+                                    <i class="fa-brands fa-x-twitter"></i>
+                                </a>
+                                <a href="#">
+                                    <i class="fa-brands fa-linkedin-in"></i>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="footer-col">
+                            <h5>خدمات</h5>
+                            <ul>
+                                <li>
+                                    <a href="#services">
+                                        <i class="fa-solid fa-caret-left"></i> هوش مصنوعی
+                                    </a
+                    >
+                                </li>
+                                <li>
+                                    <a href="#services">
+                                        <i class="fa-solid fa-caret-left"></i> طراحی وب‌سایت
+                                    </a
+                    >
+                                </li>
+                                <li>
+                                    <a href="#services">
+                                        <i class="fa-solid fa-caret-left"></i> اپلیکیشن موبایل
+                                    </a
+                    >
+                                </li>
+                                <li>
+                                    <a href="#services">
+                                        <i class="fa-solid fa-caret-left"></i> زیرساخت ابری
+                                    </a
+                    >
+                                </li>
+                                <li>
+                                    <a href="tel:02117545678">
+                                        <i class="fa-solid fa-phone"></i> ۰۲۱-۱۷۵۴۵۶۷۸
+                                    </a
+                    >
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="footer-badges">
+                        <div class="fb-item">
+                            <i class="fa-solid fa-shield-halved"></i>
+                            قرارداد و محرمانگی NDA
+                        </div>
+                        <div class="fb-item">
+                            <i class="fa-solid fa-headset"></i>
+                            پشتیبانی ۲۴/۷
+                        </div>
+                        <div class="fb-item">
+                            <i class="fa-solid fa-bolt"></i>
+                            تحویل به‌موقع پروژه
+                        </div>
+                        <div class="fb-item">
+                            <i class="fa-solid fa-tags"></i>
+                            قیمت‌گذاری شفاف
+                        </div>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>© ۲۰۲۶ مانا. تمامی حقوق محفوظ است.</p>
+                    <div class="legal">
+                        <a href="#">حریم خصوصی</a>
+                        <a href="#">شرایط استفاده</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <button class="to-top" id="toTop">
+        <i class="fa-solid fa-arrow-up"></i>
+    </button>
+    <a href="index.html#contact" class="chat-fab" id="chatFab">
+        <i class="fa-solid fa-comment-dots">
+        </i
+    >
+    </a>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/blog.js"></script>
+</body>
+</html>
