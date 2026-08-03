@@ -6,20 +6,25 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
-        Schema::create('amalis', function (Blueprint $table) {
+        Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->integer('course_id');
-            $table->integer('user_id');
-            $table->double('nomre');
-            $table->integer('type');
+            $table->string('title', 200);
+            $table->text('answer');
+            $table->tinyInteger('number')->comment('برای مرتب سازی');
             $table->timestamps();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('amalis');
+        //
     }
 };
