@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Models\Services;
 use App\Models\Projects;
 use App\Models\Features;
+use App\Models\Blogs;
 
 
 
@@ -31,6 +32,10 @@ class Images extends Model
 
     public function features(){
         return $this->belongsTo(Features::class);
+    }
+    
+    public function blogs(){
+        return $this->belongsTo(Blogs::class);
     }
     
 }
