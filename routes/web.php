@@ -6,6 +6,7 @@ use App\Http\Controllers\TeacherSiteController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\ServiceController;
 
 
 use App\Http\Controllers\TestController;
@@ -67,11 +68,22 @@ Route::prefix('/admin')->middleware(['role:admin'])->group(function () {
     });
     
     Route::prefix('/questions')->group(function () {
-         Route::post('/create-question', [QuestionController::class, 'createQuestion'])->name('create_question');
-    Route::post('/edit-question/{id}', [QuestionController::class, 'updateQuestion'])->name('update_question');
-    Route::get('/delete-question/{id}', [QuestionController::class, 'deleteQuestion'])->name('delete_question');
-    Route::get('/questions', [QuestionController::class, 'getAllQuestions'])->name('all_questions');
-    Route::post('/change-question-number/{id}/number', [QuestionController::class, 'changeNumber'])->name('change_question_number');
+
+        Route::post('/create-question', [QuestionController::class, 'createQuestion'])->name('create_question');
+        Route::post('/edit-question/{id}', [QuestionController::class, 'updateQuestion'])->name('update_question');
+        Route::get('/delete-question/{id}', [QuestionController::class, 'deleteQuestion'])->name('delete_question');
+        Route::get('/questions', [QuestionController::class, 'getAllQuestions'])->name('all_questions');
+        Route::post('/change-question-number/{id}/number', [QuestionController::class, 'changeNumber'])->name('change_question_number');
+    });
+
+    Route::prefix('/services')->group(function () {
+
+        Route::post('/create-service', [ServiceController::class, 'createService'])->name('create_service');
+        Route::put('/edit-service/{id}', [ServiceController::class, 'updateService'])->name('edit_service');
+        Route::get('/delete-service/{id}', [ServiceController::class, 'deleteService'])->name('delete_service');
+        Route::get('/services', [ServiceController::class, 'getAllServices'])->name('all_services');
+        Route::post('/change-service-number/{id}/number', [ServiceController::class, 'changeNumber'])->name('change_service_number');
+        Route::post('/change-service-image/{id}/image', [ServiceController::class, 'changeImage'])->name('change_service_image');
     });
     
 });

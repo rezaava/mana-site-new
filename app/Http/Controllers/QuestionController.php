@@ -17,7 +17,7 @@ class QuestionController extends Controller
 
         $question = Questions::create($validatedData);
 
-        return response()->json(['message' => 'Question created successfully', 'success' => true, 'question' => $question], 201);
+        return response()->json(['message' => 'Question created successfully', 'success' => true], 201);
     }
 
     public function deleteQuestion($id)
@@ -49,7 +49,7 @@ class QuestionController extends Controller
 
         $question->update($validatedData);
 
-        return response()->json(['message' => 'Question updated successfully', 'success' => true, 'question' => $question], 200);
+        return response()->json(['message' => 'Question updated successfully', 'success' => true], 200);
     }
 
     public function getAllQuestions()
@@ -74,7 +74,7 @@ class QuestionController extends Controller
         $question->number = $validatedData['number'];
         $question->save();
 
-        return response()->json(['message' => 'Question number updated successfully', 'success' => true, 'question' => $question], 200);
+        return response()->json(['message' => 'Question number updated successfully', 'success' => true], 200);
     }
 
 }
