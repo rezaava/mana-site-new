@@ -10,9 +10,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\SocialsController;
 use App\Http\Controllers\ImageController;
-use App\Http\Controllers\BlogsController;
-
-
+// use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\TestController;
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -29,14 +27,6 @@ Route::get('/surveys', [TestController::class, 'surveys'])->name('surveys');
 Route::get('/content', [TestController::class, 'content'])->name('content');
 Route::get('/create-quiz', [TestController::class, 'createQuiz'])->name('createQuiz');
 Route::get('/quizzes', [TestController::class, 'quizzes'])->name('quizzes');
-
-
-
-
-
-
-
-
 
 Route::get('/role', [AuthController::class, 'roleFun']);
 
@@ -55,7 +45,7 @@ Route::prefix('/admin')->group(function () {
     Route::get('/1', function(){return view('admin.panel');})->name('admin_panel');
     Route::get('/2', function(){return view('admin.dashboard');})->name('admin_dashboard');
 
-        // بازدیدکنندگان
+    // بازدیدکنندگان
     Route::get('/visitors', function(){return view('admin.visitors');})->name('admin_visitors');
 
     // فروش
@@ -103,7 +93,6 @@ Route::prefix('/admin')->group(function () {
     });
 
     Route::prefix('/questions')->group(function () {
-
         Route::post('/create-question', [QuestionController::class, 'createQuestion'])->name('create_question');
         Route::post('/edit-question/{id}', [QuestionController::class, 'updateQuestion'])->name('update_question');
         Route::get('/delete-question/{id}', [QuestionController::class, 'deleteQuestion'])->name('delete_question');
@@ -112,7 +101,6 @@ Route::prefix('/admin')->group(function () {
     });
 
     Route::prefix('/services')->group(function () {
-
         Route::post('/create-service', [ServiceController::class, 'createService'])->name('create_service');
         Route::put('/edit-service/{id}', [ServiceController::class, 'updateService'])->name('edit_service');
         Route::get('/delete-service/{id}', [ServiceController::class, 'deleteService'])->name('delete_service');
@@ -122,29 +110,26 @@ Route::prefix('/admin')->group(function () {
     });
 
     Route::prefix('/teams')->group(function () {
-    Route::post('/create-team', [TeamController::class, 'create'])->name('create_team');
-    Route::put('/edit-team/{id}', [TeamController::class, 'edit'])->name('edit_team');
-    Route::get('/delete-team/{id}', [TeamController::class, 'delete'])->name('delete_team');
-});
-
-     Route::prefix('/images')->group(function () {
-    Route::post('/store-image', [ImageController::class, 'store_image'])->name('store_image');
-    Route::put('/edit-image/{id}', [ImageController::class, 'edit_image'])->name('edit_image');
-    Route::get('/delete-image/{id}', [ImageController::class, 'delete_image'])->name('delete_image');
-});
-
-    Route::prefix('/socials')->group(function () {
-    Route::post('/create-social', [SocialsController::class, 'create'])->name('create_social');
-    Route::put('/edit-social/{id}', [SocialsController::class, 'edit'])->name('edit_social');
-    Route::get('/delete-social/{id}', [SocialsController::class, 'delete'])->name('delete_social');
-});
-    Route::prefix('/blogs')->group(function () {
-        Route::post('/create-blog', [BlogsController::class, 'create'])->name('create_blog');
-        Route::put('/edit-blog/{id}', [BlogsController::class, 'edit'])->name('edit_blog');
-        Route::get('/delete-blog/{id}', [BlogsController::class, 'delete'])->name('delete_blog');
+        Route::post('/create-team', [TeamController::class, 'create'])->name('create_team');
+        Route::put('/edit-team/{id}', [TeamController::class, 'edit'])->name('edit_team');
+        Route::get('/delete-team/{id}', [TeamController::class, 'delete'])->name('delete_team');
     });
 
-    Route::get('/admin', function () {
-    return view('admin.dashboard');
-});
+    Route::prefix('/images')->group(function () {
+        Route::post('/store-image', [ImageController::class, 'store_image'])->name('store_image');
+        Route::put('/edit-image/{id}', [ImageController::class, 'edit_image'])->name('edit_image');
+        Route::get('/delete-image/{id}', [ImageController::class, 'delete_image'])->name('delete_image');
+    });
+
+    Route::prefix('/socials')->group(function () {
+        Route::post('/create-social', [SocialsController::class, 'create'])->name('create_social');
+        Route::put('/edit-social/{id}', [SocialsController::class, 'edit'])->name('edit_social');
+        Route::get('/delete-social/{id}', [SocialsController::class, 'delete'])->name('delete_social');
+    });
+
+    // Route::prefix('/blogs')->group(function () {
+    //     Route::post('/create-blog', [BlogsController::class, 'create'])->name('create_blog');
+    //     Route::put('/edit-blog/{id}', [BlogsController::class, 'edit'])->name('edit_blog');
+    //     Route::get('/delete-blog/{id}', [BlogsController::class, 'delete'])->name('delete_blog');
+    // });
 });
