@@ -29,11 +29,13 @@
             <span>پنل مدیریت</span>
         </div>
         <div class="menu-label">منوی اصلی</div>
+
         <!-- داشبورد -->
-        <button class="nav-item active" data-page="dashboard">
+        <a href="{{ url('/admin/2') }}" class="nav-item active">
             <i class="fa-solid fa-gauge-high"></i>
             داشبورد
-        </button>
+        </a>
+
         <!-- آمار و گزارشات (زیرمنو) -->
         <button class="nav-item has-sub open" id="statsToggle">
             <i class="fa-solid fa-chart-line"></i>
@@ -43,10 +45,11 @@
             </span>
         </button>
         <div class="sub-menu open" id="statsSub">
-            <button class="nav-item" data-page="visitors">بازدیدکنندگان</button>
-            <button class="nav-item" data-page="sales">فروش</button>
-            <button class="nav-item" data-page="users-stats">کاربران</button>
+            <a href="{{ url('/admin/visitors') }}" class="nav-item">بازدیدکنندگان</a>
+            <a href="{{ url('/admin/sales') }}" class="nav-item">فروش</a>
+            <a href="{{ url('/admin/users-stats') }}" class="nav-item">کاربران</a>
         </div>
+
         <!-- مدیریت محتوا (زیرمنو) -->
         <button class="nav-item has-sub open" id="contentToggle">
             <i class="fa-solid fa-folder-tree"></i>
@@ -56,29 +59,33 @@
             </span>
         </button>
         <div class="sub-menu open" id="contentSub">
-            <button class="nav-item" data-page="posts">مقالات</button>
-            <button class="nav-item" data-page="pages">صفحات</button>
-            <button class="nav-item" data-page="comments">نظرات
+            <a href="{{ url('/admin/posts') }}" class="nav-item">مقالات</a>
+            <a href="{{ url('/admin/pages') }}" class="nav-item">صفحات</a>
+            <a href="{{ url('/admin/comments') }}" class="nav-item">نظرات
                 <span class="badge-num">۱۲</span>
-            </button>
+            </a>
         </div>
+
         <!-- کاربران -->
-        <button class="nav-item" data-page="users">
+        <a href="{{ url('/admin/users') }}" class="nav-item">
             <i class="fa-solid fa-users"></i>
             کاربران
             <span class="badge-dot"></span>
-        </button>
+        </a>
+
         <!-- تنظیمات -->
-        <button class="nav-item" data-page="settings">
+        <a href="{{ url('/admin/settings') }}" class="nav-item">
             <i class="fa-solid fa-gear"></i>
             تنظیمات
-        </button>
+        </a>
+
         <!-- پشتیبانی -->
-        <button class="nav-item" data-page="support">
+        <a href="{{ url('/admin/support') }}" class="nav-item">
             <i class="fa-solid fa-headset"></i>
             پشتیبانی
             <span class="badge-num">۳</span>
-        </button>
+        </a>
+
         <!-- کارت کاربر -->
         <div class="user-card">
             <div class="avatar">

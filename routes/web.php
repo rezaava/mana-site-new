@@ -54,7 +54,34 @@ Route::prefix('/admin')->group(function () {
     //این قسمت برای تست صرفا شماره بندی شد تا بین 2 تا ویو جا به جا شوم
     Route::get('/1', function(){return view('admin.panel');})->name('admin_panel');
     Route::get('/2', function(){return view('admin.dashboard');})->name('admin_dashboard');
-    
+
+        // بازدیدکنندگان
+    Route::get('/visitors', function(){return view('admin.visitors');})->name('admin_visitors');
+
+    // فروش
+    Route::get('/sales', function(){return view('admin.sales');})->name('admin_sales');
+
+    // آمار کاربران
+    Route::get('/users-stats', function(){return view('admin.users-stats');})->name('admin_users_stats');
+
+    // مقالات
+    Route::get('/posts', function(){return view('admin.posts');})->name('admin_posts');
+
+    // صفحات
+    Route::get('/pages', function(){return view('admin.pages');})->name('admin_pages');
+
+    // نظرات
+    Route::get('/comments', function(){return view('admin.comments');})->name('admin_comments');
+
+    // کاربران
+    Route::get('/users', function(){return view('admin.users');})->name('admin_users');
+
+    // تنظیمات
+    Route::get('/settings', function(){return view('admin.settings');})->name('admin_settings');
+
+    // پشتیبانی
+    Route::get('/support', function(){return view('admin.support');})->name('admin_support');
+
     // Projects
     Route::prefix('/projects')->group(function () {
         Route::post('/create-project', [ProjectController::class, 'createProject'])->name('create_project');
