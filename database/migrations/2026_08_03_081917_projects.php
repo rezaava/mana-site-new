@@ -18,6 +18,7 @@ return new class extends Migration
                     $table->text('desc')->nullable();
                     $table->tinyInteger('cat-id');
                     $table->string('image_url');
+                    $table->integer('number')->comment('This column is used to determine the order of the projects');
                     $table->timestamps();
                 });
 

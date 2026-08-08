@@ -9,6 +9,7 @@ use App\Models\Services;
 use App\Models\Projects;
 use App\Models\Features;
 use App\Models\Blogs;
+use App\Models\Teams;
 
 
 
@@ -27,7 +28,7 @@ class Images extends Model
     }
 
     public function projects(){
-        return $this->belongsTo(Projects::class);
+        return $this->belongsTo(Projects::class, 'sub-id');
     }
 
     public function features(){
@@ -36,6 +37,10 @@ class Images extends Model
     
     public function blogs(){
         return $this->belongsTo(Blogs::class);
+    }
+
+    public function teams(){
+        return $this->belongsTo(Teams::class);
     }
     
 }
