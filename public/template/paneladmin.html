@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="fa" dir="rtl" data-theme="dark">
+    <head>
+        <link rel="icon" type="image/x-icon" href="/img/mana.png">
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>پنل مدیریت | مانا</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.css">
+        <link rel="stylesheet" href="/css/paneladmin.css">
+    </head>
+    <body>
+        <!-- ===== CURSOR ===== -->
+        <div class="cur-dot" id="curDot"></div>
+        <div class="cur-ring" id="curRing"></div>
+        <!-- ===== SIDEBAR OVERLAY (موبایل) ===== -->
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+        <!-- ===== ADMIN WRAPPER ===== -->
+        <div class="admin-wrapper">
+            <!-- ===== SIDEBAR ===== -->
+            <aside class="sidebar" id="sidebar">
+                <div class="brand">
+                    <span class="mark">
+                        <img src="/img/mana.png" alt="مانا">
+                    </span>
+                    <span>پنل مدیریت</span>
+                </div>
+                <div class="menu-label">منوی اصلی</div>
+                <!-- داشبورد -->
+                <button class="nav-item active" data-page="dashboard">
+                    <i class="fa-solid fa-gauge-high"></i>
+                    داشبورد
+                </button>
+                <!-- آمار و گزارشات (زیرمنو) -->
+                <button class="nav-item has-sub open" id="statsToggle">
+                    <i class="fa-solid fa-chart-line"></i>
+                    آمار و گزارشات
+                    <span class="arrow">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </span>
+                </button>
+                <div class="sub-menu open" id="statsSub">
+                    <button class="nav-item" data-page="visitors">بازدیدکنندگان</button>
+                    <button class="nav-item" data-page="sales">فروش</button>
+                    <button class="nav-item" data-page="users-stats">کاربران</button>
+                </div>
+                <!-- مدیریت محتوا (زیرمنو) -->
+                <button class="nav-item has-sub open" id="contentToggle">
+                    <i class="fa-solid fa-folder-tree"></i>
+                    مدیریت محتوا
+                    <span class="arrow">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </span>
+                </button>
+                <div class="sub-menu open" id="contentSub">
+                    <button class="nav-item" data-page="posts">مقالات</button>
+                    <button class="nav-item" data-page="pages">صفحات</button>
+                    <button class="nav-item" data-page="comments">نظرات
+                        <span class="badge-num">۱۲</span>
+                    </button>
+                </div>
+                <!-- کاربران -->
+                <button class="nav-item" data-page="users">
+                    <i class="fa-solid fa-users"></i>
+                    کاربران
+                    <span class="badge-dot"></span>
+                </button>
+                <!-- تنظیمات -->
+                <button class="nav-item" data-page="settings">
+                    <i class="fa-solid fa-gear"></i>
+                    تنظیمات
+                </button>
+                <!-- پشتیبانی -->
+                <button class="nav-item" data-page="support">
+                    <i class="fa-solid fa-headset"></i>
+                    پشتیبانی
+                    <span class="badge-num">۳</span>
+                </button>
+                <!-- کارت کاربر -->
+                <div class="user-card">
+                    <div class="avatar">
+                        <img src="/img/contect3.jpg" alt="admin">
+                    </div>
+                    <div class="info">
+                        <h6>رضا آواره</h6>
+                        <span>مدیر سیستم</span>
+                    </div>
+                </div>
+            </aside>
+            <!-- ===== MAIN CONTENT ===== -->
+            <main class="main-content" id="mainContent">
+                <!-- ===== TOPBAR ===== -->
+                <div class="topbar">
+                    <div class="left">
+                        <button class="toggle-btn" id="sidebarToggle">
+                            <i class="fa-solid fa-bars"></i>
+                        </button>
+                        <h4 id="pageTitle">داشبورد</h4>
+                    </div>
+                    <div class="right">
+                        <div class="theme-switch" id="themeSwitch">
+                            <div class="knob">
+                                <i class="fa-solid fa-moon" id="themeIcon"></i>
+                            </div>
+                        </div>
+                        <button class="notif-btn" id="notifBtn">
+                            <i class="fa-regular fa-bell"></i>
+                            <span class="dot"></span>
+                        </button>
+                    </div>
+                </div>
+                <!-- ===== CONTENT AREA ===== -->
+                <div id="pageContent">
+                    <!-- ===== STATS ===== -->
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon blue">
+                                <i class="fa-solid fa-eye"></i>
+                            </div>
+                            <h3 id="statViews">۱۱۲,۰۰۰</h3>
+                            <span>بازدید پروفایل</span>
+                            <span class="change up">
+                                <i class="fa-solid fa-arrow-up"></i> ۱۲.۵٪
+                            </span>
+                            <div class="stat-bg">
+                                <i class="fa-regular fa-eye"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon green">
+                                <i class="fa-solid fa-user-plus"></i>
+                            </div>
+                            <h3 id="statFollowers">۱۸۳,۰۰۰</h3>
+                            <span>دنبال‌کنندگان</span>
+                            <span class="change up">
+                                <i class="fa-solid fa-arrow-up"></i> ۸.۲٪
+                            </span>
+                            <div class="stat-bg">
+                                <i class="fa-regular fa-user"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon yellow">
+                                <i class="fa-solid fa-bookmark"></i>
+                            </div>
+                            <h3 id="statSaved">۱۱۲</h3>
+                            <span>ذخیره‌شده‌ها</span>
+                            <span class="change down">
+                                <i class="fa-solid fa-arrow-down"></i> ۲.۱٪
+                            </span>
+                            <div class="stat-bg">
+                                <i class="fa-regular fa-bookmark"></i>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon purple">
+                                <i class="fa-solid fa-comment"></i>
+                            </div>
+                            <h3 id="statComments">۴۵</h3>
+                            <span>نظرات جدید</span>
+                            <span class="change up">
+                                <i class="fa-solid fa-arrow-up"></i> ۲۳.۷٪
+                            </span>
+                            <div class="stat-bg">
+                                <i class="fa-regular fa-comment"></i>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ===== CHARTS ===== -->
+                    <div class="charts-row">
+                        <div class="chart-card">
+                            <div class="card-header">
+                                <h6>
+                                    <i class="fa-regular fa-calendar" style="color: var(--accent-2)"></i> آمار بازدید ماهانه
+                                </h6>
+                                <div class="filter-btns">
+                                    <button class="active" data-period="month">ماه</button>
+                                    <button data-period="week">هفته</button>
+                                    <button data-period="year">سال</button>
+                                </div>
+                            </div>
+                            <canvas id="visitsChart"></canvas>
+                        </div>
+                        <div class="chart-card">
+                            <div class="card-header">
+                                <h6>
+                                    <i class="fa-solid fa-circle-pie" style="color: var(--accent)"></i> ترکیب بازدیدکنندگان
+                                </h6>
+                            </div>
+                            <canvas id="genderChart"></canvas>
+                        </div>
+                    </div>
+                    <!-- ===== BOTTOM ROW ===== -->
+                    <div class="bottom-row">
+                        <!-- بازدیدکنندگان -->
+                        <div class="visitor-card">
+                            <h6>
+                                <i class="fa-solid fa-earth-asia"></i> بازدید بر اساس منطقه
+                            </h6>
+                            <div class="visitor-item">
+                                <span class="label">اروپا</span>
+                                <div class="bar-track">
+                                    <div class="bar-fill" style="width: 45%"></div>
+                                </div>
+                                <span class="value">۸۶۲</span>
+                            </div>
+                            <div class="visitor-item">
+                                <span class="label">آمریکا</span>
+                                <div class="bar-track">
+                                    <div class="bar-fill orange" style="width: 30%"></div>
+                                </div>
+                                <span class="value">۳۷۵</span>
+                            </div>
+                            <div class="visitor-item">
+                                <span class="label">هند</span>
+                                <div class="bar-track">
+                                    <div class="bar-fill green" style="width: 55%"></div>
+                                </div>
+                                <span class="value">۶۲۵</span>
+                            </div>
+                            <div class="visitor-item">
+                                <span class="label">اندونزی</span>
+                                <div class="bar-track">
+                                    <div class="bar-fill purple" style="width: 75%"></div>
+                                </div>
+                                <span class="value">۱,۰۲۵</span>
+                            </div>
+                            <div class="visitor-item">
+                                <span class="label">ایران</span>
+                                <div class="bar-track">
+                                    <div class="bar-fill pink" style="width: 60%"></div>
+                                </div>
+                                <span class="value">۸۴۲</span>
+                            </div>
+                        </div>
+                        <!-- نظرات اخیر -->
+                        <div class="comments-card">
+                            <h6>
+                                <i class="fa-regular fa-comment-dots"></i> آخرین نظرات
+                            </h6>
+                            <div class="comment-item">
+                                <div class="cav" style="background: linear-gradient(135deg, var(--brand), var(--accent-2))">س.ع</div>
+                                <div class="cbody">
+                                    <h6>سارا عزیزی</h6>
+                                    <p>تبریک می‌گم بابت فارغ‌التحصیلی! موفق باشید ✨</p>
+                                    <span class="time">۲ ساعت پیش</span>
+                                </div>
+                            </div>
+                            <div class="comment-item">
+                                <div class="cav" style="background: linear-gradient(135deg, var(--accent), var(--brand))">م.ر</div>
+                                <div class="cbody">
+                                    <h6>محمد رضایی</h6>
+                                    <p>طراحی فوق‌العاده‌ای! میشه یه آموزش دیگه از این سبک بذارید؟</p>
+                                    <span class="time">۵ ساعت پیش</span>
+                                </div>
+                            </div>
+                            <div class="comment-item">
+                                <div class="cav" style="background: linear-gradient(135deg, var(--accent-2), var(--brand))">ن.ک</div>
+                                <div class="cbody">
+                                    <h6>نیما کریمی</h6>
+                                    <p>چه طراحی خیره‌کننده‌ای! خیلی خلاق و استعداد دارید 😍</p>
+                                    <span class="time">روز گذشته</span>
+                                </div>
+                            </div>
+                            <div class="comment-item">
+                                <div class="cav" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa)">ز.م</div>
+                                <div class="cbody">
+                                    <h6>زهرا محمدی</h6>
+                                    <p>طراحیتون رو خیلی دوست دارم! خیلی زیبا و منحصربه‌فرد است 🌟</p>
+                                    <span class="time">۲ روز پیش</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <!-- ===== SCRIPTS ===== -->
+         <script src="/js/paneladmin.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    </body>
+</html>
