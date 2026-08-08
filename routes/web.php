@@ -7,6 +7,9 @@ use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\TeamController;
+use App\Http\Controllers\SocialsController;
+use App\Http\Controllers\ImageController;
 
 
 use App\Http\Controllers\TestController;
@@ -99,9 +102,9 @@ Route::prefix('/admin')->middleware(['role:admin'])->group(function () {
 });
 
     Route::prefix('/socials')->group(function () {
-    Route::post('/create-social', [SocialController::class, 'create'])->name('create_social');
-    Route::put('/edit-social/{id}', [SocialController::class, 'edit'])->name('edit_social');
-    Route::get('/delete-social/{id}', [SocialController::class, 'delete'])->name('delete_social');
+    Route::post('/create-social', [SocialsController::class, 'create'])->name('create_social');
+    Route::put('/edit-social/{id}', [SocialsController::class, 'edit'])->name('edit_social');
+    Route::get('/delete-social/{id}', [SocialsController::class, 'delete'])->name('delete_social');
 });
     
 });
