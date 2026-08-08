@@ -90,6 +90,24 @@ Route::prefix('/admin')->group(function () {
         Route::post('/change-service-image/{id}/image', [ServiceController::class, 'changeImage'])->name('change_service_image');
     });
 
+    Route::prefix('/teams')->group(function () {
+    Route::post('/create-team', [TeamController::class, 'create'])->name('create_team');
+    Route::put('/edit-team/{id}', [TeamController::class, 'edit'])->name('edit_team');
+    Route::get('/delete-team/{id}', [TeamController::class, 'delete'])->name('delete_team');
+});
+
+     Route::prefix('/images')->group(function () {
+    Route::post('/store-image', [ImageController::class, 'store_image'])->name('store_image');
+    Route::put('/edit-image/{id}', [ImageController::class, 'edit_image'])->name('edit_image');
+    Route::get('/delete-image/{id}', [ImageController::class, 'delete_image'])->name('delete_image');
+});
+
+    Route::prefix('/socials')->group(function () {
+    Route::post('/create-social', [SocialsController::class, 'create'])->name('create_social');
+    Route::put('/edit-social/{id}', [SocialsController::class, 'edit'])->name('edit_social');
+    Route::get('/delete-social/{id}', [SocialsController::class, 'delete'])->name('delete_social');
+});
+
     Route::get('/admin', function () {
     return view('admin.dashboard');
 });
