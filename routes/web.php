@@ -7,6 +7,9 @@ use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\QuestionController;
 use App\Http\Controllers\ServiceController;
+use App\Http\Controllers\TeamController;
+use App\Http\Controllers\SocialsController;
+use App\Http\Controllers\ImageController;
 
 
 use App\Http\Controllers\TestController;
