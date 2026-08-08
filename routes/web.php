@@ -10,6 +10,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\SocialsController;
 use App\Http\Controllers\ImageController;
+use App\Http\Controllers\BlogsController;
 
 
 use App\Http\Controllers\TestController;
@@ -50,7 +51,10 @@ Route::prefix('/student')->middleware(['role:student|admin'])->group(function ()
 
 Route::prefix('/admin')->group(function () {
     //->middleware(['role:admin'])
-    Route::get('/', function(){return view('admin.panel');})->name('admin_panel');
+    //این قسمت برای تست صرفا شماره بندی شد تا بین 2 تا ویو جا به جا شوم
+    Route::get('/1', function(){return view('admin.panel');})->name('admin_panel');
+    Route::get('/2', function(){return view('admin.dashboard');})->name('admin_dashboard');
+    
     // Projects
     Route::prefix('/projects')->group(function () {
         Route::post('/create-project', [ProjectController::class, 'createProject'])->name('create_project');
@@ -107,6 +111,11 @@ Route::prefix('/admin')->group(function () {
     Route::put('/edit-social/{id}', [SocialsController::class, 'edit'])->name('edit_social');
     Route::get('/delete-social/{id}', [SocialsController::class, 'delete'])->name('delete_social');
 });
+    Route::prefix('/blogs')->group(function () {
+        Route::post('/create-blog', [BlogsController::class, 'create'])->name('create_blog');
+        Route::put('/edit-blog/{id}', [BlogsController::class, 'edit'])->name('edit_blog');
+        Route::get('/delete-blog/{id}', [BlogsController::class, 'delete'])->name('delete_blog');
+    });
 
     Route::get('/admin', function () {
     return view('admin.dashboard');
