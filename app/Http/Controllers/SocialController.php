@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Socials; // اگر نام مدل در پروژه شما Socialss است، این را اصلاح کنید
+use App\Models\Social; // اگر نام مدل در پروژه شما Socials است، این را اصلاح کنید
 use Illuminate\Support\Facades\Storage;
 
-class SocialsController extends Controller
+class SocialController extends Controller
 {
     public function create(Request $request)
     {
@@ -21,17 +21,17 @@ class SocialsController extends Controller
             $validated_data['image_url'] = $path;
         }
 
-        Socials::create($validated_data);
+        Social::create($validated_data);
 
         return response()->json([
             'success' => true,
-            'message' => 'Socials link created successfully'
+            'message' => 'Social link created successfully'
         ], 201);
     }
 
     public function edit(Request $request, $id)
     {
-        $socials = Socials::findOrFail($id);
+        $social = Social::findOrFail($id);
 
         $validated_data = $request->validate([
             'name'      => 'sometimes|string|max:100',
@@ -41,35 +41,35 @@ class SocialsController extends Controller
 
         if ($request->hasFile('image_url')) {
             // حذف عکس قدیمی در صورت وجود
-            if ($socials->image_url && Storage::disk('public')->exists($socials->image_url)) {
-                Storage::disk('public')->delete($socials->image_url);
+            if ($social->image_url && Storage::disk('public')->exists($social->image_url)) {
+                Storage::disk('public')->delete($social->image_url);
             }
 
             $validated_data['image_url'] = $request->file('image_url')->store('images', 'public');
         }
 
-        $socials->update($validated_data);
+        $social->update($validated_data);
 
         return response()->json([
             'success' => true,
-            'message' => 'Socials link updated successfully'
+            'message' => 'Social link updated successfully'
         ], 200);
     }
 
     public function delete($id)
     {
-        $socials = Socials::findOrFail($id);
+        $social = Social::findOrFail($id);
 
         // پاک کردن فایل تصویر از دیسک
-        if ($socials->image_url && Storage::disk('public')->exists($socials->image_url)) {
-            Storage::disk('public')->delete($socials->image_url);
+        if ($social->image_url && Storage::disk('public')->exists($social->image_url)) {
+            Storage::disk('public')->delete($social->image_url);
         }
 
-        $socials->delete();
+        $social->delete();
 
         return response()->json([
             'success' => true,
-            'message' => 'Socials link deleted successfully'
+            'message' => 'Social link deleted successfully'
         ], 200);
     }
 }
