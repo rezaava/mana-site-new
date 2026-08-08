@@ -75,11 +75,5 @@
         }
     },
     "minimum-stability": "dev",
-    "prefer-stable": true,
-    "repositories": {
-        "packagist": {
-            "type": "composer",
-            "url": "https://package-mirror.liara.ir/repository/composer/"
-        }
-    }
+    "prefer-stable": true
 }
