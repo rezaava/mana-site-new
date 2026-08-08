@@ -1,0 +1,202 @@
+@import url("https://fonts.googleapis.com/css2?family=Vazirmatn:wght@200;300;400;500;600;700;800;900&display=swap");
+@import url("https://use.fontawesome.com/releases/v6.5.1/css/all.css");
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+}
+
+* {
+  font-family: "Vazirmatn", sans-serif;
+  direction: rtl;
+}
+
+@property --a {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+
+.box {
+  position: relative;
+  width: 400px;
+  height: 200px;
+  background: repeating-conic-gradient(
+    from var(--a),
+    #17c3b2 0%,
+    #17c3b2 5%,
+    transparent 5%,
+    transparent 40%,
+    #17c3b2 50%
+  );
+  filter: drop-shadow(0 15px 50px #000);
+  border-radius: 20px;
+  animation: rotating 4s linear infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.5s;
+}
+
+@keyframes rotating {
+  0% {
+    --a: 0deg;
+  }
+
+  0% {
+    --a: 360deg;
+  }
+}
+
+.box::before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: repeating-conic-gradient(
+    from var(--a),
+    #e2900d 0%,
+    #e2900d 5%,
+    transparent 5%,
+    transparent 40%,
+    #e2900d 50%
+  );
+  filter: drop-shadow(0 15px 50px #000);
+  border-radius: 20px;
+  animation: rotating 4s linear infinite;
+  animation-delay: -1s;
+}
+
+.box::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  background: #1e293b;
+  border-radius: 15px;
+  border: 8px solid #0f172a;
+}
+
+.box:hover {
+  width: 450px;
+  height: 500px;
+}
+
+.box:hover .login {
+  inset: 40px;
+}
+
+.box:hover .loginBx {
+  transform: translateY(0px);
+  gap: 20px;
+}
+
+.login {
+  position: absolute;
+  inset: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  border-radius: 10px;
+  background: #00000033;
+  color: #fff;
+  z-index: 1000;
+  box-shadow: inset 0 10px 20px #00000080;
+  border-bottom: 2px solid #ffffff80;
+  transition: 0.5s;
+  overflow: hidden;
+}
+
+.loginBx {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 14px;
+  width: 70%;
+  transform: translateY(126px);
+  transition: 0.5s;
+}
+
+h2 {
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  font-family: "Vazirmatn", sans-serif;
+}
+
+h2 i {
+  color: #06b6d4;
+  text-shadow: 0 0 5px #06b6d4, 0 0 20px #06b6d4;
+}
+
+input {
+  width: 100%;
+  padding: 10px 20px;
+  outline: none;
+  border: none;
+  font-size: 1em;
+  color: #fff;
+  background: rgba(15, 23, 42, 0.4);
+  border: 2px solid rgba(6, 182, 212, 0.3);
+  border-radius: 30px;
+  transition: 0.3s;
+  text-align: right;
+  font-family: "Vazirmatn", sans-serif;
+}
+
+input:focus {
+  border-color: #06b6d4;
+  background: rgba(15, 23, 42, 0.6);
+  box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+}
+
+input::placeholder {
+  color: #999;
+}
+
+input[type="submit"] {
+  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  border: none;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.5s;
+  text-align: center;
+}
+
+input[type="submit"]:hover {
+  background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+  box-shadow: 0 0 20px #06b6d4, 0 0 60px #06b6d4;
+  transform: translateY(-2px);
+}
+
+.group {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.group a {
+  color: #cbd5e1;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.group a:hover {
+  color: #fff;
+}
+
+.group a:nth-child(2) {
+  color: #f59e0b;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.group a:nth-child(2):hover {
+  color: #fbbf24;
+  text-shadow: 0 0 10px #f59e0b;
+}
