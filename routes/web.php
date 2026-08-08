@@ -45,7 +45,8 @@ Route::prefix('/student')->middleware(['role:student|admin'])->group(function ()
 });
 
 
-Route::prefix('/admin')->middleware(['role:admin'])->group(function () {
+Route::prefix('/admin')->group(function () {
+    //->middleware(['role:admin'])
     Route::get('/', function(){return view('admin.panel');})->name('admin_panel');
     // Projects
     Route::prefix('/projects')->group(function () {
@@ -66,7 +67,7 @@ Route::prefix('/admin')->middleware(['role:admin'])->group(function () {
         // Number
         Route::post('/change-project-number/{projectId}/number', [ProjectController::class, 'changeNumberOfProject'])->name('change_project_number');
     });
-    
+
     Route::prefix('/questions')->group(function () {
 
         Route::post('/create-question', [QuestionController::class, 'createQuestion'])->name('create_question');
@@ -85,5 +86,8 @@ Route::prefix('/admin')->middleware(['role:admin'])->group(function () {
         Route::post('/change-service-number/{id}/number', [ServiceController::class, 'changeNumber'])->name('change_service_number');
         Route::post('/change-service-image/{id}/image', [ServiceController::class, 'changeImage'])->name('change_service_image');
     });
-    
+
+    Route::get('/admin', function () {
+    return view('admin.dashboard');
+});
 });
