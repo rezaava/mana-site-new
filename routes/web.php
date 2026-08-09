@@ -14,6 +14,9 @@ use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VisitorController;
+use App\Http\Controllers\Admin\UserStatsController;
+use App\Http\Controllers\Admin\CommentController;
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/register', [AuthController::class, 'register'])->name('register');
@@ -48,7 +51,8 @@ Route::prefix('/admin')->group(function () {
     Route::get('/2', function(){return view('admin.dashboard');})->name('admin_dashboard');
 
     // بازدیدکنندگان
-    Route::get('/visitors', function(){return view('admin.visitors');})->name('admin_visitors');
+    Route::get('/visitors', [VisitorController::class, 'index'])->name('visitors.index');
+    Route::delete('/visitors/{id}', [VisitorController::class, 'destroy'])->name('visitors.destroy');
 
     // فروش
     Route::get('/sales', [SaleController::class, 'index'])->name('sales.index');
@@ -59,10 +63,8 @@ Route::prefix('/admin')->group(function () {
     Route::delete('/sales/{id}', [SaleController::class, 'destroy'])->name('sales.destroy');
 
     // آمار کاربران
-    Route::get('/users-stats', function(){return view('admin.users-stats');})->name('admin_users_stats');
+    Route::get('/users-stats', [UserStatsController::class, 'index'])->name('users-stats.index');
 
-    // مقالات
-    Route::get('/posts', function(){return view('admin.posts');})->name('admin_posts');
 
     // صفحات
     Route::get('/pages', [ServiceController::class, 'index'])->name('pages.index');
@@ -73,7 +75,11 @@ Route::prefix('/admin')->group(function () {
     Route::delete('/pages/{id}', [ServiceController::class, 'destroy'])->name('pages.destroy');
 
     // نظرات
-    Route::get('/comments', function(){return view('admin.comments');})->name('admin_comments');
+    Route::get('/comments', [CommentController::class, 'index'])->name('comments.index');
+    Route::get('/comments/{id}/approve', [CommentController::class, 'approve'])->name('comments.approve');
+    Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
+    Route::get('/comments/create', [CommentController::class, 'create'])->name('comments.create');
+    Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
 
     // کاربران
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
@@ -151,6 +157,4 @@ Route::prefix('/admin')->group(function () {
         Route::put('/edit-social/{id}', [SocialsController::class, 'edit'])->name('edit_social');
         Route::get('/delete-social/{id}', [SocialsController::class, 'delete'])->name('delete_social');
     });
-
-
 });

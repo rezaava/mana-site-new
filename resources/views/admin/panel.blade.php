@@ -59,10 +59,10 @@
             </span>
         </button>
         <div class="sub-menu open" id="contentSub">
-            <a href="{{ url('/admin/blogs') }}" class="nav-item">مقالات</a>
+            <a href="{{ url('/admin/posts') }}" class="nav-item">مقالات</a>
             <a href="{{ url('/admin/pages') }}" class="nav-item">صفحات</a>
             <a href="{{ url('/admin/comments') }}" class="nav-item">نظرات
-                <span class="badge-num">۱۲</span>
+                <span class="badge-num">{{ persianNum(\App\Models\Comment::where('is_approved', true)->count()) }}</span>
             </a>
         </div>
 
