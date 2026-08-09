@@ -10,7 +10,7 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\SocialsController;
 use App\Http\Controllers\ImageController;
-// use App\Http\Controllers\BlogsController;
+use App\Http\Controllers\BlogsController;    
 use App\Http\Controllers\TestController;
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -39,7 +39,7 @@ Route::prefix('/student')->middleware(['role:student|admin'])->group(function ()
 });
 
 
-Route::prefix('/admin')->group(function () {
+Route::prefix('/admin')->name('admin.')->group(function () {
     //->middleware(['role:admin'])
     //این قسمت برای تست صرفا شماره بندی شد تا بین 2 تا ویو جا به جا شوم
     Route::get('/1', function(){return view('admin.panel');})->name('admin_panel');
@@ -99,6 +99,14 @@ Route::prefix('/admin')->group(function () {
         Route::get('/questions', [QuestionController::class, 'getAllQuestions'])->name('all_questions');
         Route::post('/change-question-number/{id}/number', [QuestionController::class, 'changeNumber'])->name('change_question_number');
     });
+    Route::prefix('/blogs')->name('blogs.')->group(function () {
+        Route::get('/', [BlogsController::class, 'index'])->name('index');          
+        Route::get('/create', [BlogsController::class, 'create'])->name('create');  
+        Route::post('/', [BlogsController::class, 'store'])->name('store');      
+        Route::get('/{id}/edit', [BlogsController::class, 'edit'])->name('edit');     
+        Route::put('/{id}', [BlogsController::class, 'update'])->name('update');     
+        Route::delete('/{id}', [BlogsController::class, 'destroy'])->name('destroy'); 
+    });
 
     Route::prefix('/services')->group(function () {
         Route::post('/create-service', [ServiceController::class, 'createService'])->name('create_service');
@@ -128,8 +136,8 @@ Route::prefix('/admin')->group(function () {
     });
 
     // Route::prefix('/blogs')->group(function () {
-    //     Route::post('/create-blog', [BlogsController::class, 'create'])->name('create_blog');
-    //     Route::put('/edit-blog/{id}', [BlogsController::class, 'edit'])->name('edit_blog');
-    //     Route::get('/delete-blog/{id}', [BlogsController::class, 'delete'])->name('delete_blog');
+    //     Route::post('/create-blog', [BlogController::class, 'create'])->name('create_blog');
+    //     Route::put('/edit-blog/{id}', [BlogController::class, 'edit'])->name('edit_blog');
+    //     Route::get('/delete-blog/{id}', [BlogController::class, 'delete'])->name('delete_blog');
     // });
 });

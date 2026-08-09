@@ -11,12 +11,12 @@ class Blogs extends Model
 {
     use HasFactory;
 
-    public $fillable = ['title', 'text', 'image_url', 'reding-time', 'number'];
-        public $table = 'blogs';
-        public $casts = [
-            'reading-time'=> 'integer',
-            'number' => 'integer'
-        ];
+    protected $fillable = ['title', 'text', 'image_url', 'reading-time', 'number'];
+    protected $table = 'blogs';
+    protected $casts = [
+        'reading-time' => 'integer',
+        'number' => 'integer'
+];
     
         public function images(){
             return $this->hasMany(Images::class);
