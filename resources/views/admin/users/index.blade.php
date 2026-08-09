@@ -5,10 +5,10 @@
     <div style="background: var(--card-bg); border-radius: 12px; padding: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h5 style="margin: 0;">
-                <i class="fa-solid fa-newspaper"></i> مدیریت مقالات
+                <i class="fa-solid fa-users"></i> مدیریت کاربران
             </h5>
-            <a href="{{ route('blogs.create') }}" class="btn btn-sm btn-primary" style="padding: 8px 16px; border-radius: 8px; text-decoration: none;">
-                <i class="fa-solid fa-plus"></i> افزودن مقاله جدید
+            <a href="{{ route('users.create') }}" class="btn btn-sm btn-primary" style="padding: 8px 16px; border-radius: 8px; text-decoration: none;">
+                <i class="fa-solid fa-plus"></i> افزودن کاربر جدید
             </a>
         </div>
 
@@ -23,32 +23,34 @@
                 <thead>
                     <tr style="border-bottom: 1px solid var(--border);">
                         <th style="padding: 12px; text-align: right;">#</th>
-                        <th style="padding: 12px; text-align: right;">تصویر</th>
-                        <th style="padding: 12px; text-align: right;">عنوان</th>
-                        <th style="padding: 12px; text-align: right;">زمان مطالعه</th>
-                        <th style="padding: 12px; text-align: right;">شماره</th>
+                        <th style="padding: 12px; text-align: right;">نام</th>
+                        <th style="padding: 12px; text-align: right;">ایمیل</th>
+                        <th style="padding: 12px; text-align: right;">نقش</th>
+                        <th style="padding: 12px; text-align: right;">تاریخ عضویت</th>
                         <th style="padding: 12px; text-align: right;">عملیات</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($blogs as $index => $blog)
+                    @forelse($users as $index => $user)
                         <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">{{ $blogs->firstItem() + $index }}</td>
+                            <td style="padding: 12px;">{{ $users->firstItem() + $index }}</td>
+                            <td style="padding: 12px;">{{ $user->name }}</td>
+                            <td style="padding: 12px;">{{ $user->email }}</td>
                             <td style="padding: 12px;">
-                                @if($blog->image_url)
-                                    <img src="{{ asset('storage/' . $blog->image_url) }}" alt="{{ $blog->title }}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px;">
+                                @if($user->role == 'admin')
+                                    <span style="background: #6366f1; color: white; padding: 2px 10px; border-radius: 10px; font-size: 12px;">ادمین</span>
+                                @elseif($user->role == 'teacher')
+                                    <span style="background: #10b981; color: white; padding: 2px 10px; border-radius: 10px; font-size: 12px;">استاد</span>
                                 @else
-                                    <span style="color: var(--text-light);">بدون تصویر</span>
+                                    <span style="background: #f59e0b; color: white; padding: 2px 10px; border-radius: 10px; font-size: 12px;">دانشجو</span>
                                 @endif
                             </td>
-                            <td style="padding: 12px;">{{ $blog->title }}</td>
-                            <td style="padding: 12px;">{{ $blog->{'reading-time'} ? $blog->{'reading-time'} . ' دقیقه' : '-' }}</td>
-                            <td style="padding: 12px;">{{ $blog->number ?? '-' }}</td>
+                            <td style="padding: 12px;">{{ $user->created_at ? $user->created_at->format('Y/m/d') : '-' }}</td>
                             <td style="padding: 12px;">
-                                <a href="{{ route('blogs.edit', $blog->id) }}" class="btn btn-sm btn-warning" style="margin-left: 5px; display: inline-block; padding: 6px 10px; border-radius: 6px; text-decoration: none;">
+                                <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-warning" style="margin-left: 5px; display: inline-block; padding: 6px 10px; border-radius: 6px; text-decoration: none;">
                                     <i class="fa-solid fa-edit"></i>
                                 </a>
-                                <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('آیا از حذف این مقاله اطمینان دارید؟');">
+                                <form action="{{ route('users.destroy', $user->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('آیا از حذف این کاربر اطمینان دارید؟');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" style="padding: 6px 10px; border-radius: 6px; border: none; cursor: pointer;">
@@ -60,7 +62,7 @@
                     @empty
                         <tr>
                             <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-light);">
-                                <i class="fa-solid fa-inbox"></i> هیچ مقاله‌ای یافت نشد
+                                <i class="fa-solid fa-inbox"></i> هیچ کاربری یافت نشد
                             </td>
                         </tr>
                     @endforelse
@@ -69,7 +71,7 @@
         </div>
 
         <div style="margin-top: 20px;">
-            {{ $blogs->links() }}
+            {{ $users->links() }}
         </div>
     </div>
 </div>

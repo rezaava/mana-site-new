@@ -10,8 +10,10 @@ use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\SocialsController;
 use App\Http\Controllers\ImageController;
-use App\Http\Controllers\BlogsController;    
+use App\Http\Controllers\BlogsController;
 use App\Http\Controllers\TestController;
+use App\Http\Controllers\SaleController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/register', [AuthController::class, 'register'])->name('register');
@@ -39,7 +41,7 @@ Route::prefix('/student')->middleware(['role:student|admin'])->group(function ()
 });
 
 
-Route::prefix('/admin')->name('admin.')->group(function () {
+Route::prefix('/admin')->group(function () {
     //->middleware(['role:admin'])
     //این قسمت برای تست صرفا شماره بندی شد تا بین 2 تا ویو جا به جا شوم
     Route::get('/1', function(){return view('admin.panel');})->name('admin_panel');
@@ -49,7 +51,12 @@ Route::prefix('/admin')->name('admin.')->group(function () {
     Route::get('/visitors', function(){return view('admin.visitors');})->name('admin_visitors');
 
     // فروش
-    Route::get('/sales', function(){return view('admin.sales');})->name('admin_sales');
+    Route::get('/sales', [SaleController::class, 'index'])->name('sales.index');
+    Route::get('/sales/create', [SaleController::class, 'create'])->name('sales.create');
+    Route::post('/sales', [SaleController::class, 'store'])->name('sales.store');
+    Route::get('/sales/{id}/edit', [SaleController::class, 'edit'])->name('sales.edit');
+    Route::put('/sales/{id}', [SaleController::class, 'update'])->name('sales.update');
+    Route::delete('/sales/{id}', [SaleController::class, 'destroy'])->name('sales.destroy');
 
     // آمار کاربران
     Route::get('/users-stats', function(){return view('admin.users-stats');})->name('admin_users_stats');
@@ -58,13 +65,23 @@ Route::prefix('/admin')->name('admin.')->group(function () {
     Route::get('/posts', function(){return view('admin.posts');})->name('admin_posts');
 
     // صفحات
-    Route::get('/pages', function(){return view('admin.pages');})->name('admin_pages');
+    Route::get('/pages', [ServiceController::class, 'index'])->name('pages.index');
+    Route::get('/pages/create', [ServiceController::class, 'create'])->name('pages.create');
+    Route::post('/pages', [ServiceController::class, 'store'])->name('pages.store');
+    Route::get('/pages/{id}/edit', [ServiceController::class, 'edit'])->name('pages.edit');
+    Route::put('/pages/{id}', [ServiceController::class, 'update'])->name('pages.update');
+    Route::delete('/pages/{id}', [ServiceController::class, 'destroy'])->name('pages.destroy');
 
     // نظرات
     Route::get('/comments', function(){return view('admin.comments');})->name('admin_comments');
 
     // کاربران
-    Route::get('/users', function(){return view('admin.users');})->name('admin_users');
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
+    Route::post('/users', [UserController::class, 'store'])->name('users.store');
+    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
+    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
+    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
     // تنظیمات
     Route::get('/settings', function(){return view('admin.settings');})->name('admin_settings');
@@ -100,22 +117,22 @@ Route::prefix('/admin')->name('admin.')->group(function () {
         Route::post('/change-question-number/{id}/number', [QuestionController::class, 'changeNumber'])->name('change_question_number');
     });
     Route::prefix('/blogs')->name('blogs.')->group(function () {
-        Route::get('/', [BlogsController::class, 'index'])->name('index');          
-        Route::get('/create', [BlogsController::class, 'create'])->name('create');  
-        Route::post('/', [BlogsController::class, 'store'])->name('store');      
-        Route::get('/{id}/edit', [BlogsController::class, 'edit'])->name('edit');     
-        Route::put('/{id}', [BlogsController::class, 'update'])->name('update');     
-        Route::delete('/{id}', [BlogsController::class, 'destroy'])->name('destroy'); 
+        Route::get('/', [BlogsController::class, 'index'])->name('index');
+        Route::get('/create', [BlogsController::class, 'create'])->name('create');
+        Route::post('/', [BlogsController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [BlogsController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [BlogsController::class, 'update'])->name('update');
+        Route::delete('/{id}', [BlogsController::class, 'destroy'])->name('destroy');
     });
 
-    Route::prefix('/services')->group(function () {
-        Route::post('/create-service', [ServiceController::class, 'createService'])->name('create_service');
-        Route::put('/edit-service/{id}', [ServiceController::class, 'updateService'])->name('edit_service');
-        Route::get('/delete-service/{id}', [ServiceController::class, 'deleteService'])->name('delete_service');
-        Route::get('/services', [ServiceController::class, 'getAllServices'])->name('all_services');
-        Route::post('/change-service-number/{id}/number', [ServiceController::class, 'changeNumber'])->name('change_service_number');
-        Route::post('/change-service-image/{id}/image', [ServiceController::class, 'changeImage'])->name('change_service_image');
-    });
+    // Route::prefix('/services')->group(function () {
+    //     Route::post('/create-service', [ServiceController::class, 'createService'])->name('create_service');
+    //     Route::put('/edit-service/{id}', [ServiceController::class, 'updateService'])->name('edit_service');
+    //     Route::get('/delete-service/{id}', [ServiceController::class, 'deleteService'])->name('delete_service');
+    //     Route::get('/services', [ServiceController::class, 'getAllServices'])->name('all_services');
+    //     Route::post('/change-service-number/{id}/number', [ServiceController::class, 'changeNumber'])->name('change_service_number');
+    //     Route::post('/change-service-image/{id}/image', [ServiceController::class, 'changeImage'])->name('change_service_image');
+    // });
 
     Route::prefix('/teams')->group(function () {
         Route::post('/create-team', [TeamController::class, 'create'])->name('create_team');
@@ -135,9 +152,5 @@ Route::prefix('/admin')->name('admin.')->group(function () {
         Route::get('/delete-social/{id}', [SocialsController::class, 'delete'])->name('delete_social');
     });
 
-    // Route::prefix('/blogs')->group(function () {
-    //     Route::post('/create-blog', [BlogController::class, 'create'])->name('create_blog');
-    //     Route::put('/edit-blog/{id}', [BlogController::class, 'edit'])->name('edit_blog');
-    //     Route::get('/delete-blog/{id}', [BlogController::class, 'delete'])->name('delete_blog');
-    // });
+
 });

@@ -5,10 +5,10 @@
     <div style="background: var(--card-bg); border-radius: 12px; padding: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h5 style="margin: 0;">
-                <i class="fa-solid fa-newspaper"></i> مدیریت مقالات
+                <i class="fa-solid fa-file"></i> مدیریت صفحات
             </h5>
-            <a href="{{ route('blogs.create') }}" class="btn btn-sm btn-primary" style="padding: 8px 16px; border-radius: 8px; text-decoration: none;">
-                <i class="fa-solid fa-plus"></i> افزودن مقاله جدید
+            <a href="{{ route('pages.create') }}" class="btn btn-sm btn-primary" style="padding: 8px 16px; border-radius: 8px; text-decoration: none;">
+                <i class="fa-solid fa-plus"></i> افزودن صفحه جدید
             </a>
         </div>
 
@@ -25,30 +25,28 @@
                         <th style="padding: 12px; text-align: right;">#</th>
                         <th style="padding: 12px; text-align: right;">تصویر</th>
                         <th style="padding: 12px; text-align: right;">عنوان</th>
-                        <th style="padding: 12px; text-align: right;">زمان مطالعه</th>
                         <th style="padding: 12px; text-align: right;">شماره</th>
                         <th style="padding: 12px; text-align: right;">عملیات</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse($blogs as $index => $blog)
+                    @forelse($services as $index => $service)
                         <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">{{ $blogs->firstItem() + $index }}</td>
+                            <td style="padding: 12px;">{{ $services->firstItem() + $index }}</td>
                             <td style="padding: 12px;">
-                                @if($blog->image_url)
-                                    <img src="{{ asset('storage/' . $blog->image_url) }}" alt="{{ $blog->title }}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px;">
+                                @if($service->image_url)
+                                    <img src="{{ asset('storage/' . $service->image_url) }}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px;">
                                 @else
                                     <span style="color: var(--text-light);">بدون تصویر</span>
                                 @endif
                             </td>
-                            <td style="padding: 12px;">{{ $blog->title }}</td>
-                            <td style="padding: 12px;">{{ $blog->{'reading-time'} ? $blog->{'reading-time'} . ' دقیقه' : '-' }}</td>
-                            <td style="padding: 12px;">{{ $blog->number ?? '-' }}</td>
+                            <td style="padding: 12px;">{{ $service->title }}</td>
+                            <td style="padding: 12px;">{{ $service->number ?? '-' }}</td>
                             <td style="padding: 12px;">
-                                <a href="{{ route('blogs.edit', $blog->id) }}" class="btn btn-sm btn-warning" style="margin-left: 5px; display: inline-block; padding: 6px 10px; border-radius: 6px; text-decoration: none;">
+                                <a href="{{ route('pages.edit', $service->id) }}" class="btn btn-sm btn-warning" style="margin-left: 5px; display: inline-block; padding: 6px 10px; border-radius: 6px; text-decoration: none;">
                                     <i class="fa-solid fa-edit"></i>
                                 </a>
-                                <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('آیا از حذف این مقاله اطمینان دارید؟');">
+                                <form action="{{ route('pages.destroy', $service->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('آیا از حذف این صفحه اطمینان دارید؟');">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger" style="padding: 6px 10px; border-radius: 6px; border: none; cursor: pointer;">
@@ -59,8 +57,8 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-light);">
-                                <i class="fa-solid fa-inbox"></i> هیچ مقاله‌ای یافت نشد
+                            <td colspan="5" style="text-align: center; padding: 40px; color: var(--text-light);">
+                                <i class="fa-solid fa-inbox"></i> هیچ صفحه‌ای یافت نشد
                             </td>
                         </tr>
                     @endforelse
@@ -69,7 +67,7 @@
         </div>
 
         <div style="margin-top: 20px;">
-            {{ $blogs->links() }}
+            {{ $services->links() }}
         </div>
     </div>
 </div>

@@ -7,12 +7,12 @@
             <h5 style="margin: 0;">
                 <i class="fa-solid fa-plus-circle"></i> افزودن مقاله جدید
             </h5>
-            <a href="{{ route('admin.blogs.index') }}" style="color: var(--text-light); text-decoration: none;">
+            <a href="{{ route('blogs.index') }}" style="color: var(--text-light); text-decoration: none;">
                 <i class="fa-solid fa-arrow-right"></i> بازگشت
             </a>
         </div>
 
-        <form action="{{ route('admin.blogs.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('blogs.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">

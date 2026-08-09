@@ -2,103 +2,80 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
 use App\Models\Services;
-use App\Models\Images;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ServiceController extends Controller
 {
-    public function createService(Request $request)
+    public function index()
     {
-        $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:100',
-            'text' => 'nullable|string',
-            'image_url' => 'nullable|url',
+        $services = Services::latest()->paginate(10);
+        return view('admin.pages.index', compact('services'));
+    }
+
+    public function create()
+    {
+        return view('admin.pages.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'title'  => 'required|string|max:255',
+            'text'   => 'nullable|string',
+            'image'  => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'number' => 'nullable|integer',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = $request->file('image')->store('services', 'public');
         }
 
-        $service = Services::create($request->only(['title', 'text', 'image_url']));
+        Services::create($validated);
 
-        return response()->json(['message' => 'Service created successfully', 'success' => true], 201);
+        return redirect()->route('pages.index')->with('success', 'صفحه با موفقیت ایجاد شد.');
     }
-    
-    public function updateService(Request $request, $id)
+
+    public function edit($id)
+    {
+        $service = Services::findOrFail($id);
+        return view('admin.pages.edit', compact('service'));
+    }
+
+    public function update(Request $request, $id)
     {
         $service = Services::findOrFail($id);
 
-        $validator = Validator::make($request->all(), [
-            'title' => 'string|max:100',
-            'text' => 'nullable|string',
-            'image_url' => 'nullable|url',
+        $validated = $request->validate([
+            'title'  => 'required|string|max:255',
+            'text'   => 'nullable|string',
+            'image'  => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'number' => 'nullable|integer',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+        if ($request->hasFile('image')) {
+            if ($service->image_url && Storage::disk('public')->exists($service->image_url)) {
+                Storage::disk('public')->delete($service->image_url);
+            }
+            $validated['image_url'] = $request->file('image')->store('services', 'public');
         }
 
-        $service->update($request->only(['title', 'text', 'image_url']));
+        $service->update($validated);
 
-        return response()->json(['message' => 'Service updated successfully', 'success' => true], 200);
+        return redirect()->route('pages.index')->with('success', 'صفحه با موفقیت بروزرسانی شد.');
     }
 
-    public function deleteService($id)
+    public function destroy($id)
     {
         $service = Services::findOrFail($id);
 
-        if (!$service) {
-            return response()->json(['message' => 'Service not found', 'success' => false], 404);
+        if ($service->image_url && Storage::disk('public')->exists($service->image_url)) {
+            Storage::disk('public')->delete($service->image_url);
         }
 
         $service->delete();
 
-        return response()->json(['message' => 'Service deleted successfully', 'success' => true], 200);
-    }
-
-    public function getAllServices()
-    {
-        $services = Services::all();
-
-        return response()->json(['services' => $services, 'success' => true], 200);
-    }
-
-    public function changeNumber(Request $request, $id)
-    {
-        $service = Services::findOrFail($id);
-
-        if (!$service) {
-            return response()->json(['message' => 'Service not found', 'success' => false], 404);
-        }
-
-        $validatedData = $request->validate([
-            'number' => 'required|integer',
-        ]);
-
-        $service->number = $validatedData['number'];
-        $service->save();
-
-        return response()->json(['message' => 'Service number updated successfully', 'success' => true], 200);
-    }
-
-    public function changeImage(Request $request, $id)
-    {
-        $service = Services::findOrFail($id);
-
-        if (!$service) {
-            return response()->json(['message' => 'Service not found', 'success' => false], 404);
-        }
-
-        $validatedData = $request->validate([
-            'image_url' => 'required|url',
-        ]);
-
-        $service->image_url = $validatedData['image_url'];
-        $service->save();
-
-        return response()->json(['message' => 'Service image updated successfully', 'success' => true], 200);
+        return redirect()->route('pages.index')->with('success', 'صفحه با موفقیت حذف شد.');
     }
 }

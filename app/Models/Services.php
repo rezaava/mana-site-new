@@ -11,8 +11,7 @@ class Services extends Model
 {
     use HasFactory;
     public $table = 'services';
-    public $fillable = ['title', 'text', 'image_url'];
-
+    public $fillable = ['title', 'text', 'image_url', 'number'];
 
     public function images(){
         return $this->hasMany(Images::class);
