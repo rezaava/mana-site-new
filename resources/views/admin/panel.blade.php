@@ -83,7 +83,7 @@
         <a href="{{ url('/admin/support') }}" class="nav-item">
             <i class="fa-solid fa-headset"></i>
             پشتیبانی
-            <span class="badge-num">۳</span>
+            <span class="badge-num">{{ persianNum(\App\Models\Ticket::where('status', 'open')->count()) }}</span>
         </a>
 
         <!-- کارت کاربر -->

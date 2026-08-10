@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\VisitorController;
 use App\Http\Controllers\Admin\UserStatsController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TicketController;
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/register', [AuthController::class, 'register'])->name('register');
@@ -95,7 +96,10 @@ Route::prefix('/admin')->group(function () {
     Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
 
     // پشتیبانی
-    Route::get('/support', function(){return view('admin.support');})->name('admin_support');
+    Route::get('/support', [TicketController::class, 'index'])->name('support.index');
+    Route::get('/support/{id}', [TicketController::class, 'show'])->name('support.show');
+    Route::get('/support/{id}/close', [TicketController::class, 'close'])->name('support.close');
+    Route::delete('/support/{id}', [TicketController::class, 'destroy'])->name('support.destroy');
 
     // Projects
     Route::prefix('/projects')->group(function () {
