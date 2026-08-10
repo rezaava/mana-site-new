@@ -11,6 +11,7 @@ class BlogsController extends Controller
     public function index()
     {
         $blogs = Blogs::latest()->paginate(10);
+
         return view('admin.blogs.blogs', compact('blogs'));
     }
 
@@ -30,24 +31,22 @@ class BlogsController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            $validated['image_url'] = $request->file('image')->store('blogs', 'public');
+            $validated['image_url'] = $request
+                ->file('image')
+                ->store('blogs', 'public');
         }
 
-        if ($request->filled('reading-time')) {
-            $validated['reading-time'] = $request->input('reading-time');
-        }
+        $blog = Blogs::create($validated);
 
-        Blogs::create($validated);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Blog created successfully.'
-        ]);
+        // Redirect to index instead of back()
+        return redirect()->route('blogs.index')
+            ->with('success', "مقاله «{$blog->title}» با موفقیت ثبت شد.");
     }
 
     public function edit($id)
     {
         $blog = Blogs::findOrFail($id);
+
         return view('admin.blogs.edit', compact('blog'));
     }
 
@@ -64,37 +63,42 @@ class BlogsController extends Controller
         ]);
 
         if ($request->hasFile('image')) {
-            if ($blog->image_url && Storage::disk('public')->exists($blog->image_url)) {
+            if (
+                $blog->image_url &&
+                Storage::disk('public')->exists($blog->image_url)
+            ) {
                 Storage::disk('public')->delete($blog->image_url);
             }
-            $validated['image_url'] = $request->file('image')->store('blogs', 'public');
-        }
 
-        if ($request->filled('reading-time')) {
-            $validated['reading-time'] = $request->input('reading-time');
+            $validated['image_url'] = $request
+                ->file('image')
+                ->store('blogs', 'public');
         }
 
         $blog->update($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Blog updated successfully.'
-        ]);
+        return redirect()->route('blogs.index')
+            ->with('success', "مقاله «{$blog->title}» با موفقیت بروزرسانی شد.");
     }
 
     public function destroy($id)
     {
         $blog = Blogs::findOrFail($id);
 
-        if ($blog->image_url && Storage::disk('public')->exists($blog->image_url)) {
+        // Save info before delete
+        $title = $blog->title;
+        $deletedId = $blog->id;
+
+        if (
+            $blog->image_url &&
+            Storage::disk('public')->exists($blog->image_url)
+        ) {
             Storage::disk('public')->delete($blog->image_url);
         }
 
         $blog->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Blog deleted successfully.'
-        ]);
+        return redirect()->route('blogs.index')
+            ->with('success', "مقاله «{$title}» (شناسه: {$deletedId}) با موفقیت حذف شد.");
     }
 }
