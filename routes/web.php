@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VisitorController;
 use App\Http\Controllers\Admin\UserStatsController;
 use App\Http\Controllers\Admin\CommentController;
+use App\Http\Controllers\Admin\SettingController;
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/register', [AuthController::class, 'register'])->name('register');
@@ -90,7 +91,8 @@ Route::prefix('/admin')->group(function () {
     Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
 
     // تنظیمات
-    Route::get('/settings', function(){return view('admin.settings');})->name('admin_settings');
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
 
     // پشتیبانی
     Route::get('/support', function(){return view('admin.support');})->name('admin_support');
