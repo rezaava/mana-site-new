@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Projects;
 use App\Models\Images;
 use App\Models\Features;
-
+use Illuminate\Support\Facades\Storage;
 
 class projectController extends Controller
 {
@@ -116,7 +116,7 @@ class projectController extends Controller
             return response()->json(['errors' => $validator->errors(),'success' => false],  422);
         }
 
-        
+
 
         $image = new Images();
 
@@ -200,5 +200,82 @@ class projectController extends Controller
         return redirect()->back()->with('success', true);
     }
 
+
+
+    public function index()
+    {
+        $projects = Projects::latest()->paginate(10);
+        return view('admin.projects.index', compact('projects'));
+    }
+
+    public function create()
+    {
+        return view('admin.projects.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'title'   => 'required|string|max:255',
+            'brief'   => 'nullable|string|max:500',
+            'desc'    => 'nullable|string',
+            'cat-id'  => 'nullable|integer',
+            'image'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        $maxNumber = Projects::max('number');
+        $validated['number'] = $maxNumber + 1;
+
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = $request->file('image')->store('projects', 'public');
+        }
+
+        Projects::create($validated);
+
+        return redirect()->route('projects.index')->with('success', 'پروژه با موفقیت ایجاد شد.');
+    }
+
+    public function edit($id)
+    {
+        $project = Projects::findOrFail($id);
+        return view('admin.projects.edit', compact('project'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $project = Projects::findOrFail($id);
+
+        $validated = $request->validate([
+            'title'   => 'required|string|max:255',
+            'brief'   => 'nullable|string|max:500',
+            'desc'    => 'nullable|string',
+            'cat-id'  => 'nullable|integer',
+            'image'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($project->image_url && Storage::disk('public')->exists($project->image_url)) {
+                Storage::disk('public')->delete($project->image_url);
+            }
+            $validated['image_url'] = $request->file('image')->store('projects', 'public');
+        }
+
+        $project->update($validated);
+
+        return redirect()->route('projects.index')->with('success', 'پروژه با موفقیت بروزرسانی شد.');
+    }
+
+    public function destroy($id)
+    {
+        $project = Projects::findOrFail($id);
+
+        if ($project->image_url && Storage::disk('public')->exists($project->image_url)) {
+            Storage::disk('public')->delete($project->image_url);
+        }
+
+        $project->delete();
+
+        return redirect()->route('projects.index')->with('success', 'پروژه با موفقیت حذف شد.');
+    }
 
 }

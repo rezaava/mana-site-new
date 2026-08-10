@@ -66,6 +66,14 @@
             </a>
         </div>
 
+
+                <!-- مدیریت پروژه‌ها -->
+        <a href="{{ url('/admin/projects') }}" class="nav-item">
+            <i class="fa-solid fa-diagram-project"></i>
+            پروژه‌ها
+        </a>
+
+
         <!-- کاربران -->
         <a href="{{ url('/admin/users') }}" class="nav-item">
             <i class="fa-solid fa-users"></i>

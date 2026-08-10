@@ -48,7 +48,6 @@ Route::prefix('/student')->middleware(['role:student|admin'])->group(function ()
 
 Route::prefix('/admin')->group(function () {
     //->middleware(['role:admin'])
-    //این قسمت برای تست صرفا شماره بندی شد تا بین 2 تا ویو جا به جا شوم
     Route::get('/1', function(){return view('admin.panel');})->name('admin_panel');
     Route::get('/2', function(){return view('admin.dashboard');})->name('admin_dashboard');
 
@@ -66,7 +65,6 @@ Route::prefix('/admin')->group(function () {
 
     // آمار کاربران
     Route::get('/users-stats', [UserStatsController::class, 'index'])->name('users-stats.index');
-
 
     // صفحات
     Route::get('/pages', [ServiceController::class, 'index'])->name('pages.index');
@@ -103,11 +101,18 @@ Route::prefix('/admin')->group(function () {
 
     // Projects
     Route::prefix('/projects')->group(function () {
+        // Blade
+        Route::get('/', [ProjectController::class, 'index'])->name('projects.index');
+        Route::get('/create', [ProjectController::class, 'create'])->name('projects.create');
+        Route::post('/', [ProjectController::class, 'store'])->name('projects.store');
+        Route::get('/{id}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+        Route::put('/{id}', [ProjectController::class, 'update'])->name('projects.update');
+        Route::delete('/{id}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+
+        // API
         Route::post('/create-project', [ProjectController::class, 'createProject'])->name('create_project');
         Route::put('/edit-project/{id}', [ProjectController::class, 'editeProject'])->name('edit_project');
         Route::get('/delete-project/{id}', [ProjectController::class, 'deleteProject'])->name('delete_project');
-        Route::get('/projects', [ProjectController::class, 'returnAllProjects'])->name('all_projects');
-        Route::get('/projects/{id}', [ProjectController::class, 'returnProjectById'])->name('project_by_id');
 
         // Images
         Route::post('/projects/{projectId}/images', [ProjectController::class, 'addImageToProject'])->name('add_project_image');
@@ -128,6 +133,7 @@ Route::prefix('/admin')->group(function () {
         Route::get('/questions', [QuestionController::class, 'getAllQuestions'])->name('all_questions');
         Route::post('/change-question-number/{id}/number', [QuestionController::class, 'changeNumber'])->name('change_question_number');
     });
+
     Route::prefix('/blogs')->name('blogs.')->group(function () {
         Route::get('/', [BlogsController::class, 'index'])->name('index');
         Route::get('/create', [BlogsController::class, 'create'])->name('create');
@@ -136,15 +142,6 @@ Route::prefix('/admin')->group(function () {
         Route::put('/{id}', [BlogsController::class, 'update'])->name('update');
         Route::delete('/{id}', [BlogsController::class, 'destroy'])->name('destroy');
     });
-
-    // Route::prefix('/services')->group(function () {
-    //     Route::post('/create-service', [ServiceController::class, 'createService'])->name('create_service');
-    //     Route::put('/edit-service/{id}', [ServiceController::class, 'updateService'])->name('edit_service');
-    //     Route::get('/delete-service/{id}', [ServiceController::class, 'deleteService'])->name('delete_service');
-    //     Route::get('/services', [ServiceController::class, 'getAllServices'])->name('all_services');
-    //     Route::post('/change-service-number/{id}/number', [ServiceController::class, 'changeNumber'])->name('change_service_number');
-    //     Route::post('/change-service-image/{id}/image', [ServiceController::class, 'changeImage'])->name('change_service_image');
-    // });
 
     Route::prefix('/teams')->group(function () {
         Route::post('/create-team', [TeamController::class, 'create'])->name('create_team');
