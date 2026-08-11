@@ -2,77 +2,90 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Team;
 use Illuminate\Http\Request;
-use App\Models\Teams;
 use Illuminate\Support\Facades\Storage;
 
 class TeamController extends Controller
 {
-    public function create(Request $request)
+    public function index()
     {
-        $validated_data = $request->validate([
-            'name' => 'required|string|max:100',
-            'title' => 'required|string|max:100',
-            'number' => 'required|integer',
-            'image_url' => 'required|file|image',
-        ]);
+        $members = Team::all();
 
-        if ($request->hasFile('image_url')) {
-
-            $path = $request->file('image_url')->store('images', 'public');
-
-            $validated_data['image_url'] = $path;
-        }
-
-        Teams::create($validated_data);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Team member created successfully'
-        ], 201);
+        return view('admin.team.team', compact('members'));
     }
 
-    public function edit(Request $request, $id)
+    public function create()
     {
-        $team = Teams::findOrFail($id);
+        return view('admin.team.create');
+    }
 
-        $validated_data = $request->validate([
-            'name' => 'sometimes|string|max:100',
-            'title' => 'sometimes|string|max:100',
-            'number' => 'sometimes|integer',
-            'image_url' => 'sometimes|file|image',
+    public function store(Request $request)
+    {
+        $request->validate([
+            'name'      => 'required|string|max:100',
+            'title'     => 'required|string|max:100',
+            'number'    => 'required|integer',
+            'image_url' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
-        if ($request->hasFile('image_url')) {
+        $member = new Team();
+        $member->name = $request->name;
+        $member->title = $request->title;
+        $member->number = $request->number;
 
-            if ($team->image_url && Storage::disk('public')->exists($team->image_url)) {
-                Storage::disk('public')->delete($team->image_url);
+        if ($request->hasFile('image_url')) {
+            $member->image_url = $request->file('image_url')->store('team', 'public');
+        }
+
+        $member->save();
+
+        return redirect()->route('team.index')->with('success', 'عضو جدید با موفقیت اضافه شد.');
+    }
+
+    public function edit($id)
+    {
+        $team = Team::findOrFail($id);
+
+        return view('admin.team.edit', compact('team'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name'      => 'required|string|max:100',
+            'title'     => 'required|string|max:100',
+            'number'    => 'required|integer',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        $member = Team::findOrFail($id);
+        $member->name = $request->name;
+        $member->title = $request->title;
+        $member->number = $request->number;
+
+        if ($request->hasFile('image_url')) {
+            if ($member->image_url) {
+                Storage::disk('public')->delete($member->image_url);
             }
-
-            $validated_data['image_url'] = $request->file('image_url')->store('images', 'public');
+            $member->image_url = $request->file('image_url')->store('team', 'public');
         }
 
-        $team->update($validated_data);
+        $member->save();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Team member updated successfully'
-        ], 200);
+        return redirect()->route('team.index')->with('success', 'اطلاعات عضو با موفقیت آپدیت شد.');
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
-        $team = Teams::findOrFail($id);
+        $member = Team::findOrFail($id);
 
-        if ($team->image_url && Storage::disk('public')->exists($team->image_url)) {
-            Storage::disk('public')->delete($team->image_url);
+        if ($member->image_url) {
+            Storage::disk('public')->delete($member->image_url);
         }
 
-        $team->delete();
+        $member->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Team member deleted successfully'
-        ], 200);
+        return redirect()->route('team.index')->with('success', 'عضو مورد نظر حذف شد.');
     }
 }

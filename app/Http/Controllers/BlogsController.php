@@ -23,11 +23,11 @@ class BlogsController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title'        => 'required|string|max:255',
-            'text'         => 'required|string',
-            'image'        => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'title' => 'required|string|max:255',
+            'text'      => 'required|string',
+            'image'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'reading-time' => 'nullable|integer|min:1',
-            'number'       => 'nullable|integer',
+            'number' => 'nullable|integer',
         ]);
 
         if ($request->hasFile('image')) {
@@ -55,10 +55,10 @@ class BlogsController extends Controller
         $blog = Blogs::findOrFail($id);
 
         $validated = $request->validate([
-            'title'        => 'required|string|max:255',
-            'text'         => 'required|string',
+            'title' => 'required|string|max:255',
+            'text'       => 'required|string',
             'image'        => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'reading-time' => 'nullable|integer|min:1',
+            'reading-time'=> 'nullable|integer|min:1',
             'number'       => 'nullable|integer',
         ]);
 

@@ -1,6 +1,6 @@
 # code-to-llm — Context Report
 
-> Generated: `2026-08-10T09:08:55.160Z`
+> Generated: `2026-08-10T16:12:03.647Z`
 > root: `E:\Workspace\Behin Fartak\mana-site-new`
 > type: `smart`
 
@@ -8,19 +8,19 @@
 
 - Status: **OK**
 - Detected preset: `node`
-- Files included: **301**
-- Files skipped: 132
-- Total lines: 57,189
+- Files included: **312**
+- Files skipped: 131
+- Total lines: 57,960
 
 ### Token estimate
 
 | Model family | Tokens | Exact? |
 |---|---:|:---:|
-| GPT (o200k) | 517,898 | ✅ |
-| Claude | 559,330 | ~est |
-| Gemini | 543,793 | ~est |
-| DeepSeek | 528,256 | ~est |
-| Qwen | 533,435 | ~est |
+| GPT (o200k) | 531,103 | ✅ |
+| Claude | 573,591 | ~est |
+| Gemini | 557,658 | ~est |
+| DeepSeek | 541,725 | ~est |
+| Qwen | 547,036 | ~est |
 
 > Only GPT is an exact count; others are estimated from the base count (±10%).
 
@@ -39,7 +39,7 @@ Rules:
 3. Then map the dependencies between modules.
 4. Do not suggest changes until you have understood the whole project.
 
-This is a SMART CONTEXT selection: the 301 most architecturally important files were prioritized (by import in-degree, entrypoints, and configs). Treat earlier files as the structural core of the system.
+This is a SMART CONTEXT selection: the 312 most architecturally important files were prioritized (by import in-degree, entrypoints, and configs). Treat earlier files as the structural core of the system.
 
 When done, produce a concise architectural report: purpose, tech stack, main modules, and their responsibilities.
 ```
@@ -325,6 +325,10 @@ When done, produce a concise architectural report: purpose, tech stack, main mod
 │   │   │   │   ├── create.blade.php
 │   │   │   │   ├── edit.blade.php
 │   │   │   │   └── index.blade.php
+│   │   │   ├── projects/
+│   │   │   │   ├── create.blade.php
+│   │   │   │   ├── edit.blade.php
+│   │   │   │   └── index.blade.php
 │   │   │   ├── sales/
 │   │   │   │   ├── create.blade.php
 │   │   │   │   ├── edit.blade.php
@@ -389,16 +393,24 @@ When done, produce a concise architectural report: purpose, tech stack, main mod
 ├── storage/
 │   └── framework/
 │       └── views/
+│           ├── 03959c0719b08d24b5f7665e0d9b35eb.php
+│           ├── 18891cd5c0684bf6c145a0544cb79abb.php
+│           ├── 204d68d39e1538d9315bb78cd1f8bad1.php
 │           ├── 2e1d8993812858c036f163c0b120c1c3.php
 │           ├── 4e3fab8cd93b9623aa00a280fc872a8b.php
 │           ├── 512157d07a444ea6c04661c35a0f7897.php
 │           ├── 7f52581cd50222a77624af1a7cf84191.php
 │           ├── 85dd58348c222676d0c3f2717c1a74a5.php
+│           ├── 8c6937ff54c0dfc27fa1e789c207da10.php
+│           ├── a3d2fc25f33e160d74111d33e4c48d2b.php
 │           ├── b51f870b73087b84ec487ad6f24d9f16.php
+│           ├── d5e706a10da90fc66c20ae6b11b08a79.php
 │           ├── dbe70fa0935c77778d195cee2f15944d.php
 │           ├── de2c61210dc2309f7854f82ec87aae70.php
+│           ├── e567217f7928a09b8d761e9a92fca994.php
 │           ├── ee7bd4cff02838c0104d444bf2cebdc6.php
-│           └── f431d01fe709cd4230eb475ba5cb2acf.php
+│           ├── f431d01fe709cd4230eb475ba5cb2acf.php
+│           └── fa17ef26a2f8b784f7479c90ec83cae9.php
 ├── tests/
 │   ├── Feature/
 │   │   └── ExampleTest.php
@@ -21224,7 +21236,6 @@ Route::prefix('/student')->middleware(['role:student|admin'])->group(function ()
 
 Route::prefix('/admin')->group(function () {
     //->middleware(['role:admin'])
-    //این قسمت برای تست صرفا شماره بندی شد تا بین 2 تا ویو جا به جا شوم
     Route::get('/1', function(){return view('admin.panel');})->name('admin_panel');
     Route::get('/2', function(){return view('admin.dashboard');})->name('admin_dashboard');
 
@@ -21242,7 +21253,6 @@ Route::prefix('/admin')->group(function () {
 
     // آمار کاربران
     Route::get('/users-stats', [UserStatsController::class, 'index'])->name('users-stats.index');
-
 
     // صفحات
     Route::get('/pages', [ServiceController::class, 'index'])->name('pages.index');
@@ -21279,11 +21289,18 @@ Route::prefix('/admin')->group(function () {
 
     // Projects
     Route::prefix('/projects')->group(function () {
+        // Blade
+        Route::get('/', [ProjectController::class, 'index'])->name('projects.index');
+        Route::get('/create', [ProjectController::class, 'create'])->name('projects.create');
+        Route::post('/', [ProjectController::class, 'store'])->name('projects.store');
+        Route::get('/{id}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
+        Route::put('/{id}', [ProjectController::class, 'update'])->name('projects.update');
+        Route::delete('/{id}', [ProjectController::class, 'destroy'])->name('projects.destroy');
+
+        // API
         Route::post('/create-project', [ProjectController::class, 'createProject'])->name('create_project');
         Route::put('/edit-project/{id}', [ProjectController::class, 'editeProject'])->name('edit_project');
         Route::get('/delete-project/{id}', [ProjectController::class, 'deleteProject'])->name('delete_project');
-        Route::get('/projects', [ProjectController::class, 'returnAllProjects'])->name('all_projects');
-        Route::get('/projects/{id}', [ProjectController::class, 'returnProjectById'])->name('project_by_id');
 
         // Images
         Route::post('/projects/{projectId}/images', [ProjectController::class, 'addImageToProject'])->name('add_project_image');
@@ -21304,6 +21321,7 @@ Route::prefix('/admin')->group(function () {
         Route::get('/questions', [QuestionController::class, 'getAllQuestions'])->name('all_questions');
         Route::post('/change-question-number/{id}/number', [QuestionController::class, 'changeNumber'])->name('change_question_number');
     });
+
     Route::prefix('/blogs')->name('blogs.')->group(function () {
         Route::get('/', [BlogsController::class, 'index'])->name('index');
         Route::get('/create', [BlogsController::class, 'create'])->name('create');
@@ -21312,15 +21330,6 @@ Route::prefix('/admin')->group(function () {
         Route::put('/{id}', [BlogsController::class, 'update'])->name('update');
         Route::delete('/{id}', [BlogsController::class, 'destroy'])->name('destroy');
     });
-
-    // Route::prefix('/services')->group(function () {
-    //     Route::post('/create-service', [ServiceController::class, 'createService'])->name('create_service');
-    //     Route::put('/edit-service/{id}', [ServiceController::class, 'updateService'])->name('edit_service');
-    //     Route::get('/delete-service/{id}', [ServiceController::class, 'deleteService'])->name('delete_service');
-    //     Route::get('/services', [ServiceController::class, 'getAllServices'])->name('all_services');
-    //     Route::post('/change-service-number/{id}/number', [ServiceController::class, 'changeNumber'])->name('change_service_number');
-    //     Route::post('/change-service-image/{id}/image', [ServiceController::class, 'changeImage'])->name('change_service_image');
-    // });
 
     Route::prefix('/teams')->group(function () {
         Route::post('/create-team', [TeamController::class, 'create'])->name('create_team');
@@ -42749,11 +42758,11 @@ class BlogsController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title'        => 'required|string|max:255',
-            'text'         => 'required|string',
-            'image'        => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'title' => 'required|string|max:255',
+            'text'      => 'required|string',
+            'image'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'reading-time' => 'nullable|integer|min:1',
-            'number'       => 'nullable|integer',
+            'number' => 'nullable|integer',
         ]);
 
         if ($request->hasFile('image')) {
@@ -42762,9 +42771,11 @@ class BlogsController extends Controller
                 ->store('blogs', 'public');
         }
 
-        Blogs::create($validated);
+        $blog = Blogs::create($validated);
 
-        return redirect()->back()->with('success', 'Blog created successfully.');
+        // Redirect to index instead of back()
+        return redirect()->route('blogs.index')
+            ->with('success', "مقاله «{$blog->title}» با موفقیت ثبت شد.");
     }
 
     public function edit($id)
@@ -42779,10 +42790,10 @@ class BlogsController extends Controller
         $blog = Blogs::findOrFail($id);
 
         $validated = $request->validate([
-            'title'        => 'required|string|max:255',
-            'text'         => 'required|string',
+            'title' => 'required|string|max:255',
+            'text'       => 'required|string',
             'image'        => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'reading-time' => 'nullable|integer|min:1',
+            'reading-time'=> 'nullable|integer|min:1',
             'number'       => 'nullable|integer',
         ]);
 
@@ -42801,12 +42812,17 @@ class BlogsController extends Controller
 
         $blog->update($validated);
 
-        return redirect()->back()->with('success', 'Blog updated successfully.');
+        return redirect()->route('blogs.index')
+            ->with('success', "مقاله «{$blog->title}» با موفقیت بروزرسانی شد.");
     }
 
     public function destroy($id)
     {
         $blog = Blogs::findOrFail($id);
+
+        // Save info before delete
+        $title = $blog->title;
+        $deletedId = $blog->id;
 
         if (
             $blog->image_url &&
@@ -42817,7 +42833,8 @@ class BlogsController extends Controller
 
         $blog->delete();
 
-        return redirect()->back()->with('success', 'Blog deleted successfully.');
+        return redirect()->route('blogs.index')
+            ->with('success', "مقاله «{$title}» (شناسه: {$deletedId}) با موفقیت حذف شد.");
     }
 }
 ```
@@ -42937,7 +42954,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Projects;
 use App\Models\Images;
 use App\Models\Features;
-
+use Illuminate\Support\Facades\Storage;
 
 class projectController extends Controller
 {
@@ -43045,7 +43062,7 @@ class projectController extends Controller
             return response()->json(['errors' => $validator->errors(),'success' => false],  422);
         }
 
-        
+
 
         $image = new Images();
 
@@ -43129,6 +43146,83 @@ class projectController extends Controller
         return redirect()->back()->with('success', true);
     }
 
+
+
+    public function index()
+    {
+        $projects = Projects::latest()->paginate(10);
+        return view('admin.projects.index', compact('projects'));
+    }
+
+    public function create()
+    {
+        return view('admin.projects.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'title'   => 'required|string|max:255',
+            'brief'   => 'nullable|string|max:500',
+            'desc'    => 'nullable|string',
+            'cat-id'  => 'nullable|integer',
+            'image'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        $maxNumber = Projects::max('number');
+        $validated['number'] = $maxNumber + 1;
+
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = $request->file('image')->store('projects', 'public');
+        }
+
+        Projects::create($validated);
+
+        return redirect()->route('projects.index')->with('success', 'پروژه با موفقیت ایجاد شد.');
+    }
+
+    public function edit($id)
+    {
+        $project = Projects::findOrFail($id);
+        return view('admin.projects.edit', compact('project'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $project = Projects::findOrFail($id);
+
+        $validated = $request->validate([
+            'title'   => 'required|string|max:255',
+            'brief'   => 'nullable|string|max:500',
+            'desc'    => 'nullable|string',
+            'cat-id'  => 'nullable|integer',
+            'image'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($project->image_url && Storage::disk('public')->exists($project->image_url)) {
+                Storage::disk('public')->delete($project->image_url);
+            }
+            $validated['image_url'] = $request->file('image')->store('projects', 'public');
+        }
+
+        $project->update($validated);
+
+        return redirect()->route('projects.index')->with('success', 'پروژه با موفقیت بروزرسانی شد.');
+    }
+
+    public function destroy($id)
+    {
+        $project = Projects::findOrFail($id);
+
+        if ($project->image_url && Storage::disk('public')->exists($project->image_url)) {
+            Storage::disk('public')->delete($project->image_url);
+        }
+
+        $project->delete();
+
+        return redirect()->route('projects.index')->with('success', 'پروژه با موفقیت حذف شد.');
+    }
 
 }
 ```
@@ -55118,6 +55212,14 @@ function loadServices() {
             </a>
         </div>
 
+
+                <!-- مدیریت پروژه‌ها -->
+        <a href="{{ url('/admin/projects') }}" class="nav-item">
+            <i class="fa-solid fa-diagram-project"></i>
+            پروژه‌ها
+        </a>
+
+
         <!-- کاربران -->
         <a href="{{ url('/admin/users') }}" class="nav-item">
             <i class="fa-solid fa-users"></i>
@@ -56304,6 +56406,222 @@ body{
 @endsection
 ```
 
+### `storage/framework/views/03959c0719b08d24b5f7665e0d9b35eb.php`
+
+```php
+<?php $__env->startSection('content'); ?>
+<div style="padding: 20px;">
+    <div style="background: var(--card-bg); border-radius: 12px; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h5 style="margin: 0;"><i class="fa-solid fa-diagram-project"></i> مدیریت پروژه‌ها</h5>
+            <a href="<?php echo e(route('projects.create')); ?>" class="btn btn-sm btn-primary" style="padding: 8px 16px; border-radius: 8px; text-decoration: none;">
+                <i class="fa-solid fa-plus"></i> افزودن پروژه
+            </a>
+        </div>
+        <?php if(session('success')): ?>
+            <div style="background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; padding: 12px; border-radius: 8px; margin-bottom: 20px;"><?php echo e(session('success')); ?></div>
+        <?php endif; ?>
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead><tr style="border-bottom: 1px solid var(--border);">
+                <th style="padding: 12px;">#</th><th style="padding: 12px;">تصویر</th><th style="padding: 12px;">عنوان</th><th style="padding: 12px;">توضیح</th><th style="padding: 12px;">شماره</th><th style="padding: 12px;">عملیات</th>
+            </tr></thead>
+            <tbody>
+                <?php $__empty_1 = true; $__currentLoopData = $projects; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $i => $project): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 12px;"><?php echo e($projects->firstItem() + $i); ?></td>
+                        <td style="padding: 12px;"><?php if($project->image_url): ?><img src="<?php echo e(asset('storage/'.$project->image_url)); ?>" style="width:45px;height:45px;object-fit:cover;border-radius:6px;"><?php else: ?> --- <?php endif; ?></td>
+                        <td style="padding: 12px;"><?php echo e($project->title); ?></td>
+                        <td style="padding: 12px;"><?php echo e(Str::limit($project->brief, 40)); ?></td>
+                        <td style="padding: 12px;"><?php echo e($project->number ?? '-'); ?></td>
+                        <td style="padding: 12px;">
+                            <a href="<?php echo e(route('projects.edit', $project->id)); ?>" class="btn btn-sm btn-warning" style="margin-left:3px;padding:6px 10px;border-radius:6px;text-decoration:none;"><i class="fa-solid fa-edit"></i></a>
+                            <form action="<?php echo e(route('projects.destroy', $project->id)); ?>" method="POST" style="display:inline;" onsubmit="return confirm('حذف شود؟')">
+                                <?php echo csrf_field(); ?> <?php echo method_field('DELETE'); ?>
+                                <button type="submit" class="btn btn-sm btn-danger" style="padding:6px 10px;border-radius:6px;border:none;"><i class="fa-solid fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                    <tr><td colspan="6" style="text-align:center;padding:40px;">پروژه‌ای یافت نشد</td></tr>
+                <?php endif; ?>
+            </tbody>
+        </table>
+        <div style="margin-top:20px;"><?php echo e($projects->links()); ?></div>
+    </div>
+</div>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.panel', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH E:\Workspace\Behin Fartak\mana-site-new\resources\views/admin/projects/index.blade.php ENDPATH**/ ?>
+```
+
+### `storage/framework/views/18891cd5c0684bf6c145a0544cb79abb.php`
+
+```php
+<?php $__env->startSection('content'); ?>
+<div style="padding: 20px;">
+    <div style="background: var(--card-bg); border-radius: 12px; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h5 style="margin: 0;">
+                <i class="fa-solid fa-plus-circle"></i> افزودن صفحه جدید
+            </h5>
+            <a href="<?php echo e(route('pages.index')); ?>" style="color: var(--text-light); text-decoration: none;">
+                <i class="fa-solid fa-arrow-right"></i> بازگشت
+            </a>
+        </div>
+
+        <form action="<?php echo e(route('pages.store')); ?>" method="POST" enctype="multipart/form-data">
+            <?php echo csrf_field(); ?>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="display: block; margin-bottom: 8px;">عنوان صفحه</label>
+                    <input type="text" name="title" value="<?php echo e(old('title')); ?>" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                    <?php $__errorArgs = ['title'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><small style="color: #ef4444;"><?php echo e($message); ?></small><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px;">شماره / اولویت</label>
+                    <input type="number" name="number" value="<?php echo e(old('number')); ?>" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                    <?php $__errorArgs = ['number'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><small style="color: #ef4444;"><?php echo e($message); ?></small><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 8px;">تصویر</label>
+                <input type="file" name="image" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                <?php $__errorArgs = ['image'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><small style="color: #ef4444;"><?php echo e($message); ?></small><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px;">متن</label>
+                <textarea name="text" rows="8" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;"><?php echo e(old('text')); ?></textarea>
+                <?php $__errorArgs = ['text'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><small style="color: #ef4444;"><?php echo e($message); ?></small><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;">
+                <i class="fa-solid fa-check"></i> ذخیره صفحه
+            </button>
+        </form>
+    </div>
+</div>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.panel', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH E:\Workspace\Behin Fartak\mana-site-new\resources\views/admin/pages/create.blade.php ENDPATH**/ ?>
+```
+
+### `storage/framework/views/204d68d39e1538d9315bb78cd1f8bad1.php`
+
+```php
+<?php $__env->startSection('content'); ?>
+<div style="padding: 20px;">
+    <div style="background: var(--card-bg); border-radius: 12px; padding: 20px;">
+        <h5 style="margin-bottom: 25px;">
+            <i class="fa-solid fa-gear"></i> تنظیمات سایت
+        </h5>
+
+        <?php if(session('success')): ?>
+            <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                <?php echo e(session('success')); ?>
+
+            </div>
+        <?php endif; ?>
+
+        <form action="<?php echo e(route('settings.update')); ?>" method="POST">
+            <?php echo csrf_field(); ?>
+            <?php echo method_field('PUT'); ?>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">نام سایت</label>
+                    <input type="text" name="site_name" value="<?php echo e(old('site_name', $settings['site_name'])); ?>" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">ایمیل تماس</label>
+                    <input type="email" name="contact_email" value="<?php echo e(old('contact_email', $settings['contact_email'])); ?>" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">تلفن تماس</label>
+                    <input type="text" name="contact_phone" value="<?php echo e(old('contact_phone', $settings['contact_phone'])); ?>" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">آدرس</label>
+                    <input type="text" name="address" value="<?php echo e(old('address', $settings['address'])); ?>" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                </div>
+
+                <div style="grid-column: span 2;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">توضیحات سایت</label>
+                    <textarea name="site_description" rows="3" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;"><?php echo e(old('site_description', $settings['site_description'])); ?></textarea>
+                </div>
+
+                <div style="grid-column: span 2;">
+                    <label style="display: block; margin-bottom: 8px; font-weight: 500;">کلمات کلیدی</label>
+                    <input type="text" name="site_keywords" value="<?php echo e(old('site_keywords', $settings['site_keywords'])); ?>" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                </div>
+            </div>
+
+            <h6 style="margin-bottom: 15px; color: var(--accent);">
+                <i class="fa-solid fa-link"></i> شبکه‌های اجتماعی
+            </h6>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 25px;">
+                <div>
+                    <label style="display: block; margin-bottom: 8px;">تلگرام</label>
+                    <input type="url" name="telegram" value="<?php echo e(old('telegram', $settings['telegram'])); ?>" placeholder="https://t.me/..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px;">اینستاگرام</label>
+                    <input type="url" name="instagram" value="<?php echo e(old('instagram', $settings['instagram'])); ?>" placeholder="https://instagram.com/..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px;">توییتر</label>
+                    <input type="url" name="twitter" value="<?php echo e(old('twitter', $settings['twitter'])); ?>" placeholder="https://twitter.com/..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="padding: 12px 25px; border-radius: 8px; border: none; cursor: pointer; font-size: 15px;">
+                <i class="fa-solid fa-save"></i> ذخیره تنظیمات
+            </button>
+        </form>
+    </div>
+</div>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.panel', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH E:\Workspace\Behin Fartak\mana-site-new\resources\views/admin/settings/index.blade.php ENDPATH**/ ?>
+```
+
 ### `storage/framework/views/2e1d8993812858c036f163c0b120c1c3.php`
 
 ```php
@@ -56743,11 +57061,207 @@ body{
 <?php /**PATH E:\Workspace\Behin Fartak\mana-site-new\vendor\laravel\framework\src\Illuminate\Pagination/resources/views/tailwind.blade.php ENDPATH**/ ?>
 ```
 
+### `storage/framework/views/8c6937ff54c0dfc27fa1e789c207da10.php`
+
+```php
+<?php $__env->startSection('content'); ?>
+<div style="padding: 20px;">
+    <div style="background: var(--card-bg); border-radius: 12px; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h5 style="margin: 0;">
+                <i class="fa-solid fa-users"></i> مدیریت کاربران
+            </h5>
+            <a href="<?php echo e(route('users.create')); ?>" class="btn btn-sm btn-primary" style="padding: 8px 16px; border-radius: 8px; text-decoration: none;">
+                <i class="fa-solid fa-plus"></i> افزودن کاربر جدید
+            </a>
+        </div>
+
+        <?php if(session('success')): ?>
+            <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                <?php echo e(session('success')); ?>
+
+            </div>
+        <?php endif; ?>
+
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <th style="padding: 12px; text-align: right;">#</th>
+                        <th style="padding: 12px; text-align: right;">نام</th>
+                        <th style="padding: 12px; text-align: right;">ایمیل</th>
+                        <th style="padding: 12px; text-align: right;">نقش</th>
+                        <th style="padding: 12px; text-align: right;">تاریخ عضویت</th>
+                        <th style="padding: 12px; text-align: right;">عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php $__empty_1 = true; $__currentLoopData = $users; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $user): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 12px;"><?php echo e($users->firstItem() + $index); ?></td>
+                            <td style="padding: 12px;"><?php echo e($user->name); ?></td>
+                            <td style="padding: 12px;"><?php echo e($user->email); ?></td>
+                            <td style="padding: 12px;">
+                                <?php if($user->role == 'admin'): ?>
+                                    <span style="background: #6366f1; color: white; padding: 2px 10px; border-radius: 10px; font-size: 12px;">ادمین</span>
+                                <?php elseif($user->role == 'teacher'): ?>
+                                    <span style="background: #10b981; color: white; padding: 2px 10px; border-radius: 10px; font-size: 12px;">استاد</span>
+                                <?php else: ?>
+                                    <span style="background: #f59e0b; color: white; padding: 2px 10px; border-radius: 10px; font-size: 12px;">دانشجو</span>
+                                <?php endif; ?>
+                            </td>
+                            <td style="padding: 12px;"><?php echo e($user->created_at ? $user->created_at->format('Y/m/d') : '-'); ?></td>
+                            <td style="padding: 12px;">
+                                <a href="<?php echo e(route('users.edit', $user->id)); ?>" class="btn btn-sm btn-warning" style="margin-left: 5px; display: inline-block; padding: 6px 10px; border-radius: 6px; text-decoration: none;">
+                                    <i class="fa-solid fa-edit"></i>
+                                </a>
+                                <form action="<?php echo e(route('users.destroy', $user->id)); ?>" method="POST" style="display: inline-block;" onsubmit="return confirm('آیا از حذف این کاربر اطمینان دارید؟');">
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('DELETE'); ?>
+                                    <button type="submit" class="btn btn-sm btn-danger" style="padding: 6px 10px; border-radius: 6px; border: none; cursor: pointer;">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-light);">
+                                <i class="fa-solid fa-inbox"></i> هیچ کاربری یافت نشد
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <?php echo e($users->links()); ?>
+
+        </div>
+    </div>
+</div>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.panel', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH E:\Workspace\Behin Fartak\mana-site-new\resources\views/admin/users/index.blade.php ENDPATH**/ ?>
+```
+
+### `storage/framework/views/a3d2fc25f33e160d74111d33e4c48d2b.php`
+
+```php
+<?php $__env->startSection('content'); ?>
+<div style="padding: 20px;">
+    <div style="background: var(--card-bg); border-radius: 12px; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h5 style="margin: 0;">
+                <i class="fa-solid fa-plus-circle"></i> افزودن محصول جدید
+            </h5>
+            <a href="<?php echo e(route('sales.index')); ?>" style="color: var(--text-light); text-decoration: none;">
+                <i class="fa-solid fa-arrow-right"></i> بازگشت
+            </a>
+        </div>
+
+        <form action="<?php echo e(route('sales.store')); ?>" method="POST" enctype="multipart/form-data">
+            <?php echo csrf_field(); ?>
+
+            <div style="display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                <div>
+                    <label style="display: block; margin-bottom: 8px;">عنوان محصول</label>
+                    <input type="text" name="title" value="<?php echo e(old('title')); ?>" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                    <?php $__errorArgs = ['title'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><small style="color: #ef4444;"><?php echo e($message); ?></small><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px;">قیمت (تومان)</label>
+                    <input type="number" name="price" value="<?php echo e(old('price')); ?>" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                    <?php $__errorArgs = ['price'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><small style="color: #ef4444;"><?php echo e($message); ?></small><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                </div>
+
+                <div>
+                    <label style="display: block; margin-bottom: 8px;">شماره / اولویت</label>
+                    <input type="number" name="number" value="<?php echo e(old('number')); ?>" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                    <?php $__errorArgs = ['number'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><small style="color: #ef4444;"><?php echo e($message); ?></small><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label style="display: block; margin-bottom: 8px;">تصویر محصول</label>
+                <input type="file" name="image" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                <?php $__errorArgs = ['image'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><small style="color: #ef4444;"><?php echo e($message); ?></small><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 8px;">توضیحات</label>
+                <textarea name="text" rows="8" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;"><?php echo e(old('text')); ?></textarea>
+                <?php $__errorArgs = ['text'];
+$__bag = $errors->getBag($__errorArgs[1] ?? 'default');
+if ($__bag->has($__errorArgs[0])) :
+if (isset($message)) { $__messageOriginal = $message; }
+$message = $__bag->first($__errorArgs[0]); ?><small style="color: #ef4444;"><?php echo e($message); ?></small><?php unset($message);
+if (isset($__messageOriginal)) { $message = $__messageOriginal; }
+endif;
+unset($__errorArgs, $__bag); ?>
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="padding: 10px 20px; border-radius: 8px; border: none; cursor: pointer;">
+                <i class="fa-solid fa-check"></i> ذخیره محصول
+            </button>
+        </form>
+    </div>
+</div>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.panel', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH E:\Workspace\Behin Fartak\mana-site-new\resources\views/admin/sales/create.blade.php ENDPATH**/ ?>
+```
+
 ### `storage/framework/views/b51f870b73087b84ec487ad6f24d9f16.php`
 
 ```php
 <?php $__env->startSection('content'); ?>
 <div style="padding: 20px;">
+    
+    <?php if(session('success')): ?>
+        <div style="background: #10b981; color: #fff; padding: 12px 15px; border-radius: 8px; margin-bottom: 20px;">
+            <i class="fa-solid fa-circle-check"></i> <?php echo e(session('success')); ?>
+
+        </div>
+    <?php endif; ?>
+
+    <?php if(session('error')): ?>
+        <div style="background: #ef4444; color: #fff; padding: 12px 15px; border-radius: 8px; margin-bottom: 20px;">
+            <i class="fa-solid fa-circle-exclamation"></i> <?php echo e(session('error')); ?>
+
+        </div>
+    <?php endif; ?>
+
     <div style="background: var(--card-bg); border-radius: 12px; padding: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h5 style="margin: 0;">
@@ -56845,8 +57359,29 @@ unset($__errorArgs, $__bag); ?>
     </div>
 </div>
 <?php $__env->stopSection(); ?>
-
 <?php echo $__env->make('admin.panel', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH E:\Workspace\Behin Fartak\mana-site-new\resources\views/admin/blogs/create.blade.php ENDPATH**/ ?>
+```
+
+### `storage/framework/views/d5e706a10da90fc66c20ae6b11b08a79.php`
+
+```php
+<?php $__env->startSection('content'); ?>
+<div style="padding:20px;"><div style="background:var(--card-bg);border-radius:12px;padding:20px;">
+<h5 style="margin-bottom:20px;"><i class="fa-solid fa-plus-circle"></i> افزودن پروژه</h5>
+<form action="<?php echo e(route('projects.store')); ?>" method="POST" enctype="multipart/form-data">
+<?php echo csrf_field(); ?>
+<div style="margin-bottom:15px;"><label>عنوان</label><input type="text" name="title" required style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;"></div>
+<div style="margin-bottom:15px;"><label>توضیح کوتاه</label><textarea name="brief" rows="2" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;"></textarea></div>
+<div style="margin-bottom:15px;"><label>توضیحات کامل</label><textarea name="desc" rows="4" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;"></textarea></div>
+<div style="margin-bottom:15px;"><label>تصویر</label><input type="file" name="image" style="width:100%;padding:10px;"></div>
+<div style="margin-bottom:15px;"><label>دسته‌بندی (cat-id)</label><input type="number" name="cat-id" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;"></div>
+<button type="submit" class="btn btn-primary">ذخیره</button>
+<a href="<?php echo e(route('projects.index')); ?>" class="btn btn-secondary">بازگشت</a>
+</form>
+</div></div>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.panel', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH E:\Workspace\Behin Fartak\mana-site-new\resources\views/admin/projects/create.blade.php ENDPATH**/ ?>
 ```
 
 ### `storage/framework/views/dbe70fa0935c77778d195cee2f15944d.php`
@@ -56938,6 +57473,82 @@ unset($__errorArgs, $__bag); ?>
 <?php $__env->startSection('message', __('Not Found')); ?>
 
 <?php echo $__env->make('errors::minimal', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH E:\Workspace\Behin Fartak\mana-site-new\vendor\laravel\framework\src\Illuminate\Foundation\Exceptions/views/404.blade.php ENDPATH**/ ?>
+```
+
+### `storage/framework/views/e567217f7928a09b8d761e9a92fca994.php`
+
+```php
+<?php $__env->startSection('content'); ?>
+<div style="padding: 20px;">
+    <h5 style="margin-bottom: 20px;">
+        <i class="fa-solid fa-chart-line"></i> آمار کاربران
+    </h5>
+
+    <!-- کارت‌های آمار -->
+    <div class="stats-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px;">
+        <div class="stat-card" style="background: var(--card-bg); border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+            <div class="stat-icon blue" style="width: 45px; height: 45px; background: rgba(99,102,241,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                <i class="fa-solid fa-users" style="color: #6366f1; font-size: 20px;"></i>
+            </div>
+            <h3 style="font-size: 28px; margin: 5px 0;"><?php echo e(number_format($totalUsers)); ?></h3>
+            <span style="color: var(--text-light); font-size: 14px;">کل کاربران</span>
+        </div>
+
+        <div class="stat-card" style="background: var(--card-bg); border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+            <div class="stat-icon green" style="width: 45px; height: 45px; background: rgba(16,185,129,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                <i class="fa-solid fa-user-plus" style="color: #10b981; font-size: 20px;"></i>
+            </div>
+            <h3 style="font-size: 28px; margin: 5px 0;"><?php echo e(number_format($newUsersToday)); ?></h3>
+            <span style="color: var(--text-light); font-size: 14px;">کاربران جدید امروز</span>
+        </div>
+
+        <div class="stat-card" style="background: var(--card-bg); border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+            <div class="stat-icon yellow" style="width: 45px; height: 45px; background: rgba(245,158,11,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                <i class="fa-solid fa-calendar-week" style="color: #f59e0b; font-size: 20px;"></i>
+            </div>
+            <h3 style="font-size: 28px; margin: 5px 0;"><?php echo e(number_format($newUsersThisWeek)); ?></h3>
+            <span style="color: var(--text-light); font-size: 14px;">کاربران جدید این هفته</span>
+        </div>
+
+        <div class="stat-card" style="background: var(--card-bg); border-radius: 12px; padding: 20px; position: relative; overflow: hidden;">
+            <div class="stat-icon purple" style="width: 45px; height: 45px; background: rgba(139,92,246,0.1); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px;">
+                <i class="fa-solid fa-calendar-check" style="color: #8b5cf6; font-size: 20px;"></i>
+            </div>
+            <h3 style="font-size: 28px; margin: 5px 0;"><?php echo e(number_format($newUsersThisMonth)); ?></h3>
+            <span style="color: var(--text-light); font-size: 14px;">کاربران جدید این ماه</span>
+        </div>
+    </div>
+
+    <!-- کارت‌های نقش‌ها -->
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+        <div style="background: var(--card-bg); border-radius: 12px; padding: 25px; text-align: center;">
+            <div style="width: 60px; height: 60px; background: rgba(99,102,241,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                <i class="fa-solid fa-crown" style="color: #6366f1; font-size: 24px;"></i>
+            </div>
+            <h4 style="font-size: 24px; margin: 5px 0;"><?php echo e(number_format($admins)); ?></h4>
+            <span style="color: var(--text-light);">ادمین‌ها</span>
+        </div>
+
+        <div style="background: var(--card-bg); border-radius: 12px; padding: 25px; text-align: center;">
+            <div style="width: 60px; height: 60px; background: rgba(16,185,129,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                <i class="fa-solid fa-chalkboard-teacher" style="color: #10b981; font-size: 24px;"></i>
+            </div>
+            <h4 style="font-size: 24px; margin: 5px 0;"><?php echo e(number_format($teachers)); ?></h4>
+            <span style="color: var(--text-light);">اساتید</span>
+        </div>
+
+        <div style="background: var(--card-bg); border-radius: 12px; padding: 25px; text-align: center;">
+            <div style="width: 60px; height: 60px; background: rgba(245,158,11,0.1); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px;">
+                <i class="fa-solid fa-user-graduate" style="color: #f59e0b; font-size: 24px;"></i>
+            </div>
+            <h4 style="font-size: 24px; margin: 5px 0;"><?php echo e(number_format($students)); ?></h4>
+            <span style="color: var(--text-light);">دانشجویان</span>
+        </div>
+    </div>
+</div>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.panel', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH E:\Workspace\Behin Fartak\mana-site-new\resources\views/admin/users-stats/index.blade.php ENDPATH**/ ?>
 ```
 
 ### `storage/framework/views/ee7bd4cff02838c0104d444bf2cebdc6.php`
@@ -57094,6 +57705,14 @@ unset($__errorArgs, $__bag); ?>
             </a>
         </div>
 
+
+                <!-- مدیریت پروژه‌ها -->
+        <a href="<?php echo e(url('/admin/projects')); ?>" class="nav-item">
+            <i class="fa-solid fa-diagram-project"></i>
+            پروژه‌ها
+        </a>
+
+
         <!-- کاربران -->
         <a href="<?php echo e(url('/admin/users')); ?>" class="nav-item">
             <i class="fa-solid fa-users"></i>
@@ -57161,6 +57780,94 @@ unset($__errorArgs, $__bag); ?>
 </body>
 </html>
 <?php /**PATH E:\Workspace\Behin Fartak\mana-site-new\resources\views/admin/panel.blade.php ENDPATH**/ ?>
+```
+
+### `storage/framework/views/fa17ef26a2f8b784f7479c90ec83cae9.php`
+
+```php
+<?php $__env->startSection('content'); ?>
+<div style="padding: 20px;">
+    <div style="background: var(--card-bg); border-radius: 12px; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h5 style="margin: 0;">
+                <i class="fa-solid fa-headset"></i> تیکت‌های پشتیبانی
+                <?php if($openCount > 0): ?>
+                    <span style="background: #ef4444; color: white; padding: 2px 10px; border-radius: 10px; font-size: 13px; margin-right: 8px;"><?php echo e(persianNum($openCount)); ?></span>
+                <?php endif; ?>
+            </h5>
+        </div>
+
+        <?php if(session('success')): ?>
+            <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                <?php echo e(session('success')); ?>
+
+            </div>
+        <?php endif; ?>
+
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse;">
+                <thead>
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <th style="padding: 12px; text-align: right;">#</th>
+                        <th style="padding: 12px; text-align: right;">کاربر</th>
+                        <th style="padding: 12px; text-align: right;">موضوع</th>
+                        <th style="padding: 12px; text-align: right;">وضعیت</th>
+                        <th style="padding: 12px; text-align: right;">تاریخ</th>
+                        <th style="padding: 12px; text-align: right;">عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php $__empty_1 = true; $__currentLoopData = $tickets; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $ticket): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); $__empty_1 = false; ?>
+                        <tr style="border-bottom: 1px solid var(--border);">
+                            <td style="padding: 12px;"><?php echo e(persianNum($tickets->firstItem() + $index)); ?></td>
+                            <td style="padding: 12px;"><?php echo e($ticket->user_name); ?></td>
+                            <td style="padding: 12px;"><?php echo e(Str::limit($ticket->subject, 40)); ?></td>
+                            <td style="padding: 12px;">
+                                <?php if($ticket->status == 'open'): ?>
+                                    <span style="background: #10b981; color: white; padding: 3px 10px; border-radius: 10px; font-size: 12px;">باز</span>
+                                <?php else: ?>
+                                    <span style="background: #6b7280; color: white; padding: 3px 10px; border-radius: 10px; font-size: 12px;">بسته</span>
+                                <?php endif; ?>
+                            </td>
+                            <td style="padding: 12px;"><?php echo e($ticket->created_at->format('Y/m/d H:i')); ?></td>
+                            <td style="padding: 12px;">
+                                <a href="<?php echo e(route('support.show', $ticket->id)); ?>" class="btn btn-sm btn-info" style="margin-left: 3px; display: inline-block; padding: 6px 10px; border-radius: 6px; text-decoration: none;">
+                                    <i class="fa-solid fa-eye"></i>
+                                </a>
+                                <?php if($ticket->status == 'open'): ?>
+                                    <a href="<?php echo e(route('support.close', $ticket->id)); ?>" class="btn btn-sm btn-warning" style="margin-left: 3px; display: inline-block; padding: 6px 10px; border-radius: 6px; text-decoration: none;" onclick="return confirm('بستن این تیکت؟');">
+                                        <i class="fa-solid fa-lock"></i>
+                                    </a>
+                                <?php endif; ?>
+                                <form action="<?php echo e(route('support.destroy', $ticket->id)); ?>" method="POST" style="display: inline-block;" onsubmit="return confirm('آیا از حذف این تیکت اطمینان دارید؟');">
+                                    <?php echo csrf_field(); ?>
+                                    <?php echo method_field('DELETE'); ?>
+                                    <button type="submit" class="btn btn-sm btn-danger" style="padding: 6px 10px; border-radius: 6px; border: none; cursor: pointer;">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); if ($__empty_1): ?>
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-light);">
+                                <i class="fa-solid fa-inbox"></i> هیچ تیکتی یافت نشد
+                            </td>
+                        </tr>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <?php echo e($tickets->links()); ?>
+
+        </div>
+    </div>
+</div>
+<?php $__env->stopSection(); ?>
+
+<?php echo $__env->make('admin.panel', \Illuminate\Support\Arr::except(get_defined_vars(), ['__data', '__path']))->render(); ?><?php /**PATH E:\Workspace\Behin Fartak\mana-site-new\resources\views/admin/support/index.blade.php ENDPATH**/ ?>
 ```
 
 ### `app/Http/Controllers/Admin/CommentController.php`
@@ -57751,6 +58458,19 @@ class AuthController extends Controller
 
 @section('content')
 <div style="padding: 20px;">
+    {{-- Alerts Section --}}
+    @if (session('success'))
+        <div style="background: #10b981; color: #fff; padding: 12px 15px; border-radius: 8px; margin-bottom: 20px;">
+            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div style="background: #ef4444; color: #fff; padding: 12px 15px; border-radius: 8px; margin-bottom: 20px;">
+            <i class="fa-solid fa-circle-exclamation"></i> {{ session('error') }}
+        </div>
+    @endif
+
     <div style="background: var(--card-bg); border-radius: 12px; padding: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h5 style="margin: 0;">
@@ -57822,6 +58542,30 @@ class AuthController extends Controller
 
 @section('content')
 <div style="padding: 20px;">
+
+    {{-- آلرت‌های موفقیت، خطا و اعتبارسنجی --}}
+    @if (session('success'))
+        <div style="background: #10b981; color: #fff; padding: 12px 15px; border-radius: 8px; margin-bottom: 20px;">
+            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
+        </div>
+    @endif
+
+    @if (session('error'))
+        <div style="background: #ef4444; color: #fff; padding: 12px 15px; border-radius: 8px; margin-bottom: 20px;">
+            <i class="fa-solid fa-circle-exclamation"></i> {{ session('error') }}
+        </div>
+    @endif
+
+    @if ($errors->any())
+        <div style="background: #ef4444; color: #fff; padding: 12px 15px; border-radius: 8px; margin-bottom: 20px;">
+            <ul style="margin: 0; padding-right: 20px;">
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div style="background: var(--card-bg); border-radius: 12px; padding: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
             <h5 style="margin: 0;">
@@ -57865,12 +58609,17 @@ class AuthController extends Controller
             <div style="margin-bottom: 15px;">
                 <label style="display: block; margin-bottom: 8px;">تصویر شاخص جدید (اختیاری)</label>
                 <input type="file" name="image" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
-                @if($blog->image_url)
-                    <div style="margin-top: 10px;">
+                
+                {{-- بخش پیش‌نمایش تصویر --}}
+                <div style="margin-top: 10px;">
+                    @if($blog->image_url)
                         <small style="color: var(--text-light); display: block; margin-bottom: 5px;">تصویر فعلی:</small>
-                        <img src="{{ asset('storage/' . $blog->image_url) }}" alt="{{ $blog->title }}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px;">
-                    </div>
-                @endif
+                        <img src="{{ asset('storage/' . $blog->image_url) }}" alt="{{ $blog->title }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);">
+                    @else
+                        <small style="color: var(--text-light); display: block;">تصویری برای این مقاله ثبت نشده است.</small>
+                    @endif
+                </div>
+
                 @error('image')
                     <small style="color: #ef4444; display: block; margin-top: 4px;">{{ $message }}</small>
                 @enderror
@@ -58250,6 +58999,95 @@ class AuthController extends Controller
         <div style="margin-top: 20px;">
             {{ $services->links() }}
         </div>
+    </div>
+</div>
+@endsection
+```
+
+### `resources/views/admin/projects/create.blade.php`
+
+```php
+@extends('admin.panel')
+@section('content')
+<div style="padding:20px;"><div style="background:var(--card-bg);border-radius:12px;padding:20px;">
+<h5 style="margin-bottom:20px;"><i class="fa-solid fa-plus-circle"></i> افزودن پروژه</h5>
+<form action="{{ route('projects.store') }}" method="POST" enctype="multipart/form-data">
+@csrf
+<div style="margin-bottom:15px;"><label>عنوان</label><input type="text" name="title" required style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;"></div>
+<div style="margin-bottom:15px;"><label>توضیح کوتاه</label><textarea name="brief" rows="2" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;"></textarea></div>
+<div style="margin-bottom:15px;"><label>توضیحات کامل</label><textarea name="desc" rows="4" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;"></textarea></div>
+<div style="margin-bottom:15px;"><label>تصویر</label><input type="file" name="image" style="width:100%;padding:10px;"></div>
+<div style="margin-bottom:15px;"><label>دسته‌بندی (cat-id)</label><input type="number" name="cat-id" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;"></div>
+<button type="submit" class="btn btn-primary">ذخیره</button>
+<a href="{{ route('projects.index') }}" class="btn btn-secondary">بازگشت</a>
+</form>
+</div></div>
+@endsection
+```
+
+### `resources/views/admin/projects/edit.blade.php`
+
+```php
+@extends('admin.panel')
+@section('content')
+<div style="padding:20px;"><div style="background:var(--card-bg);border-radius:12px;padding:20px;">
+<h5 style="margin-bottom:20px;"><i class="fa-solid fa-pen-to-square"></i> ویرایش پروژه</h5>
+<form action="{{ route('projects.update', $project->id) }}" method="POST" enctype="multipart/form-data">
+@csrf @method('PUT')
+<div style="margin-bottom:15px;"><label>عنوان</label><input type="text" name="title" value="{{ $project->title }}" required style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;"></div>
+<div style="margin-bottom:15px;"><label>توضیح کوتاه</label><textarea name="brief" rows="2" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;">{{ $project->brief }}</textarea></div>
+<div style="margin-bottom:15px;"><label>توضیحات کامل</label><textarea name="desc" rows="4" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;">{{ $project->desc }}</textarea></div>
+<div style="margin-bottom:15px;"><label>تصویر جدید</label><input type="file" name="image" style="width:100%;padding:10px;">@if($project->image_url)<img src="{{ asset('storage/'.$project->image_url) }}" style="width:70px;margin-top:10px;border-radius:8px;">@endif</div>
+<button type="submit" class="btn btn-primary">بروزرسانی</button>
+<a href="{{ route('projects.index') }}" class="btn btn-secondary">بازگشت</a>
+</form>
+</div></div>
+@endsection
+```
+
+### `resources/views/admin/projects/index.blade.php`
+
+```php
+@extends('admin.panel')
+
+@section('content')
+<div style="padding: 20px;">
+    <div style="background: var(--card-bg); border-radius: 12px; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h5 style="margin: 0;"><i class="fa-solid fa-diagram-project"></i> مدیریت پروژه‌ها</h5>
+            <a href="{{ route('projects.create') }}" class="btn btn-sm btn-primary" style="padding: 8px 16px; border-radius: 8px; text-decoration: none;">
+                <i class="fa-solid fa-plus"></i> افزودن پروژه
+            </a>
+        </div>
+        @if(session('success'))
+            <div style="background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; padding: 12px; border-radius: 8px; margin-bottom: 20px;">{{ session('success') }}</div>
+        @endif
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead><tr style="border-bottom: 1px solid var(--border);">
+                <th style="padding: 12px;">#</th><th style="padding: 12px;">تصویر</th><th style="padding: 12px;">عنوان</th><th style="padding: 12px;">توضیح</th><th style="padding: 12px;">شماره</th><th style="padding: 12px;">عملیات</th>
+            </tr></thead>
+            <tbody>
+                @forelse($projects as $i => $project)
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 12px;">{{ $projects->firstItem() + $i }}</td>
+                        <td style="padding: 12px;">@if($project->image_url)<img src="{{ asset('storage/'.$project->image_url) }}" style="width:45px;height:45px;object-fit:cover;border-radius:6px;">@else --- @endif</td>
+                        <td style="padding: 12px;">{{ $project->title }}</td>
+                        <td style="padding: 12px;">{{ Str::limit($project->brief, 40) }}</td>
+                        <td style="padding: 12px;">{{ $project->number ?? '-' }}</td>
+                        <td style="padding: 12px;">
+                            <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-sm btn-warning" style="margin-left:3px;padding:6px 10px;border-radius:6px;text-decoration:none;"><i class="fa-solid fa-edit"></i></a>
+                            <form action="{{ route('projects.destroy', $project->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('حذف شود؟')">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" style="padding:6px 10px;border-radius:6px;border:none;"><i class="fa-solid fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr><td colspan="6" style="text-align:center;padding:40px;">پروژه‌ای یافت نشد</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+        <div style="margin-top:20px;">{{ $projects->links() }}</div>
     </div>
 </div>
 @endsection

@@ -81,6 +81,18 @@
             <span class="badge-dot"></span>
         </a>
 
+        <a href="{{ url('/admin/team') }}" class="nav-item">
+            <i class="fa-solid fa-users"></i>
+            تیم
+            <span class="badge-dot"></span>
+        </a>
+
+        <a href="{{ url('/admin/socials') }}" class="nav-item">
+            <i class="fa-solid fa-users"></i>
+            شبکه‌های اجتماعی
+            <span class="badge-dot"></span>
+        </a>
+
         <!-- تنظیمات -->
         <a href="{{ url('/admin/settings') }}" class="nav-item">
             <i class="fa-solid fa-gear"></i>

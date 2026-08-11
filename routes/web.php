@@ -143,11 +143,14 @@ Route::prefix('/admin')->group(function () {
         Route::delete('/{id}', [BlogsController::class, 'destroy'])->name('destroy');
     });
 
-    Route::prefix('/teams')->group(function () {
-        Route::post('/create-team', [TeamController::class, 'create'])->name('create_team');
-        Route::put('/edit-team/{id}', [TeamController::class, 'edit'])->name('edit_team');
-        Route::get('/delete-team/{id}', [TeamController::class, 'delete'])->name('delete_team');
-    });
+    Route::prefix('/team')->group(function () {
+    Route::get('/', [TeamController::class, 'index'])->name('team.index');
+    Route::get('/create-team', [TeamController::class, 'create'])->name('create_team_form');
+    Route::post('/create-team', [TeamController::class, 'store'])->name('create_team');
+    Route::get('/edit-team/{id}', [TeamController::class, 'edit'])->name('edit_team_form');
+    Route::put('/edit-team/{id}', [TeamController::class, 'update'])->name('update_team');
+    Route::delete('/delete-team/{id}', [TeamController::class, 'destroy'])->name('destroy_team');
+});
 
     Route::prefix('/images')->group(function () {
         Route::post('/store-image', [ImageController::class, 'store_image'])->name('store_image');
