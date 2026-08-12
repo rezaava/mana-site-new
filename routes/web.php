@@ -158,9 +158,12 @@ Route::prefix('/admin')->group(function () {
         Route::get('/delete-image/{id}', [ImageController::class, 'delete_image'])->name('delete_image');
     });
 
-    Route::prefix('/socials')->group(function () {
-        Route::post('/create-social', [SocialsController::class, 'create'])->name('create_social');
-        Route::put('/edit-social/{id}', [SocialsController::class, 'edit'])->name('edit_social');
-        Route::get('/delete-social/{id}', [SocialsController::class, 'delete'])->name('delete_social');
+    Route::prefix('socials')->group(function () {
+        Route::get('/', [SocialsController::class, 'index'])->name('socials.index');
+        Route::get('/create', [SocialsController::class, 'create'])->name('socials.create');
+        Route::post('/', [SocialsController::class, 'store'])->name('socials.store');
+        Route::get('/{id}/edit', [SocialsController::class, 'edit'])->name('socials.edit');
+        Route::put('/{id}', [SocialsController::class, 'update'])->name('socials.update');
+        Route::delete('/{id}', [SocialsController::class, 'destroy'])->name('socials.destroy');
     });
 });

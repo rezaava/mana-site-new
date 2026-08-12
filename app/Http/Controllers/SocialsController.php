@@ -2,74 +2,78 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Socials;
 use Illuminate\Http\Request;
-use App\Models\Socials; // اگر نام مدل در پروژه شما Socialss است، این را اصلاح کنید
 use Illuminate\Support\Facades\Storage;
 
 class SocialsController extends Controller
 {
-    public function create(Request $request)
+    public function index()
+    {   
+        $socials = Socials::latest()->paginate(10);
+        return view('admin.socials.socials', compact('socials'));
+    }
+
+    public function create()
     {
-        $validated_data = $request->validate([
+        return view('admin.socials.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
             'name'      => 'required|string|max:100',
             'url'       => 'required|url',
-            'image_url' => 'required|file|image|max:2048',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         if ($request->hasFile('image_url')) {
-            $path = $request->file('image_url')->store('images', 'public');
-            $validated_data['image_url'] = $path;
+            $validated['image_url'] = $request->file('image_url')->store('socials', 'public');
         }
 
-        Socials::create($validated_data);
+        Socials::create($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Socials link created successfully'
-        ], 201);
+        return redirect()->route('socials.index')->with('success', 'شبکه اجتماعی با موفقیت اضافه شد.');
     }
 
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
-        $socials = Socials::findOrFail($id);
+        $social = Socials::findOrFail($id);
+        return view('admin.socials.edit', compact('social'));
+    }
 
-        $validated_data = $request->validate([
-            'name'      => 'sometimes|string|max:100',
-            'url'       => 'sometimes|url',
-            'image_url' => 'sometimes|file|image|max:2048',
+    public function update(Request $request, $id)
+    {
+        $social = Socials::findOrFail($id);
+
+        $validated = $request->validate([
+            'name'      => 'required|string|max:100',
+            'url'       => 'required|url',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         if ($request->hasFile('image_url')) {
-            // حذف عکس قدیمی در صورت وجود
-            if ($socials->image_url && Storage::disk('public')->exists($socials->image_url)) {
-                Storage::disk('public')->delete($socials->image_url);
+            if ($social->image_url && Storage::disk('public')->exists($social->image_url)) {
+                Storage::disk('public')->delete($social->image_url);
             }
-
-            $validated_data['image_url'] = $request->file('image_url')->store('images', 'public');
+            $validated['image_url'] = $request->file('image_url')->store('socials', 'public');
         }
 
-        $socials->update($validated_data);
+        $social->update($validated);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Socials link updated successfully'
-        ], 200);
+        return redirect()->route('socials.index')->with('success', 'شبکه اجتماعی با موفقیت بروزرسانی شد.');
     }
 
-    public function delete($id)
+    public function destroy($id)
     {
-        $socials = Socials::findOrFail($id);
+        $social = Socials::findOrFail($id);
 
-        // پاک کردن فایل تصویر از دیسک
-        if ($socials->image_url && Storage::disk('public')->exists($socials->image_url)) {
-            Storage::disk('public')->delete($socials->image_url);
+        if ($social->image_url && Storage::disk('public')->exists($social->image_url)) {
+            Storage::disk('public')->delete($social->image_url);
         }
 
-        $socials->delete();
+        $social->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Socials link deleted successfully'
-        ], 200);
+        return redirect()->route('socials.index')->with('success', 'شبکه اجتماعی با موفقیت حذف شد.');
     }
 }
