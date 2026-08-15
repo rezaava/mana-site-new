@@ -67,6 +67,12 @@
         </div>
 
 
+        <a href="{{ url('/admin/categories') }}" class="nav-item">
+            <i class="fa-solid fa-tags"></i>
+             دسته‌بندی‌ها
+        </a>
+
+        
                 <!-- مدیریت پروژه‌ها -->
         <a href="{{ url('/admin/projects') }}" class="nav-item">
             <i class="fa-solid fa-diagram-project"></i>

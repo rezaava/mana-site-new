@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\UserStatsController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TicketController;
+use App\Http\Controllers\Admin\CategoryController;
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/register', [AuthController::class, 'register'])->name('register');
@@ -98,6 +99,14 @@ Route::prefix('/admin')->group(function () {
     Route::get('/support/{id}', [TicketController::class, 'show'])->name('support.show');
     Route::get('/support/{id}/close', [TicketController::class, 'close'])->name('support.close');
     Route::delete('/support/{id}', [TicketController::class, 'destroy'])->name('support.destroy');
+
+    // دسته‌بندی‌ها
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
     // Projects
     Route::prefix('/projects')->group(function () {

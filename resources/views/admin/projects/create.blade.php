@@ -8,7 +8,15 @@
 <div style="margin-bottom:15px;"><label>توضیح کوتاه</label><textarea name="brief" rows="2" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;"></textarea></div>
 <div style="margin-bottom:15px;"><label>توضیحات کامل</label><textarea name="desc" rows="4" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;"></textarea></div>
 <div style="margin-bottom:15px;"><label>تصویر</label><input type="file" name="image" style="width:100%;padding:10px;"></div>
-<div style="margin-bottom:15px;"><label>دسته‌بندی (cat-id)</label><input type="number" name="cat-id" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;"></div>
+<div style="margin-bottom: 15px;">
+    <label style="display: block; margin-bottom: 8px;">دسته‌بندی</label>
+    <select name="cat-id" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+        <option value="">انتخاب کنید</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}">{{ $category->name ?? $category->title }}</option>
+        @endforeach
+    </select>
+</div>
 <button type="submit" class="btn btn-primary">ذخیره</button>
 <a href="{{ route('projects.index') }}" class="btn btn-secondary">بازگشت</a>
 </form>
