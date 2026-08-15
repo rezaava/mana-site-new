@@ -22,25 +22,25 @@ class TeamController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name'      => 'required|string|max:100',
-            'title'     => 'required|string|max:100',
-            'number'    => 'required|integer',
-            'image_url' => 'required|image|mimes:jpeg,png,jpg,webp|max:2048',
+        $validated = $request->validate([
+            'name'      => 'required|string|max:255',
+            'title'     => 'nullable|string|max:255',
+            'image'     => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'instagram' => 'nullable|url',
+            'twitter'   => 'nullable|url',
+            'github'    => 'nullable|url',
+            'telegram'  => 'nullable|url',
+            'whatsapp'  => 'nullable|url',
+            'linkedin'  => 'nullable|url',
         ]);
 
-        $member = new Team();
-        $member->name = $request->name;
-        $member->title = $request->title;
-        $member->number = $request->number;
-
-        if ($request->hasFile('image_url')) {
-            $member->image_url = $request->file('image_url')->store('team', 'public');
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = $request->file('image')->store('team', 'public');
         }
 
-        $member->save();
+        Team::create($validated);
 
-        return redirect()->route('team.index')->with('success', 'عضو جدید با موفقیت اضافه شد.');
+        return redirect()->route('team.index')->with('success', 'عضو تیم اضافه شد.');
     }
 
     public function edit($id)
@@ -52,28 +52,30 @@ class TeamController extends Controller
 
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name'      => 'required|string|max:100',
-            'title'     => 'required|string|max:100',
-            'number'    => 'required|integer',
-            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        $team = Team::findOrFail($id);
+
+        $validated = $request->validate([
+            'name'      => 'required|string|max:255',
+            'title'     => 'nullable|string|max:255',
+            'image'     => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'instagram' => 'nullable|url',
+            'twitter'   => 'nullable|url',
+            'github'    => 'nullable|url',
+            'telegram'  => 'nullable|url',
+            'whatsapp'  => 'nullable|url',
+            'linkedin'  => 'nullable|url',
         ]);
 
-        $member = Team::findOrFail($id);
-        $member->name = $request->name;
-        $member->title = $request->title;
-        $member->number = $request->number;
-
-        if ($request->hasFile('image_url')) {
-            if ($member->image_url) {
-                Storage::disk('public')->delete($member->image_url);
+        if ($request->hasFile('image')) {
+            if ($team->image_url && Storage::disk('public')->exists($team->image_url)) {
+                Storage::disk('public')->delete($team->image_url);
             }
-            $member->image_url = $request->file('image_url')->store('team', 'public');
+            $validated['image_url'] = $request->file('image')->store('team', 'public');
         }
 
-        $member->save();
+        $team->update($validated);
 
-        return redirect()->route('team.index')->with('success', 'اطلاعات عضو با موفقیت آپدیت شد.');
+        return redirect()->route('team.index')->with('success', 'عضو تیم بروزرسانی شد.');
     }
 
     public function destroy($id)
