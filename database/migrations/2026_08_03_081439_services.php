@@ -13,12 +13,14 @@ return new class extends Migration
             $table->string('title', 100);
             $table->text('text')->nullable();
             $table->string('image_url')->nullable();
+            $table->string('icon')->nullable();
+            $table->integer('number')->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void
-{
-    Schema::dropIfExists('services');
-}
+    {
+        Schema::dropIfExists('services');
+    }
 };

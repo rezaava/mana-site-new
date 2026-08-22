@@ -60,7 +60,7 @@
         </button>
         <div class="sub-menu open" id="contentSub">
             <a href="{{ url('/admin/blogs') }}" class="nav-item">مقالات</a>
-            <a href="{{ url('/admin/pages') }}" class="nav-item">صفحات</a>
+            <a href="{{ url('/admin/pages') }}" class="nav-item">خدمات</a>
             <a href="{{ url('/admin/comments') }}" class="nav-item">نظرات
                 <span class="badge-num">{{ persianNum(\App\Models\Comments::where('is_approved', true)->count()) }}</span>
             </a>
@@ -72,7 +72,7 @@
              دسته‌بندی‌ها
         </a>
 
-        
+
                 <!-- مدیریت پروژه‌ها -->
         <a href="{{ url('/admin/projects') }}" class="nav-item">
             <i class="fa-solid fa-diagram-project"></i>

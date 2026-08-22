@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TicketController;
 use App\Http\Controllers\Admin\CategoryController;
 
+Route::get('/', [TestController::class, 'index'])->name('home');
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/register', [AuthController::class, 'register'])->name('register');
 
