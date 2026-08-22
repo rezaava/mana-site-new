@@ -66,6 +66,10 @@
             </a>
         </div>
 
+        <a href="{{ url('/admin/site-texts') }}" class="nav-item">
+            <i class="fa-solid fa-text-height"></i>
+            متن‌های سایت
+        </a>
 
         <a href="{{ url('/admin/categories') }}" class="nav-item">
             <i class="fa-solid fa-tags"></i>

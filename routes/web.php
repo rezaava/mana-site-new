@@ -20,6 +20,7 @@ use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TicketController;
 use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\SiteTextController;
 
 Route::get('/', [TestController::class, 'index'])->name('home');
 Route::get('/login', [AuthController::class, 'login'])->name('login');
@@ -49,6 +50,11 @@ Route::prefix('/student')->middleware(['role:student|admin'])->group(function ()
 
 
 Route::prefix('/admin')->group(function () {
+
+    // متن‌های سایت
+    Route::get('/site-texts', [SiteTextController::class, 'index'])->name('site-texts.index');
+    Route::put('/site-texts', [SiteTextController::class, 'update'])->name('site-texts.update');
+
     //->middleware(['role:admin'])
     Route::get('/1', function(){return view('admin.panel');})->name('admin_panel');
     Route::get('/2', function(){return view('admin.dashboard');})->name('admin_dashboard');
