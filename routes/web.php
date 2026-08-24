@@ -5,7 +5,7 @@ use App\Http\Controllers\StudentSiteController;
 use App\Http\Controllers\TeacherSiteController;
 use App\Http\Controllers\ProjectController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuestionsController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\SocialsController;
@@ -19,6 +19,8 @@ use App\Http\Controllers\Admin\UserStatsController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TicketController;
+
+Route::get('/', function(){return view('index');})->name('home');
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/register', [AuthController::class, 'register'])->name('register');
@@ -126,12 +128,16 @@ Route::prefix('/admin')->group(function () {
         Route::post('/change-project-number/{projectId}/number', [ProjectController::class, 'changeNumberOfProject'])->name('change_project_number');
     });
 
-    Route::prefix('/questions')->group(function () {
-        Route::post('/create-question', [QuestionController::class, 'createQuestion'])->name('create_question');
-        Route::post('/edit-question/{id}', [QuestionController::class, 'updateQuestion'])->name('update_question');
-        Route::get('/delete-question/{id}', [QuestionController::class, 'deleteQuestion'])->name('delete_question');
-        Route::get('/questions', [QuestionController::class, 'getAllQuestions'])->name('all_questions');
-        Route::post('/change-question-number/{id}/number', [QuestionController::class, 'changeNumber'])->name('change_question_number');
+
+
+// Questions Routes
+    Route::prefix('questions')->group(function () {
+        Route::get('/', [QuestionsController::class, 'index'])->name('questions.index');
+        Route::get('/create', [QuestionsController::class, 'create'])->name('questions.create');
+        Route::post('/', [QuestionsController::class, 'store'])->name('questions.store');
+        Route::get('/{id}/edit', [QuestionsController::class, 'edit'])->name('questions.edit');
+        Route::put('/{id}', [QuestionsController::class, 'update'])->name('questions.update');
+        Route::delete('/{id}', [QuestionsController::class, 'destroy'])->name('questions.destroy');
     });
 
     Route::prefix('/blogs')->name('blogs.')->group(function () {

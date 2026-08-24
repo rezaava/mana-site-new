@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
-            $table->string('title', 200);
+            $table->string('title', 200)->default('default title');
             $table->text('answer');
             $table->tinyInteger('number')->comment('برای مرتب سازی');
             $table->timestamps();

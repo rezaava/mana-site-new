@@ -81,6 +81,12 @@
             <span class="badge-dot"></span>
         </a>
 
+        <a href="{{ url('/admin/questions') }}" class="nav-item">
+            <i class="fa-solid fa-question-circle"></i>
+            سوالات متداول
+            <span class="badge-dot"></span>
+        </a>
+
         <a href="{{ url('/admin/team') }}" class="nav-item">
             <i class="fa-solid fa-users"></i>
             تیم
