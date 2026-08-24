@@ -10,7 +10,7 @@ class ServiceController extends Controller
 {
     public function index()
     {
-        $services = Services::latest()->paginate(10);
+        $services = Services::orderBy('number', 'asc')->paginate(10);
         return view('admin.pages.index', compact('services'));
     }
 
@@ -24,7 +24,8 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'title'  => 'required|string|max:255',
             'text'   => 'nullable|string',
-            'image'  => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image'  => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
+            'icon'   => 'nullable|string|max:50',
             'number' => 'nullable|integer',
         ]);
 
@@ -34,7 +35,7 @@ class ServiceController extends Controller
 
         Services::create($validated);
 
-        return redirect()->route('pages.index')->with('success', 'صفحه با موفقیت ایجاد شد.');
+        return redirect()->route('pages.index')->with('success', 'خدمت با موفقیت ایجاد شد.');
     }
 
     public function edit($id)
@@ -50,7 +51,8 @@ class ServiceController extends Controller
         $validated = $request->validate([
             'title'  => 'required|string|max:255',
             'text'   => 'nullable|string',
-            'image'  => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image'  => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
+            'icon'   => 'nullable|string|max:50',
             'number' => 'nullable|integer',
         ]);
 
@@ -63,7 +65,7 @@ class ServiceController extends Controller
 
         $service->update($validated);
 
-        return redirect()->route('pages.index')->with('success', 'صفحه با موفقیت بروزرسانی شد.');
+        return redirect()->route('pages.index')->with('success', 'خدمت با موفقیت بروزرسانی شد.');
     }
 
     public function destroy($id)
@@ -76,6 +78,6 @@ class ServiceController extends Controller
 
         $service->delete();
 
-        return redirect()->route('pages.index')->with('success', 'صفحه با موفقیت حذف شد.');
+        return redirect()->route('pages.index')->with('success', 'خدمت با موفقیت حذف شد.');
     }
 }

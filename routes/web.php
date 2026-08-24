@@ -19,6 +19,8 @@ use App\Http\Controllers\Admin\UserStatsController;
 use App\Http\Controllers\Admin\CommentController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TicketController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\SiteTextController;
 
 Route::get('/', function(){return view('index');})->name('home');
 
@@ -49,6 +51,11 @@ Route::prefix('/student')->middleware(['role:student|admin'])->group(function ()
 
 
 Route::prefix('/admin')->group(function () {
+
+    // متن‌های سایت
+    Route::get('/site-texts', [SiteTextController::class, 'index'])->name('site-texts.index');
+    Route::put('/site-texts', [SiteTextController::class, 'update'])->name('site-texts.update');
+
     //->middleware(['role:admin'])
     Route::get('/1', function(){return view('admin.panel');})->name('admin_panel');
     Route::get('/2', function(){return view('admin.dashboard');})->name('admin_dashboard');
@@ -100,6 +107,14 @@ Route::prefix('/admin')->group(function () {
     Route::get('/support/{id}', [TicketController::class, 'show'])->name('support.show');
     Route::get('/support/{id}/close', [TicketController::class, 'close'])->name('support.close');
     Route::delete('/support/{id}', [TicketController::class, 'destroy'])->name('support.destroy');
+
+    // دسته‌بندی‌ها
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
+    Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
+    Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
+    Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
     // Projects
     Route::prefix('/projects')->group(function () {

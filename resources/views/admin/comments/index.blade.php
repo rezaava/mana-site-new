@@ -7,7 +7,7 @@
             <h5 style="margin: 0;">
                 <i class="fa-solid fa-comments"></i> مدیریت نظرات
                 <span style="background: #10b981; color: white; padding: 2px 10px; border-radius: 10px; font-size: 13px; margin-right: 8px;">
-                    {{ persianNum(\App\Models\Comment::where('is_approved', true)->count()) }}
+                    {{ persianNum(\App\Models\Comments::where('is_approved', true)->count()) }}
                 </span>
             </h5>
             <a href="{{ route('comments.create') }}" class="btn btn-sm btn-primary" style="padding: 8px 16px; border-radius: 8px; text-decoration: none;">

@@ -9,6 +9,7 @@ use App\Models\Projects;
 use App\Models\Images;
 use App\Models\Features;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Categories;
 
 class projectController extends Controller
 {
@@ -210,7 +211,8 @@ class projectController extends Controller
 
     public function create()
     {
-        return view('admin.projects.create');
+        $categories = Categories::all();
+        return view('admin.projects.create', compact('categories'));
     }
 
     public function store(Request $request)
@@ -238,7 +240,8 @@ class projectController extends Controller
     public function edit($id)
     {
         $project = Projects::findOrFail($id);
-        return view('admin.projects.edit', compact('project'));
+        $categories = Categories::all();
+        return view('admin.projects.edit', compact('project', 'categories'));
     }
 
     public function update(Request $request, $id)
