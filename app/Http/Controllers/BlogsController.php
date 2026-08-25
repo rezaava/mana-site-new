@@ -101,4 +101,13 @@ class BlogsController extends Controller
         return redirect()->route('blogs.index')
             ->with('success', "مقاله «{$title}» (شناسه: {$deletedId}) با موفقیت حذف شد.");
     }
+
+    public function singleBlog($id)
+        {
+            $blog = Blogs::findOrFail($id);
+
+
+
+            return view('blog.singleblog', compact('blog'));
+        }
 }

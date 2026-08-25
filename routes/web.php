@@ -21,8 +21,10 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TicketController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SiteTextController;
+use App\Http\Controllers\SiteController;
 
-Route::get('/', function(){return view('index');})->name('home');
+
+Route::get('/', [SiteController::class, 'index'])->name('home');
 
 Route::get('/login', [AuthController::class, 'login'])->name('login');
 Route::get('/register', [AuthController::class, 'register'])->name('register');
@@ -30,6 +32,8 @@ Route::get('/register', [AuthController::class, 'register'])->name('register');
 Route::post('/loginPost', [AuthController::class, 'loginPost'])->name('loginPost');
 Route::post('/registerPost', [AuthController::class, 'registerPost'])->name('registerPost');
 
+Route::get('/blog', [BlogsController::class, 'blog'])->name('blog');
+Route::get('/blog/{id}', [BlogsController::class, 'singleBlog'])->name('singleBlog');
 
 Route::get('/courses', [TestController::class, 'courses'])->name('courses');
 Route::get('/publics', [TestController::class, 'publics'])->name('publics');

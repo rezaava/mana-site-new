@@ -36,7 +36,7 @@
     <label style="display:block;margin-bottom:8px;">تصویر جدید</label>
     <input type="file" name="image" style="width:100%;padding:10px;">
     @if($project->image_url)
-        <img src="{{ asset('storage/'.$project->image_url) }}" style="width:70px;margin-top:10px;border-radius:8px;">
+        <img src="{{ asset('storage/') }}) }}.$project->image_url) }}" style="width:70px;margin-top:10px;border-radius:8px;">
     @endif
 </div>
 

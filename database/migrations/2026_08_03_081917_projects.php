@@ -16,7 +16,7 @@ return new class extends Migration
                     $table->string('title', 100);
                     $table->text('brief', 500);
                     $table->text('desc')->nullable();
-                    $table->tinyInteger('cat-id');
+                    $table->tinyInteger('cat-id')->nullable();
                     $table->string('image_url');
                     $table->integer('number')->comment('This column is used to determine the order of the projects');
                     $table->timestamps();

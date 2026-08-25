@@ -23,7 +23,7 @@ class QuestionsController extends Controller
     {
         $validated = $request->validate([
             'number'   => 'required|integer|min:1',
-            'question' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'answer'   => 'required|string',
         ]);
 
@@ -44,7 +44,7 @@ class QuestionsController extends Controller
 
         $validated = $request->validate([
             'number'   => 'required|integer|min:1',
-            'question' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
             'answer'   => 'required|string',
         ]);
 

@@ -42,7 +42,7 @@
                 @if($sale->image_url)
                     <div style="margin-top: 10px;">
                         <small style="color: var(--text-light);">تصویر فعلی:</small>
-                        <img src="{{ asset('storage/' . $sale->image_url) }}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px; margin-top: 5px;">
+                        <img src="{{ asset('storage/') }}) }} . $sale->image_url) }}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px; margin-top: 5px;">
                     </div>
                 @endif
                 @error('image')<small style="color: #ef4444;">{{ $message }}</small>@enderror

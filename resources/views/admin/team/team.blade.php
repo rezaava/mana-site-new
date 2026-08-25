@@ -36,7 +36,7 @@
                             <td style="padding: 12px;">{{ $loop->iteration }}</td>
                             <td style="padding: 12px;">
                                 @if($member->image_url)
-                                    <img src="{{ asset('storage/' . $member->image_url) }}" alt="{{ $member->name }}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 50%;">
+                                    <img src="{{ asset('storage/') }}) }} . $member->image_url) }}" alt="{{ $member->name }}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 50%;">
                                 @else
                                     <span style="color: var(--text-light);">بدون تصویر</span>
                                 @endif

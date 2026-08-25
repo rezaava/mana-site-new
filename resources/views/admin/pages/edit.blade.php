@@ -35,7 +35,7 @@
                     <label style="display: block; margin-bottom: 8px;">آپلود تصویر جدید</label>
                     <input type="file" name="image" id="imageInput" accept="image/jpeg,image/png,image/jpg,image/webp,image/svg+xml" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
                     @if($service->image_url)
-                        <img src="{{ asset('storage/' . $service->image_url) }}" style="width: 50px; margin-top: 10px;">
+                        <img src="{{ asset('storage/') }}) }} . $service->image_url) }}" style="width: 50px; margin-top: 10px;">
                     @endif
                 </div>
 

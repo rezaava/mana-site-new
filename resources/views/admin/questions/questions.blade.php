@@ -45,7 +45,7 @@
                                     {{ $question->number }}
                                 </span>
                             </td>
-                            <td style="padding: 12px; font-weight: 600;">{{ $question->question }}</td>
+                            <td style="padding: 12px; font-weight: 600;">{{ $question->title }}</td>
                             <td style="padding: 12px; color: var(--text-light); font-size: 0.9rem;">
                                 {{ Str::limit($question->answer, 120, '...') }}
                             </td>

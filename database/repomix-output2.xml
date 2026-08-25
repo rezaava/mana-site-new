@@ -1,0 +1,1598 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+factories/
+  UserFactory.php
+migrations/
+  2014_10_12_100000_create_password_reset_tokens_table.php
+  2016_06_01_000002_create_oauth_access_tokens_table.php
+  2016_06_01_000003_create_oauth_refresh_tokens_table.php
+  2016_06_01_000004_create_oauth_clients_table.php
+  2016_06_01_000005_create_oauth_personal_access_clients_table.php
+  2019_08_19_000000_create_failed_jobs_table.php
+  2019_12_14_000001_create_personal_access_tokens_table.php
+  2026_06_17_053511_create_formats_table.php
+  2026_06_17_084803_laratrust_setup_tables.php
+  2026_08_03_081439_services.php
+  2026_08_03_081917_projects.php
+  2026_08_03_082907_images.php
+  2026_08_03_083149_features.php
+  2026_08_03_083433_categories.php
+  2026_08_03_083518_team.php
+  2026_08_03_083737_blogs.php
+  2026_08_03_084123_questions.php
+  2026_08_03_084333_socials.php
+  2026_08_09_171414_create_sales_table.php
+  2026_08_09_212200_create_users_table.php
+  2026_08_09_214508_create_visitors_table.php
+  2026_08_09_221535_rebuild_users_table.php
+  2026_08_09_222933_create_comments_table.php
+  2026_08_10_063654_create_settings_table.php
+  2026_08_10_064924_create_tickets_table.php
+  2026_08_22_085253_create_site_texts_table.php
+seeders/
+  BlogSeeder.php
+  CommentSeeder.php
+  DatabaseSeeder.php
+  ProjectSeeder.php
+  QuestionSeeder.php
+  RoleSeeder.php
+  SaleSeeder.php
+  ServiceSeeder.php
+  SettingSeeder.php
+  SocialSeeder.php
+  TeamSeeder.php
+  TicketSeeder.php
+  UserSeeder.php
+  VisitorSeeder.php
+.gitignore
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="factories/UserFactory.php">
+<?php
+
+namespace Database\Factories;
+
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Str;
+
+/**
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\User>
+ */
+class UserFactory extends Factory
+{
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
+    {
+        return [
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+            'email_verified_at' => now(),
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'remember_token' => Str::random(10),
+        ];
+    }
+
+    /**
+     * Indicate that the model's email address should be unverified.
+     *
+     * @return $this
+     */
+    public function unverified(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'email_verified_at' => null,
+        ]);
+    }
+}
+</file>
+
+<file path="migrations/2014_10_12_100000_create_password_reset_tokens_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('password_reset_tokens', function (Blueprint $table) {
+            $table->string('email')->primary();
+            $table->string('token');
+            $table->timestamp('created_at')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('password_reset_tokens');
+    }
+};
+</file>
+
+<file path="migrations/2016_06_01_000002_create_oauth_access_tokens_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('oauth_access_tokens', function (Blueprint $table) {
+            $table->string('id', 100)->primary();
+            $table->unsignedBigInteger('user_id')->nullable()->index();
+            $table->unsignedBigInteger('client_id');
+            $table->string('name')->nullable();
+            $table->text('scopes')->nullable();
+            $table->boolean('revoked');
+            $table->timestamps();
+            $table->dateTime('expires_at')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('oauth_access_tokens');
+    }
+};
+</file>
+
+<file path="migrations/2016_06_01_000003_create_oauth_refresh_tokens_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('oauth_refresh_tokens', function (Blueprint $table) {
+            $table->string('id', 100)->primary();
+            $table->string('access_token_id', 100)->index();
+            $table->boolean('revoked');
+            $table->dateTime('expires_at')->nullable();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('oauth_refresh_tokens');
+    }
+};
+</file>
+
+<file path="migrations/2016_06_01_000004_create_oauth_clients_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('oauth_clients', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('user_id')->nullable()->index();
+            $table->string('name');
+            $table->string('secret', 100)->nullable();
+            $table->string('provider')->nullable();
+            $table->text('redirect');
+            $table->boolean('personal_access_client');
+            $table->boolean('password_client');
+            $table->boolean('revoked');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('oauth_clients');
+    }
+};
+</file>
+
+<file path="migrations/2016_06_01_000005_create_oauth_personal_access_clients_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('oauth_personal_access_clients', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->unsignedBigInteger('client_id');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('oauth_personal_access_clients');
+    }
+};
+</file>
+
+<file path="migrations/2019_08_19_000000_create_failed_jobs_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('failed_jobs', function (Blueprint $table) {
+            $table->id();
+            $table->string('uuid')->unique();
+            $table->text('connection');
+            $table->text('queue');
+            $table->longText('payload');
+            $table->longText('exception');
+            $table->timestamp('failed_at')->useCurrent();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('failed_jobs');
+    }
+};
+</file>
+
+<file path="migrations/2019_12_14_000001_create_personal_access_tokens_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('personal_access_tokens', function (Blueprint $table) {
+            $table->id();
+            $table->morphs('tokenable');
+            $table->string('name');
+            $table->string('token', 64)->unique();
+            $table->text('abilities')->nullable();
+            $table->timestamp('last_used_at')->nullable();
+            $table->timestamp('expires_at')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('personal_access_tokens');
+    }
+};
+</file>
+
+<file path="migrations/2026_06_17_053511_create_formats_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('formats', function (Blueprint $table) {
+            $table->id();
+            $table->text('title');
+            $table->text('mime_type');
+            $table->text('extension');
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('formats');
+    }
+};
+</file>
+
+<file path="migrations/2026_06_17_084803_laratrust_setup_tables.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class LaratrustSetupTables extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        // Create table for storing roles
+        Schema::create('roles', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name')->unique();
+            $table->string('display_name')->nullable();
+            $table->string('description')->nullable();
+            $table->timestamps();
+        });
+
+        // Create table for storing permissions
+        Schema::create('permissions', function (Blueprint $table) {
+            $table->bigIncrements('id');
+            $table->string('name')->unique();
+            $table->string('display_name')->nullable();
+            $table->string('description')->nullable();
+            $table->timestamps();
+        });
+
+        // Create table for associating roles to users and teams (Many To Many Polymorphic)
+        Schema::create('role_user', function (Blueprint $table) {
+            $table->unsignedBigInteger('role_id');
+            $table->unsignedBigInteger('user_id');
+            $table->string('user_type');
+
+            $table->foreign('role_id')->references('id')->on('roles')
+                ->onUpdate('cascade')->onDelete('cascade');
+
+            $table->primary(['user_id', 'role_id', 'user_type']);
+        });
+
+        // Create table for associating permissions to users (Many To Many Polymorphic)
+        Schema::create('permission_user', function (Blueprint $table) {
+            $table->unsignedBigInteger('permission_id');
+            $table->unsignedBigInteger('user_id');
+            $table->string('user_type');
+
+            $table->foreign('permission_id')->references('id')->on('permissions')
+                ->onUpdate('cascade')->onDelete('cascade');
+
+            $table->primary(['user_id', 'permission_id', 'user_type']);
+        });
+
+        // Create table for associating permissions to roles (Many-to-Many)
+        Schema::create('permission_role', function (Blueprint $table) {
+            $table->unsignedBigInteger('permission_id');
+            $table->unsignedBigInteger('role_id');
+
+            $table->foreign('permission_id')->references('id')->on('permissions')
+                ->onUpdate('cascade')->onDelete('cascade');
+            $table->foreign('role_id')->references('id')->on('roles')
+                ->onUpdate('cascade')->onDelete('cascade');
+
+            $table->primary(['permission_id', 'role_id']);
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('permission_user');
+        Schema::dropIfExists('permission_role');
+        Schema::dropIfExists('permissions');
+        Schema::dropIfExists('role_user');
+        Schema::dropIfExists('roles');
+    }
+}
+</file>
+
+<file path="migrations/2026_08_03_081439_services.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('services', function (Blueprint $table) {
+            $table->id();
+            $table->string('title', 100);
+            $table->text('text')->nullable();
+            $table->string('image_url')->nullable();
+            $table->string('icon')->nullable();
+            $table->integer('number')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('services');
+    }
+};
+</file>
+
+<file path="migrations/2026_08_03_081917_projects.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+                Schema::create('projects', function (Blueprint $table) {
+                    $table->id();
+                    $table->string('title', 100);
+                    $table->text('brief', 500);
+                    $table->text('desc')->nullable();
+                    $table->tinyInteger('cat-id')->nullable();
+                    $table->string('image_url');
+                    $table->integer('number')->comment('This column is used to determine the order of the projects');
+                    $table->timestamps();
+                });
+
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists("projects");
+    }
+};
+</file>
+
+<file path="migrations/2026_08_03_082907_images.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('images', function (Blueprint $table) {
+            $table->id();
+            $table->tinyInteger('type')->comment('برای مثال، 1 مربوط به پروژه ها هست');
+            $table->string('url');
+            $table->integer('sub-id');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('images');
+    }
+};
+</file>
+
+<file path="migrations/2026_08_03_083149_features.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('features', function (Blueprint $table) {
+            $table->id();
+            $table->text('text')->nullable();
+            $table->string('image_url');
+            $table->tinyInteger('type');
+            $table->integer('sub-id');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('features');
+    }
+};
+</file>
+
+<file path="migrations/2026_08_03_083433_categories.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::create('categories', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->timestamps();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::dropIfExists('categories');
+    }
+};
+</file>
+
+<file path="migrations/2026_08_03_083518_team.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('team', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('title')->nullable();
+            $table->integer('number')->nullable();
+            $table->string('image_url')->nullable();
+            $table->string('instagram')->nullable();
+            $table->string('twitter')->nullable();
+            $table->string('github')->nullable();
+            $table->string('telegram')->nullable();
+            $table->string('whatsapp')->nullable();
+            $table->string('linkedin')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('team');
+    }
+};
+</file>
+
+<file path="migrations/2026_08_03_083737_blogs.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('blogs', function (Blueprint $table) {
+            $table->id();
+            $table->string('title', 200);
+            $table->text('text');
+            $table->string('image_url')->nullable();
+            $table->tinyInteger('reading-time')->nullable();
+            $table->tinyInteger('number')->comment('برای مرتب سازی');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('blogs');
+    }
+};
+</file>
+
+<file path="migrations/2026_08_03_084123_questions.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('questions', function (Blueprint $table) {
+            $table->id();
+            $table->string('title', 200)->default('default title');
+            $table->text('answer');
+            $table->tinyInteger('number')->comment('برای مرتب سازی');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('questions');
+    }
+};
+</file>
+
+<file path="migrations/2026_08_03_084333_socials.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('socials', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('image_url')->nullable()->default(null);
+            $table->string('url');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('socials');
+    }
+};
+</file>
+
+<file path="migrations/2026_08_09_171414_create_sales_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('sales', function (Blueprint $table) {
+            $table->id();
+            $table->string('title');
+            $table->text('text')->nullable();
+            $table->string('image_url')->nullable();
+            $table->integer('price')->nullable();
+            $table->integer('number')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('sales');
+    }
+};
+</file>
+
+<file path="migrations/2026_08_09_212200_create_users_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('users');
+    }
+};
+</file>
+
+<file path="migrations/2026_08_09_214508_create_visitors_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('visitors', function (Blueprint $table) {
+            $table->id();
+            $table->string('ip_address')->nullable();
+            $table->string('country')->nullable();
+            $table->string('region')->nullable();
+            $table->timestamp('visited_at')->useCurrent();
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('visitors');
+    }
+};
+</file>
+
+<file path="migrations/2026_08_09_221535_rebuild_users_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::dropIfExists('users');
+
+        Schema::create('users', function (Blueprint $table) {
+            $table->id();
+            $table->string('name');
+            $table->string('email')->unique();
+            $table->string('password');
+            $table->string('role')->default('student');
+            $table->rememberToken();
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('users');
+    }
+};
+</file>
+
+<file path="migrations/2026_08_09_222933_create_comments_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('comments', function (Blueprint $table) {
+            $table->id();
+            $table->string('user_name');
+            $table->text('content');
+            $table->boolean('is_approved')->default(false);
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('comments');
+    }
+};
+</file>
+
+<file path="migrations/2026_08_10_063654_create_settings_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('settings', function (Blueprint $table) {
+            $table->id();
+            $table->string('key')->unique();
+            $table->text('value')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('settings');
+    }
+};
+</file>
+
+<file path="migrations/2026_08_10_064924_create_tickets_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('tickets', function (Blueprint $table) {
+            $table->id();
+            $table->string('user_name');
+            $table->string('email');
+            $table->string('subject');
+            $table->text('message');
+            $table->enum('status', ['open', 'closed'])->default('open');
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('tickets');
+    }
+};
+</file>
+
+<file path="migrations/2026_08_22_085253_create_site_texts_table.php">
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up()
+    {
+        Schema::create('site_texts', function (Blueprint $table) {
+            $table->id();
+            $table->string('key')->unique();
+            $table->text('value')->nullable();
+            $table->timestamps();
+        });
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('site_texts');
+    }
+};
+</file>
+
+<file path="seeders/BlogSeeder.php">
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Blogs;
+use Illuminate\Database\Seeder;
+
+class BlogSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $blogs = [
+            [
+                'title' => 'راهنمای انتخاب استک فنی مناسب استارتاپ',
+                'text' => 'چگونه بین گزینه‌های مختلف فنی، بهترین انتخاب را برای مرحله‌ی رشد استارتاپ خود داشته باشیم. در این مقاله به بررسی معیارهای انتخاب تکنولوژی، مزایا و معایب هرکدام و تأثیر آن بر آینده‌ی محصول می‌پردازیم.',
+                'reading-time' => 6,
+                'number' => 1,
+            ],
+            [
+                'title' => '۷ اشتباه رایج در طراحی UX اپلیکیشن',
+                'text' => 'بررسی خطاهایی که بیشتر تیم‌های محصول در طراحی تجربه‌ی کاربری مرتکب می‌شوند و راه رفع آن‌ها. از عدم تحقیق کاربری تا نادیده گرفتن بازخوردها.',
+                'reading-time' => 4,
+                'number' => 2,
+            ],
+            [
+                'title' => 'چگونه هوش مصنوعی فروش را متحول می‌کند؟',
+                'text' => 'نگاهی به کاربردهای عملی هوش مصنوعی در پیش‌بینی فروش و شخصی‌سازی تجربه‌ی مشتری. با استفاده از الگوریتم‌های یادگیری ماشین، می‌توان الگوهای خرید را شناسایی کرد.',
+                'reading-time' => 7,
+                'number' => 3,
+            ],
+            [
+                'title' => 'امنیت داده در معماری ابری چند-مستاجری',
+                'text' => 'اصول طراحی امن برای سامانه‌هایی که داده‌ی چند مشتری را در یک زیرساخت مشترک نگه می‌دارند. این مقاله به بررسی ایزوله‌سازی داده‌ها، رمزنگاری و کنترل دسترسی می‌پردازد.',
+                'reading-time' => 8,
+                'number' => 4,
+            ],
+            [
+                'title' => 'مقایسه‌ی معماری میکروسرویس و مونولیت',
+                'text' => 'کدام معماری برای مرحله‌ی فعلی محصول شما مناسب‌تر است؟ بررسی مزایا و معایب هرکدام و نکاتی برای مهاجرت از مونولیت به میکروسرویس.',
+                'reading-time' => 9,
+                'number' => 5,
+            ],
+        ];
+
+        foreach ($blogs as $blog) {
+            Blogs::create($blog);
+        }
+    }
+}
+</file>
+
+<file path="seeders/CommentSeeder.php">
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Comments;
+use Illuminate\Database\Seeder;
+
+class CommentSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $comments = [
+            [
+                'user_name' => 'مهدی کریمی',
+                'content' => 'خیلی عالی بود! دقیقاً همین مسیر رو داریم طی می‌کنیم و نکات خیلی به‌دردبخوری داشت. ممنون از تیم مانا 🙏',
+                'is_approved' => true,
+            ],
+            [
+                'user_name' => 'سارا نوری',
+                'content' => 'درباره‌ی بخش انتخاب استک فنی خیلی دقیق توضیح دادید. کاش یکم بیشتر در مورد معماری میکروسرویس هم صحبت می‌کردید.',
+                'is_approved' => true,
+            ],
+            [
+                'user_name' => 'رضا فتحی',
+                'content' => 'دقیقاً همون چیزی بود که دنبالش می‌گشتم. مخصوصاً بخش اعتبارسنجی ایده که خیلی از استارتاپ‌ها نادیده می‌گیرن.',
+                'is_approved' => true,
+            ],
+            [
+                'user_name' => 'نیما کریمی',
+                'content' => 'چه طراحی خیره‌کننده‌ای! خیلی خلاق و استعداد دارید 😍',
+                'is_approved' => false,
+            ],
+            [
+                'user_name' => 'زهرا محمدی',
+                'content' => 'طراحیتون رو خیلی دوست دارم! خیلی زیبا و منحصربه‌فرد است 🌟',
+                'is_approved' => false,
+            ],
+        ];
+
+        foreach ($comments as $comment) {
+            Comments::create($comment);
+        }
+    }
+}
+</file>
+
+<file path="seeders/DatabaseSeeder.php">
+<?php
+
+namespace Database\Seeders;
+
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $this->call([
+            RoleSeeder::class,
+            UserSeeder::class,
+            ServiceSeeder::class,
+            ProjectSeeder::class,
+            TeamSeeder::class,
+            QuestionSeeder::class,
+            BlogSeeder::class,
+            CommentSeeder::class,
+            VisitorSeeder::class,
+            SaleSeeder::class,
+            TicketSeeder::class,
+            SettingSeeder::class,
+            SocialSeeder::class,
+        ]);
+    }
+}
+</file>
+
+<file path="seeders/ProjectSeeder.php">
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Projects;
+use Illuminate\Database\Seeder;
+
+class ProjectSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $projects = [
+            [
+                'title' => 'سامانه نوبت‌دهی پزشکی',
+                'brief' => 'سلامت دیجیتال',
+                'desc' => 'سامانه‌ای برای نوبت‌دهی، پرونده الکترونیک و مشاوره آنلاین با پزشکان.',
+                'number' => 1,
+                'image_url' => 'projects/project1.jpg',
+            ],
+            [
+                'title' => 'پلتفرم تجارت الکترونیک',
+                'brief' => 'فروشگاه آنلاین',
+                'desc' => 'فروشگاهی سریع و مقیاس‌پذیر با تجربه‌ی خرید یکپارچه در وب و موبایل.',
+                'number' => 2,                'image_url' => 'projects/project2.jpg',
+            ],
+            [
+                'title' => 'داشبورد هوشمند فروش',
+                'brief' => 'پنل مدیریت',
+                'desc' => 'داشبوردی تحلیلی برای رصد لحظه‌ای فروش، موجودی و رفتار مشتریان با گزارش‌های هوشمند.',
+                'number' => 3,
+                'image_url' => 'projects/project3.jpg',
+            ],
+            [
+                'title' => 'اپ موبایل بانکداری نوین',
+                'brief' => 'اپلیکیشن بانکی',
+                'desc' => 'اپلیکیشن بانکی امن با احراز هویت بیومتریک و تجربه‌ی کاربری ساده.',
+                'number' => 4,
+                'image_url' => 'projects/project4.jpg',
+            ],
+            [
+                'title' => 'پلتفرم یادگیری هوشمند',
+                'brief' => 'آموزش آنلاین',
+                'desc' => 'سامانه‌ی آموزش آنلاین با مسیرهای یادگیری شخصی‌سازی‌شده توسط هوش مصنوعی.',
+                'number' => 5,
+                'image_url' => 'projects/project5.jpg',
+            ],
+        ];
+
+        foreach ($projects as $project) {
+            Projects::create($project);
+        }
+    }
+}
+</file>
+
+<file path="seeders/QuestionSeeder.php">
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Questions;
+use Illuminate\Database\Seeder;
+
+class QuestionSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $questions = [
+            [
+                'title' => 'مدت زمان انجام پروژه چقدر است؟', // تغییر از question به title
+                'answer' => 'بسته به پیچیدگی پروژه، معمولاً بین ۴ تا ۱۲ هفته زمان می‌برد. در جلسه‌ی مشاوره‌ی اولیه، برآورد دقیق زمانی ارائه می‌شود.',
+                'number' => 1,
+            ],
+            [
+                'title' => 'هزینه پروژه چگونه محاسبه می‌شود؟',
+                'answer' => 'هزینه بر اساس محدوده کار، پیچیدگی فنی و بازه زمانی پروژه تعیین می‌شود و پیش از شروع، در قالب پیشنهاد شفاف ارائه خواهد شد.',
+                'number' => 2,
+            ],
+            [
+                'title' => 'آیا از اطلاعات پروژه محافظت می‌کنید؟',
+                'answer' => 'بله، تمام اطلاعات پروژه تحت قرارداد محرمانگی (NDA) محافظت شده و صرفاً در اختیار تیم پروژه قرار می‌گیرد.',
+                'number' => 3,
+            ],
+            [
+                'title' => 'آیا بعد از اتمام پروژه پشتیبانی ارائه می‌دهید؟',
+                'answer' => 'بله، بسته‌های پشتیبانی و نگهداری پس از تحویل پروژه برای اطمینان از عملکرد پایدار آن ارائه می‌شود.',
+                'number' => 4,
+            ],
+        ];
+
+        foreach ($questions as $question) {
+            Questions::create($question);
+        }
+    }
+}
+</file>
+
+<file path="seeders/RoleSeeder.php">
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Role;
+use Illuminate\Database\Seeder;
+
+class RoleSeeder extends Seeder
+{
+    public function run(): void
+    {
+        // ابتدا نقش‌های قدیمی را پاک کنید (اختیاری)
+        // Role::truncate();
+
+        $roles = [
+            ['name' => 'admin', 'display_name' => 'مدیر سیستم', 'description' => 'دسترسی کامل به تمام بخش‌ها'],
+            ['name' => 'teacher', 'display_name' => 'استاد', 'description' => 'مدیریت دوره‌ها و محتوا'],
+            ['name' => 'student', 'display_name' => 'دانشجو', 'description' => 'دسترسی به دوره‌ها و محتوا'],
+            ['name' => 'vendor', 'display_name' => 'فروشنده', 'description' => 'مدیریت فروش و محصولات'],
+        ];
+
+        foreach ($roles as $role) {
+            Role::create($role);
+        }
+    }
+}
+</file>
+
+<file path="seeders/SaleSeeder.php">
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Sale;
+use Illuminate\Database\Seeder;
+
+class SaleSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $sales = [
+            ['title' => 'دوره لاراول پیشرفته', 'text' => 'آموزش جامع لاراول از مقدماتی تا پیشرفته', 'price' => 2500000, 'number' => 1],
+            ['title' => 'دوره ری‌اکت Native', 'text' => 'آموزش ساخت اپلیکیشن موبایل با ری‌اکت', 'price' => 1800000, 'number' => 2],
+            ['title' => 'دوره هوش مصنوعی', 'text' => 'آموزش مفاهیم پایه و پیشرفته هوش مصنوعی', 'price' => 3200000, 'number' => 3],
+            ['title' => 'دوره امنیت سایبری', 'text' => 'آموزش امنیت وب و تست نفوذ', 'price' => 2800000, 'number' => 4],
+        ];
+
+        foreach ($sales as $sale) {
+            Sale::create($sale);
+        }
+    }
+}
+</file>
+
+<file path="seeders/ServiceSeeder.php">
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Services;
+use Illuminate\Database\Seeder;
+
+class ServiceSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $services = [
+            [
+                'title' => 'هوش مصنوعی و اتوماسیون',
+                'text' => 'استفاده از مدل‌های هوشمند برای ساده‌سازی فرآیندها و تصمیم‌گیری داده‌محور در کسب‌وکار شما.',
+                'number' => 1,
+                'icon' => 'brain',
+            ],
+            [
+                'title' => 'اپلیکیشن موبایل',
+                'text' => 'طراحی و توسعه اپلیکیشن‌های iOS و Android با تجربه‌ کاربری روان و عملکردی بی‌نقص.',
+                'number' => 2,
+                'icon' => 'mobile-screen-button',
+            ],
+            [
+                'title' => 'طراحی وب‌سایت',
+                'text' => 'وب‌سایت‌هایی مدرن، سریع و بهینه‌شده برای موتورهای جست‌وجو با تمرکز بر نرخ تبدیل.',
+                'number' => 3,
+                'icon' => 'window-restore',
+            ],
+            [
+                'title' => 'زیرساخت ابری',
+                'text' => 'معماری، مهاجرت و مدیریت زیرساخت ابری امن، مقیاس‌پذیر و بهینه از نظر هزینه.',
+                'number' => 4,
+                'icon' => 'cloud-arrow-up',
+            ],
+            [
+                'title' => 'نرم‌افزار اختصاصی',
+                'text' => 'طراحی و توسعه نرم‌افزار سفارشی متناسب با فرآیندهای دقیق کسب‌وکار شما.',
+                'number' => 5,
+                'icon' => 'code-branch',
+            ],
+            [
+                'title' => 'امنیت سایبری',
+                'text' => 'ارزیابی، تست نفوذ و پیاده‌سازی راهکارهای امنیتی برای محافظت از دارایی‌های دیجیتال شما.',
+                'number' => 6,
+                'icon' => 'shield-halved',
+            ],
+        ];
+
+        foreach ($services as $service) {
+            Services::create($service);
+        }
+    }
+}
+</file>
+
+<file path="seeders/SettingSeeder.php">
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Setting;
+use Illuminate\Database\Seeder;
+
+class SettingSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $settings = [
+            ['key' => 'site_name', 'value' => 'مانا'],
+            ['key' => 'site_description', 'value' => 'راهکارهای هوشمند دیجیتال برای رشد کسب‌وکار شما'],
+            ['key' => 'site_keywords', 'value' => 'هوش مصنوعی, طراحی وب, اپلیکیشن موبایل, امنیت سایبری'],
+            ['key' => 'contact_email', 'value' => 'info@mana.ir'],
+            ['key' => 'contact_phone', 'value' => '۰۲۱-۱۷۵۴۵۶۷۸'],
+            ['key' => 'address', 'value' => 'تهران، خیابان ولیعصر، پلاک ۱۲۳'],
+            ['key' => 'telegram', 'value' => 'https://t.me/mana_team'],
+            ['key' => 'instagram', 'value' => 'https://instagram.com/mana_team'],
+            ['key' => 'twitter', 'value' => 'https://twitter.com/mana_team'],
+        ];
+
+        foreach ($settings as $setting) {
+            Setting::updateOrCreate(
+                ['key' => $setting['key']],
+                ['value' => $setting['value']]
+            );
+        }
+    }
+}
+</file>
+
+<file path="seeders/SocialSeeder.php">
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Socials;
+use Illuminate\Database\Seeder;
+
+class SocialSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $socials = [
+            ['name' => 'تلگرام', 'url' => 'https://t.me/mana_team'],
+            ['name' => 'اینستاگرام', 'url' => 'https://instagram.com/mana_team'],
+            ['name' => 'توییتر', 'url' => 'https://twitter.com/mana_team'],
+            ['name' => 'لینکدین', 'url' => 'https://linkedin.com/company/mana_team'],
+            ['name' => 'واتساپ', 'url' => 'https://wa.me/989123456789'],
+        ];
+
+        foreach ($socials as $social) {
+            Socials::create($social);
+        }
+    }
+}
+</file>
+
+<file path="seeders/TeamSeeder.php">
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Team;
+use Illuminate\Database\Seeder;
+
+class TeamSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $members = [
+            ['name' => 'فاطمه', 'title' => 'مدیر محصول', 'number' => 1],
+            ['name' => 'عرشیا', 'title' => 'Web Developer', 'number' => 2],
+            ['name' => 'رضا آواره', 'title' => 'مدیر عامل', 'number' => 3],
+            ['name' => 'مزمز', 'title' => 'توسعه‌دهنده C#', 'number' => 4],
+            ['name' => 'خواجه‌ها', 'title' => 'Web Developer', 'number' => 5],
+        ];
+
+        foreach ($members as $member) {
+            Team::create($member);
+        }
+    }
+}
+</file>
+
+<file path="seeders/TicketSeeder.php">
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Ticket;
+use Illuminate\Database\Seeder;
+
+class TicketSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $tickets = [
+            [
+                'user_name' => 'رضا محمدی',
+                'email' => 'reza@example.com',
+                'subject' => 'مشکل در ورود به سیستم',
+                'message' => 'سلام، من نمی‌توانم وارد پنل کاربری شوم. لطفاً راهنمایی کنید.',
+                'status' => 'open',
+            ],
+            [
+                'user_name' => 'سارا عزیزی',
+                'email' => 'sara@example.com',
+                'subject' => 'مشکل در پرداخت',
+                'message' => 'هنگام پرداخت با خطا مواجه می‌شوم. لطفاً بررسی کنید.',
+                'status' => 'open',
+            ],
+            [
+                'user_name' => 'علی حسینی',
+                'email' => 'ali@example.com',
+                'subject' => 'درخواست تغییر پلن',
+                'message' => 'می‌خواهم پلن خود را ارتقا دهم. لطفاً راهنمایی کنید.',
+                'status' => 'closed',
+            ],
+        ];
+
+        foreach ($tickets as $ticket) {
+            Ticket::create($ticket);
+        }
+    }
+}
+</file>
+
+<file path="seeders/UserSeeder.php">
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\User;
+use App\Models\Role;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
+
+class UserSeeder extends Seeder
+{
+    public function run(): void
+    {
+        // پیدا کردن نقش‌ها
+        $adminRole = Role::where('name', 'admin')->first();
+        $teacherRole = Role::where('name', 'teacher')->first();
+        $studentRole = Role::where('name', 'student')->first();
+
+        // ادمین
+        $admin = User::create([
+            'name' => 'رضا آواره',
+            'email' => 'admin@mana.ir',
+            'password' => Hash::make('12345678'),
+            'role' => 'admin',
+        ]);
+        // اضافه کردن نقش به صورت مستقیم در جدول role_user
+        DB::table('role_user')->insert([
+            'role_id' => $adminRole->id,
+            'user_id' => $admin->id,
+            'user_type' => get_class($admin),
+        ]);
+
+        // استاد
+        $teacher = User::create([
+            'name' => 'علی معلمی',
+            'email' => 'teacher@mana.ir',
+            'password' => Hash::make('12345678'),
+            'role' => 'teacher',
+        ]);
+        DB::table('role_user')->insert([
+            'role_id' => $teacherRole->id,
+            'user_id' => $teacher->id,
+            'user_type' => get_class($teacher),
+        ]);
+
+        // دانشجو
+        $student = User::create([
+            'name' => 'سارا دانشجو',
+            'email' => 'student@mana.ir',
+            'password' => Hash::make('12345678'),
+            'role' => 'student',
+        ]);
+        DB::table('role_user')->insert([
+            'role_id' => $studentRole->id,
+            'user_id' => $student->id,
+            'user_type' => get_class($student),
+        ]);
+
+        // کاربران عادی
+        $users = [
+            ['name' => 'محمد رضایی', 'email' => 'mohammad@example.com'],
+            ['name' => 'فاطمه کریمی', 'email' => 'fatemeh@example.com'],
+            ['name' => 'علی حسینی', 'email' => 'ali@example.com'],
+            ['name' => 'زهرا محمدی', 'email' => 'zahra@example.com'],
+            ['name' => 'نیما کریمی', 'email' => 'nima@example.com'],
+        ];
+
+        foreach ($users as $userData) {
+            $user = User::create([
+                'name' => $userData['name'],
+                'email' => $userData['email'],
+                'password' => Hash::make('12345678'),
+                'role' => 'student',
+            ]);
+            DB::table('role_user')->insert([
+                'role_id' => $studentRole->id,
+                'user_id' => $user->id,
+                'user_type' => get_class($user),
+            ]);
+        }
+    }
+}
+</file>
+
+<file path="seeders/VisitorSeeder.php">
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Visitor;
+use Illuminate\Database\Seeder;
+use Carbon\Carbon;
+
+class VisitorSeeder extends Seeder
+{
+    public function run(): void
+    {
+        $visitors = [
+            ['ip_address' => '192.168.1.1', 'country' => 'ایران', 'region' => 'تهران', 'visited_at' => Carbon::now()->subDays(1)],
+            ['ip_address' => '10.0.0.1', 'country' => 'آلمان', 'region' => 'برلین', 'visited_at' => Carbon::now()->subDays(2)],
+            ['ip_address' => '172.16.0.1', 'country' => 'آمریکا', 'region' => 'نیویورک', 'visited_at' => Carbon::now()->subDays(3)],
+            ['ip_address' => '192.168.1.2', 'country' => 'ایران', 'region' => 'اصفهان', 'visited_at' => Carbon::now()->subDays(4)],
+            ['ip_address' => '10.0.0.2', 'country' => 'انگلستان', 'region' => 'لندن', 'visited_at' => Carbon::now()->subDays(5)],
+        ];
+
+        foreach ($visitors as $visitor) {
+            Visitor::create($visitor);
+        }
+    }
+}
+</file>
+
+<file path=".gitignore">
+*.sqlite*
+</file>
+
+</files>

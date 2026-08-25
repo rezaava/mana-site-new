@@ -53,7 +53,7 @@
                 @if($social->image_url)
                     <div style="margin-bottom: 10px;">
                         <span style="font-size: 0.85rem; color: var(--text-light); display: block; margin-bottom: 4px;">تصویر فعلی:</span>
-                        <img src="{{ asset('storage/' . $social->image_url) }}" alt="{{ $social->name }}" style="width: 50px; height: 50px; object-fit: contain; border-radius: 8px; border: 1px solid var(--border); padding: 4px;">
+                        <img src="{{ asset('storage/') }}) }} . $social->image_url) }}" alt="{{ $social->name }}" style="width: 50px; height: 50px; object-fit: contain; border-radius: 8px; border: 1px solid var(--border); padding: 4px;">
                     </div>
                 @endif
 

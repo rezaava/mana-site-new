@@ -40,7 +40,7 @@
 
                 <div>
                     <label style="display: block; margin-bottom: 8px;">صورت سوال</label>
-                    <input type="text" name="question" value="{{ old('question', $question->question) }}" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                    <input type="text" name="title" value="{{ old('question', $question->title) }}" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
                     @error('question')
                         <small style="color: #ef4444; display: block; margin-top: 4px;">{{ $message }}</small>
                     @enderror

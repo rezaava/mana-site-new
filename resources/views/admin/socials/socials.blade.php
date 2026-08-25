@@ -42,7 +42,7 @@
                             <td style="padding: 12px;">{{ $social->id }}</td>
                             <td style="padding: 12px;">
                                 @if($social->image_url)
-                                    <img src="{{ asset('storage/' . $social->image_url) }}" alt="{{ $social->name }}" style="width: 40px; height: 40px; object-fit: contain; border-radius: 6px;">
+                                    <img src="{{ asset('storage/') }}) }} . $social->image_url) }}" alt="{{ $social->name }}" style="width: 40px; height: 40px; object-fit: contain; border-radius: 6px;">
                                 @else
                                     <span style="color: var(--text-light);">بدون تصویر</span>
                                 @endif

@@ -1,0 +1,3510 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+Console/
+  Commands/
+    InitDb.php
+  Kernel.php
+Exceptions/
+  Handler.php
+Helpers/
+  helpers.php
+Http/
+  Controllers/
+    Admin/
+      CategoryController.php
+      CommentController.php
+      PageController.php
+      SettingController.php
+      SiteTextController.php
+      TicketController.php
+      UserController.php
+      UserStatsController.php
+      VisitorController.php
+    API/
+      Admin/
+        DashboardController.php
+      AuthController.php
+    AuthController.php
+    BlogsController.php
+    Controller.php
+    ImageController.php
+    projectController.php
+    QuestionsController.php
+    SaleController.php
+    ServiceController.php
+    SiteController.php
+    SocialsController.php
+    StudentSiteController.php
+    TeacherSiteController.php
+    TeamController.php
+    TestController.php
+  Middleware/
+    Authenticate.php
+    CheckTeacherActive.php
+    CheckVendorActive.php
+    CheckVendorSheba.php
+    EncryptCookies.php
+    EnsureUserHasPassword.php
+    EnsureVendorHasNoIban.php
+    PreventRequestsDuringMaintenance.php
+    RedirectIfAuthenticated.php
+    RedirectIfAuthenticatedCustom.php
+    testApi.php
+    TrimStrings.php
+    TrustHosts.php
+    TrustProxies.php
+    ValidateSignature.php
+    VerifyCsrfToken.php
+  Kernel.php
+Imports/
+  DiscountCodeImport.php
+Models/
+  Blogs.php
+  Categories.php
+  Comments.php
+  Features.php
+  Format.php
+  Images.php
+  Permission.php
+  Projects.php
+  Questions.php
+  Role.php
+  Sale.php
+  Services.php
+  Setting.php
+  SiteText.php
+  Socials.php
+  Team.php
+  Teams.php
+  Ticket.php
+  User.php
+  Visitor.php
+Providers/
+  AppServiceProvider.php
+  AuthServiceProvider.php
+  BroadcastServiceProvider.php
+  EventServiceProvider.php
+  RouteServiceProvider.php
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="Console/Commands/InitDb.php">
+<?php
+
+namespace App\Console\Commands;
+
+use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
+
+class InitDb extends Command
+{
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'InitDb';
+
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
+     * Execute the console command.
+     *
+     * @return mixed
+     */
+    public function handle()
+    {
+        $this->comment("Progress Started...");
+
+        // همه جداول را کامل drop و از صفر بساز
+        Artisan::call('migrate:fresh', [
+            '--force' => true,
+        ]);
+        $this->comment("DB has been dropped and migrated fresh");
+
+        Artisan::call('db:seed', [
+            '--class' => "DatabaseSeeder",
+            '--force' => true,
+        ]);
+
+        $this->info("Completed Successfully!");
+
+    }
+}
+</file>
+
+<file path="Console/Kernel.php">
+<?php
+
+namespace App\Console;
+
+use Illuminate\Console\Scheduling\Schedule;
+use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+
+class Kernel extends ConsoleKernel
+{
+    /**
+     * Define the application's command schedule.
+     */
+    protected function schedule(Schedule $schedule): void
+    {
+        // $schedule->command('inspire')->hourly();
+    }
+
+    /**
+     * Register the commands for the application.
+     */
+    protected function commands(): void
+    {
+        $this->load(__DIR__.'/Commands');
+
+        require base_path('routes/console.php');
+    }
+}
+</file>
+
+<file path="Exceptions/Handler.php">
+<?php
+
+namespace App\Exceptions;
+
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Throwable;
+
+class Handler extends ExceptionHandler
+{
+    /**
+     * A list of exception types with their corresponding custom log levels.
+     *
+     * @var array<class-string<\Throwable>, \Psr\Log\LogLevel::*>
+     */
+    protected $levels = [
+        //
+    ];
+
+    /**
+     * A list of the exception types that are not reported.
+     *
+     * @var array<int, class-string<\Throwable>>
+     */
+    protected $dontReport = [
+        //
+    ];
+
+    /**
+     * A list of the inputs that are never flashed to the session on validation exceptions.
+     *
+     * @var array<int, string>
+     */
+    protected $dontFlash = [
+        'current_password',
+        'password',
+        'password_confirmation',
+    ];
+
+    /**
+     * Register the exception handling callbacks for the application.
+     */
+    public function register(): void
+    {
+        $this->reportable(function (Throwable $e) {
+            //
+        });
+    }
+}
+</file>
+
+<file path="Helpers/helpers.php">
+<?php
+
+if (!function_exists('persianNum')) {
+    function persianNum($number) {
+        $persian = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+        $english = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        return str_replace($english, $persian, $number);
+    }
+}
+</file>
+
+<file path="Http/Controllers/Admin/CategoryController.php">
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Categories;
+use Illuminate\Http\Request;
+
+class CategoryController extends Controller
+{
+    public function index()
+    {
+        $categories = Categories::latest()->paginate(10);
+        return view('admin.categories.index', compact('categories'));
+    }
+
+    public function create()
+    {
+        return view('admin.categories.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        Categories::create($validated);
+
+        return redirect()->route('categories.index')->with('success', 'دسته‌بندی اضافه شد.');
+    }
+
+    public function edit($id)
+    {
+        $category = Categories::findOrFail($id);
+        return view('admin.categories.edit', compact('category'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $category = Categories::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $category->update($validated);
+
+        return redirect()->route('categories.index')->with('success', 'دسته‌بندی بروزرسانی شد.');
+    }
+
+    public function destroy($id)
+    {
+        $category = Categories::findOrFail($id);
+        $category->delete();
+
+        return redirect()->route('categories.index')->with('success', 'دسته‌بندی حذف شد.');
+    }
+}
+</file>
+
+<file path="Http/Controllers/Admin/CommentController.php">
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Comments;
+use Illuminate\Http\Request;
+
+class CommentController extends Controller
+{
+    public function index()
+    {
+        $comments = Comments::latest()->paginate(15);
+        $pendingCount = Comments::where('is_approved', false)->count();
+        return view('admin.comments.index', compact('comments', 'pendingCount'));
+    }
+
+    public function create()
+    {
+        return view('admin.comments.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'user_name' => 'required|string|max:255',
+            'content'   => 'required|string',
+        ]);
+
+        Comments::create($validated);
+
+        return redirect()->route('comments.index')->with('success', 'نظر با موفقیت اضافه شد.');
+    }
+
+    public function approve($id)
+    {
+        $comment = Comments::findOrFail($id);
+        $comment->update(['is_approved' => true]);
+
+        return redirect()->route('comments.index')->with('success', 'نظر تایید شد.');
+    }
+
+    public function destroy($id)
+    {
+        $comment = Comments::findOrFail($id);
+        $comment->delete();
+
+        return redirect()->route('comments.index')->with('success', 'نظر با موفقیت حذف شد.');
+    }
+}
+</file>
+
+<file path="Http/Controllers/Admin/PageController.php">
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+
+class PageController extends Controller
+{
+    public function visitors()
+    {
+        $visitors = [
+            ['id' => 1, 'ip' => '192.168.1.1', 'country' => 'ایران', 'region' => 'تهران', 'date' => '۱۴۰۲/۱۲/۱۵'],
+            ['id' => 2, 'ip' => '10.0.0.1', 'country' => 'آلمان', 'region' => 'برلین', 'date' => '۱۴۰۲/۱۲/۱۴'],
+            ['id' => 3, 'ip' => '172.16.0.1', 'country' => 'آمریکا', 'region' => 'نیویورک', 'date' => '۱۴۰۲/۱۲/۱۳'],
+        ];
+
+        return view('admin.visitors', compact('visitors'));
+    }
+
+    public function sales()
+    {
+        $sales = [
+            ['id' => 1, 'product' => 'دوره لاراول', 'amount' => '۲,۵۰۰,۰۰۰', 'date' => '۱۴۰۲/۱۲/۱۵'],
+            ['id' => 2, 'product' => 'دوره ری‌اکت', 'amount' => '۱,۸۰۰,۰۰۰', 'date' => '۱۴۰۲/۱۲/۱۴'],
+        ];
+
+        return view('admin.sales', compact('sales'));
+    }
+
+    public function usersStats()
+    {
+        $totalUsers = 1250;
+        $newUsers = 45;
+        $activeUsers = 890;
+
+        return view('admin.users-stats', compact('totalUsers', 'newUsers', 'activeUsers'));
+    }
+
+    public function posts()
+    {
+        $posts = [
+            ['id' => 1, 'title' => 'آموزش لاراول', 'author' => 'رضا', 'date' => '۱۴۰۲/۱۲/۱۰'],
+            ['id' => 2, 'title' => 'راهنمای PHP', 'author' => 'علی', 'date' => '۱۴۰۲/۱۲/۰۸'],
+        ];
+
+        return view('admin.posts', compact('posts'));
+    }
+
+    public function pages()
+    {
+        $pages = [
+            ['id' => 1, 'title' => 'درباره ما', 'slug' => 'about', 'date' => '۱۴۰۲/۱۱/۰۱'],
+            ['id' => 2, 'title' => 'تماس با ما', 'slug' => 'contact', 'date' => '۱۴۰۲/۱۰/۱۵'],
+        ];
+
+        return view('admin.pages', compact('pages'));
+    }
+
+    public function comments()
+    {
+        $comments = [
+            ['id' => 1, 'user' => 'سارا', 'text' => 'عالی بود!', 'status' => 'approved', 'date' => '۱۴۰۲/۱۲/۱۵'],
+            ['id' => 2, 'user' => 'محمد', 'text' => 'ممنون از آموزش', 'status' => 'pending', 'date' => '۱۴۰۲/۱۲/۱۴'],
+        ];
+        $pendingCount = 12;
+
+        return view('admin.comments', compact('comments', 'pendingCount'));
+    }
+
+    public function users()
+    {
+        $users = [
+            ['id' => 1, 'name' => 'رضا آواره', 'email' => 'reza@example.com', 'date' => '۱۴۰۲/۰۹/۰۱'],
+            ['id' => 2, 'name' => 'علی حسینی', 'email' => 'ali@example.com', 'date' => '۱۴۰۲/۰۸/۱۵'],
+        ];
+
+        return view('admin.users', compact('users'));
+    }
+
+    public function settings()
+    {
+        return view('admin.settings');
+    }
+
+    public function support()
+    {
+        $tickets = [
+            ['id' => 1, 'title' => 'مشکل در پرداخت', 'status' => 'open', 'date' => '۱۴۰۲/۱۲/۱۵'],
+            ['id' => 2, 'title' => 'سوال درباره دوره', 'status' => 'open', 'date' => '۱۴۰۲/۱۲/۱۴'],
+        ];
+        $openTickets = 3;
+
+        return view('admin.support', compact('tickets', 'openTickets'));
+    }
+}
+</file>
+
+<file path="Http/Controllers/Admin/SettingController.php">
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Setting;
+use Illuminate\Http\Request;
+
+class SettingController extends Controller
+{
+    public function index()
+    {
+        $settings = [
+            'site_name'        => Setting::get('site_name', 'مانا'),
+            'site_description' => Setting::get('site_description', ''),
+            'site_keywords'    => Setting::get('site_keywords', ''),
+            'contact_email'    => Setting::get('contact_email', ''),
+            'contact_phone'    => Setting::get('contact_phone', ''),
+            'address'          => Setting::get('address', ''),
+            'telegram'         => Setting::get('telegram', ''),
+            'instagram'        => Setting::get('instagram', ''),
+            'twitter'          => Setting::get('twitter', ''),
+        ];
+
+        return view('admin.settings.index', compact('settings'));
+    }
+
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'site_name'        => 'required|string|max:255',
+            'site_description' => 'nullable|string',
+            'site_keywords'    => 'nullable|string',
+            'contact_email'    => 'nullable|email',
+            'contact_phone'    => 'nullable|string',
+            'address'          => 'nullable|string',
+            'telegram'         => 'nullable|url',
+            'instagram'        => 'nullable|url',
+            'twitter'          => 'nullable|url',
+        ]);
+
+        foreach ($validated as $key => $value) {
+            Setting::set($key, $value);
+        }
+
+        return redirect()->route('settings.index')->with('success', 'تنظیمات با موفقیت ذخیره شد.');
+    }
+}
+</file>
+
+<file path="Http/Controllers/Admin/SiteTextController.php">
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\SiteText;
+use Illuminate\Http\Request;
+
+class SiteTextController extends Controller
+{
+    public function index()
+    {
+        $texts = [
+            'hero_badge' => ['label' => 'بج بخش قهرمان', 'value' => 'استودیوی محصولات دیجیتال'],
+            'hero_title' => ['label' => 'عنوان اصلی قهرمان', 'value' => 'ساختن آینده دیجیتال شما، امروز شروع می‌شود'],
+            'hero_desc' => ['label' => 'توضیحات قهرمان', 'value' => 'از ایده تا محصول؛ تیم نوین‌آی با ترکیب هوش مصنوعی، طراحی مدرن و مهندسی دقیق، محصولاتی می‌سازد که کسب‌وکار شما را برای فردا آماده می‌کند.'],
+            'hero_trust' => ['label' => 'متن اعتماد', 'value' => 'مورد اعتماد بیش از ۵۰ کسب‌وکار موفق'],
+            'stat1_num' => ['label' => 'آمار ۱ - عدد', 'value' => '۲۵۰+'],
+            'stat1_text' => ['label' => 'آمار ۱ - متن', 'value' => 'پروژه موفق'],
+            'stat2_num' => ['label' => 'آمار ۲ - عدد', 'value' => '۹۸%'],
+            'stat2_text' => ['label' => 'آمار ۲ - متن', 'value' => 'رضایت مشتریان'],
+            'stat3_num' => ['label' => 'آمار ۳ - عدد', 'value' => '۵۰+'],
+            'stat3_text' => ['label' => 'آمار ۳ - متن', 'value' => 'مشتری فعال'],
+            'stat4_num' => ['label' => 'آمار ۴ - عدد', 'value' => '۲۴/۷'],
+            'stat4_text' => ['label' => 'آمار ۴ - متن', 'value' => 'پشتیبانی'],
+            'services_badge' => ['label' => 'بج خدمات', 'value' => 'خدمات ما'],
+            'services_title' => ['label' => 'عنوان خدمات', 'value' => 'هر آنچه برای رشد دیجیتال نیاز دارید، اینجاست'],
+            'services_sub' => ['label' => 'توضیحات خدمات', 'value' => 'از هوش مصنوعی تا اپلیکیشن موبایل؛ راهکارهایی که بر پایه‌ی داده، طراحی و مهندسی مدرن ساخته شده‌اند.'],
+            'why_badge' => ['label' => 'بج چرا مانا', 'value' => 'چرا مانا'],
+            'why_title' => ['label' => 'عنوان چرا مانا', 'value' => 'شریکی که رشد دیجیتال شما را جدی می‌گیرد'],
+            'why1_title' => ['label' => 'چرا مانا - عنوان ۱', 'value' => 'تیمی متخصص و باتجربه'],
+            'why1_desc' => ['label' => 'چرا مانا - توضیح ۱', 'value' => 'متخصصانی با سال‌ها تجربه در پروژه‌های واقعی و پیچیده.'],
+            'why2_title' => ['label' => 'چرا مانا - عنوان ۲', 'value' => 'کیفیت تضمین‌شده'],
+            'why2_desc' => ['label' => 'چرا مانا - توضیح ۲', 'value' => 'تست و بازبینی دقیق در هر مرحله از توسعه‌ی پروژه.'],
+            'why3_title' => ['label' => 'چرا مانا - عنوان ۳', 'value' => 'پشتیبانی ۲۴/۷'],
+            'why3_desc' => ['label' => 'چرا مانا - توضیح ۳', 'value' => 'همراهی و پاسخگویی سریع در تمام ساعات شبانه‌روز.'],
+            'why4_title' => ['label' => 'چرا مانا - عنوان ۴', 'value' => 'قیمت‌گذاری شفاف'],
+            'why4_desc' => ['label' => 'چرا مانا - توضیح ۴', 'value' => 'بدون هزینه‌ی پنهان؛ برآورد دقیق پیش از شروع کار.'],
+            'exp_num' => ['label' => 'عدد تجربه', 'value' => '۱۵+'],
+            'exp_title' => ['label' => 'عنوان تجربه', 'value' => 'سال تجربه'],
+            'exp_desc' => ['label' => 'توضیح تجربه', 'value' => 'در ساخت محصولات دیجیتال'],
+            'folio_badge' => ['label' => 'بج نمونه‌کار', 'value' => 'نمونه‌کارها'],
+            'folio_title' => ['label' => 'عنوان نمونه‌کار', 'value' => 'بخشی از پروژه‌های موفق ما'],
+            'folio_sub' => ['label' => 'توضیح نمونه‌کار', 'value' => 'روی هر مورد کلیک کنید تا جزئیات پروژه را ببینید.'],
+            'team_badge' => ['label' => 'بج تیم', 'value' => 'تیم ما'],
+            'team_title' => ['label' => 'عنوان تیم', 'value' => 'متخصصانی که ایده شما را می‌سازند'],
+            'testi_badge' => ['label' => 'بج نظرات', 'value' => 'نظرات مشتریان'],
+            'testi_title' => ['label' => 'عنوان نظرات', 'value' => 'آنچه مشتریان ما می‌گویند'],
+            'faq_badge' => ['label' => 'بج سوالات', 'value' => 'سوالات متداول'],
+            'faq_title' => ['label' => 'عنوان سوالات', 'value' => 'پاسخ سوالات رایج شما'],
+            'contact_badge' => ['label' => 'بج تماس', 'value' => 'تماس با ما'],
+            'contact_title' => ['label' => 'عنوان تماس', 'value' => 'برای مشاوره رایگان با ما تماس بگیرید'],
+            'contact_sub' => ['label' => 'توضیح تماس', 'value' => 'فرم زیر را پر کنید تا در کمتر از ۲۴ ساعت با شما تماس بگیریم.'],
+            'contact_btn' => ['label' => 'دکمه تماس', 'value' => 'ارسال پیام'],
+            'blog_title' => ['label' => 'عنوان وبلاگ', 'value' => 'مقالات و نکات دنیای دیجیتال'],
+            'blog_sub' => ['label' => 'توضیح وبلاگ', 'value' => 'آخرین یافته‌ها، راهنماها و تجربیات تیم فنی نوین‌آی'],
+            'blog_more' => ['label' => 'متن مشاهده همه', 'value' => 'مشاهده همه مقالات'],
+            'newsletter_title' => ['label' => 'عنوان خبرنامه', 'value' => 'از آخرین اخبار و تخفیف‌ها باخبر شوید!'],
+            'newsletter_sub' => ['label' => 'توضیح خبرنامه', 'value' => 'هر هفته یک ایمیل، بدون اسپم'],
+            'footer_links' => ['label' => 'عنوان لینک‌های سریع', 'value' => 'لینک‌های سریع'],
+            'footer_brand' => ['label' => 'نام برند', 'value' => 'مانا'],
+            'footer_tag' => ['label' => 'توضیح فوتر', 'value' => 'ارائه‌ی راهکارهای هوشمند دیجیتال؛ از ایده تا اجرا، همراه کسب‌وکار شما برای ساختن آینده‌ای دیجیتال.'],
+            'footer_services' => ['label' => 'عنوان خدمات فوتر', 'value' => 'خدمات'],
+            'badge1' => ['label' => 'نشان ۱', 'value' => 'قرارداد و محرمانگی NDA'],
+            'badge2' => ['label' => 'نشان ۲', 'value' => 'پشتیبانی ۲۴/۷'],
+            'badge3' => ['label' => 'نشان ۳', 'value' => 'تحویل به‌موقع پروژه'],
+            'badge4' => ['label' => 'نشان ۴', 'value' => 'قیمت‌گذاری شفاف'],
+            'copyright' => ['label' => 'کپی‌رایت', 'value' => '© ۲۰۲۶ مانا. تمامی حقوق محفوظ است.'],
+        ];
+
+        return view('admin.site-texts.index', compact('texts'));
+    }
+
+    public function update(Request $request)
+    {
+        foreach ($request->except('_token', '_method') as $key => $value) {
+            SiteText::updateOrCreate(['key' => $key], ['value' => $value]);
+        }
+
+        return redirect()->route('site-texts.index')->with('success', 'متن‌ها با موفقیت ذخیره شدند.');
+    }
+}
+</file>
+
+<file path="Http/Controllers/Admin/TicketController.php">
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Ticket;
+use Illuminate\Http\Request;
+
+class TicketController extends Controller
+{
+    public function index()
+    {
+        $tickets = Ticket::latest()->paginate(15);
+        $openCount = Ticket::where('status', 'open')->count();
+        return view('admin.support.index', compact('tickets', 'openCount'));
+    }
+
+    public function show($id)
+    {
+        $ticket = Ticket::findOrFail($id);
+        return view('admin.support.show', compact('ticket'));
+    }
+
+    public function close($id)
+    {
+        $ticket = Ticket::findOrFail($id);
+        $ticket->update(['status' => 'closed']);
+
+        return redirect()->route('support.index')->with('success', 'تیکت بسته شد.');
+    }
+
+    public function destroy($id)
+    {
+        $ticket = Ticket::findOrFail($id);
+        $ticket->delete();
+
+        return redirect()->route('support.index')->with('success', 'تیکت با موفقیت حذف شد.');
+    }
+}
+</file>
+
+<file path="Http/Controllers/Admin/UserController.php">
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+
+class UserController extends Controller
+{
+    public function index()
+    {
+        $users = User::latest()->paginate(15);
+        return view('admin.users.index', compact('users'));
+    }
+
+    public function create()
+    {
+        return view('admin.users.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email',
+            'password' => 'required|string|min:8',
+            'role'     => 'required|in:admin,teacher,student',
+        ]);
+
+        $validated['password'] = Hash::make($validated['password']);
+
+        User::create($validated);
+
+        return redirect()->route('users.index')->with('success', 'کاربر با موفقیت ایجاد شد.');
+    }
+
+    public function edit($id)
+    {
+        $user = User::findOrFail($id);
+        return view('admin.users.edit', compact('user'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $validated = $request->validate([
+            'name'     => 'required|string|max:255',
+            'email'    => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:8',
+            'role'     => 'required|in:admin,teacher,student',
+        ]);
+
+        if ($request->filled('password')) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+
+        $user->update($validated);
+
+        return redirect()->route('users.index')->with('success', 'کاربر با موفقیت بروزرسانی شد.');
+    }
+
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->route('users.index')->with('success', 'کاربر با موفقیت حذف شد.');
+    }
+}
+</file>
+
+<file path="Http/Controllers/Admin/UserStatsController.php">
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
+
+class UserStatsController extends Controller
+{
+    public function index()
+    {
+        $totalUsers = User::count();
+        $newUsersToday = User::whereDate('created_at', today())->count();
+        $newUsersThisWeek = User::where('created_at', '>=', now()->subWeek())->count();
+        $newUsersThisMonth = User::where('created_at', '>=', now()->subMonth())->count();
+
+        $admins = User::where('role', 'admin')->count();
+        $teachers = User::where('role', 'teacher')->count();
+        $students = User::where('role', 'student')->count();
+
+        return view('admin.users-stats.index', compact(
+            'totalUsers',
+            'newUsersToday',
+            'newUsersThisWeek',
+            'newUsersThisMonth',
+            'admins',
+            'teachers',
+            'students'
+        ));
+    }
+}
+</file>
+
+<file path="Http/Controllers/Admin/VisitorController.php">
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Visitor;
+use Illuminate\Http\Request;
+
+class VisitorController extends Controller
+{
+    public function index()
+    {
+        $visitors = Visitor::latest()->paginate(20);
+        return view('admin.visitors.index', compact('visitors'));
+    }
+
+    public function destroy($id)
+    {
+        $visitor = Visitor::findOrFail($id);
+        $visitor->delete();
+
+        return redirect()->route('visitors.index')->with('success', 'بازدیدکننده با موفقیت حذف شد.');
+    }
+}
+</file>
+
+<file path="Http/Controllers/API/Admin/DashboardController.php">
+<?php
+
+namespace App\Http\Controllers\Api\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Comments;
+use Illuminate\Http\Request;
+
+class DashboardController extends Controller
+{
+    public function stats()
+    {
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'profile_views' => '۱۱۲,۰۰۰',
+                'followers' => '۱۸۳,۰۰۰',
+                'saved' => '۱۱۲',
+                'comments' => 45,
+            ]
+        ]);
+    }
+
+    public function visitsChart(Request $request)
+    {
+        $period = $request->get('period', 'month');
+
+        $data = [
+            'month' => [
+                'labels' => ['فروردین', 'اردیبهشت', 'خرداد', 'تیر', 'مرداد', 'شهریور', 'مهر', 'آبان', 'آذر', 'دی', 'بهمن', 'اسفند'],
+                'visits' => [4200, 5100, 4800, 6200, 5800, 7100, 6900, 8200, 7800, 9100, 10500, 11200],
+                'visitors' => [3800, 4600, 4300, 5600, 5200, 6400, 6200, 7400, 7000, 8200, 9500, 10200],
+            ],
+            'week' => [
+                'labels' => ['شنبه', 'یکشنبه', 'دوشنبه', 'سه‌شنبه', 'چهارشنبه', 'پنج‌شنبه', 'جمعه'],
+                'visits' => [1200, 1400, 1100, 1600, 1500, 1900, 2100],
+                'visitors' => [1000, 1200, 950, 1400, 1300, 1700, 1900],
+            ],
+            'year' => [
+                'labels' => ['۱۳۹۹', '۱۴۰۰', '۱۴۰۱', '۱۴۰۲', '۱۴۰۳', '۱۴۰۴', '۱۴۰۵'],
+                'visits' => [35000, 42000, 38000, 45000, 48000, 52000, 58000],
+                'visitors' => [31000, 38000, 34000, 41000, 44000, 48000, 54000],
+            ],
+        ];
+
+        return response()->json([
+            'success' => true,
+            'data' => $data[$period] ?? $data['month']
+        ]);
+    }
+
+    public function genderChart()
+    {
+        return response()->json([
+            'success' => true,
+            'data' => [
+                'labels' => ['مرد', 'زن'],
+                'values' => [70, 30]
+            ]
+        ]);
+    }
+
+    public function visitorsByRegion()
+    {
+        return response()->json([
+            'success' => true,
+            'data' => [
+                ['region' => 'اروپا', 'count' => 862],
+                ['region' => 'آمریکا', 'count' => 375],
+                ['region' => 'هند', 'count' => 625],
+                ['region' => 'اندونزی', 'count' => 1025],
+                ['region' => 'ایران', 'count' => 842],
+            ]
+        ]);
+    }
+
+    public function recentComments()
+    {
+        $comments = Comments::where('is_approved', true)
+            ->latest()
+            ->take(5)
+            ->get()
+            ->map(function ($comment) {
+                return [
+                    'user' => $comment->user_name,
+                    'content' => $comment->content,
+                    'time' => $comment->created_at->diffForHumans(),
+                ];
+            });
+
+        return response()->json([
+            'success' => true,
+            'data' => $comments
+        ]);
+    }
+}
+</file>
+
+<file path="Http/Controllers/API/AuthController.php">
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
+class AuthController extends Controller
+{
+    // ثبت نام
+    public function register(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'family' => 'required|string|max:255',
+            'national' => 'required|string|size:10|unique:users',
+            'mobile' => 'required|string|size:11|unique:users',
+            'password' => 'required|string|min:6|confirmed',
+            'type' => 'nullable|in:1,2',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'خطا در اعتبارسنجی',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user = User::create([
+            'name' => $request->name,
+            'family' => $request->family,
+            'national' => $request->national,
+            'mobile' => $request->mobile,
+            'password' => Hash::make($request->password),
+            'type' => $request->type ?? 2,
+            'active' => 1,
+        ]);
+
+        return response()->json([
+            'message' => 'ثبت نام موفقیت‌آمیز بود',
+            'user' => $user
+        ], 201);
+    }
+
+    // ورود
+    public function login(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'mobile' => 'required|string|size:11',
+            'password' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'خطا در اعتبارسنجی',
+                'errors' => $validator->errors()
+            ], 422);
+        }
+
+        $user = User::where('mobile', $request->mobile)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return response()->json([
+                'message' => 'اطلاعات وارد شده صحیح نیست'
+            ], 401);
+        }
+
+        $token = $user->createToken('auth_token')->accessToken;
+
+        return response()->json([
+            'message' => 'ورود موفقیت‌آمیز',
+            'token' => $token,
+            'user' => $user
+        ]);
+    }
+
+    // خروج
+    public function logout(Request $request)
+    {
+        $request->user()->token()->revoke();
+
+        return response()->json([
+            'message' => 'خروج موفقیت‌آمیز'
+        ]);
+    }
+
+    // اطلاعات کاربر
+    public function user(Request $request)
+    {
+        return response()->json([
+            'user' => $request->user()
+        ]);
+    }
+}
+</file>
+
+<file path="Http/Controllers/AuthController.php">
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use App\Models\Role;
+use Illuminate\Support\Facades\Validator;
+
+class AuthController extends Controller
+{
+    public function login()
+    {
+        if (auth()->check()) {
+            // اگر کاربر لاگین بود بر اساس نقش هدایتش کن
+            $user = auth()->user();
+            if ($user->hasRole('admin')) {
+                return redirect()->route('index_admin');
+            } elseif ($user->hasRole('teacher')) {
+                return redirect()->route('index_teacher');
+            } elseif ($user->hasRole('student')) {
+                return redirect()->route('index_student');
+            }
+            return redirect()->route('home');
+        }
+        return view('fakeBlade.login');
+    }
+
+    public function register()
+    {
+        if (auth()->check()) {
+            // اگر کاربر لاگین بود بر اساس نقش هدایتش کن
+            $user = auth()->user();
+            if ($user->hasRole('admin')) {
+                return redirect()->route('index_admin');
+            } elseif ($user->hasRole('teacher')) {
+                return redirect()->route('index_teacher');
+            } elseif ($user->hasRole('student')) {
+                return redirect()->route('index_student');
+            }
+            return redirect()->route('home');
+        }
+        return view('fakeBlade.register');
+    }
+
+    public function registerPost(Request $request)
+    {
+        // اعتبارسنجی
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:191',
+            'family' => 'required|string|max:191',
+            'national' => 'required|string|size:10|unique:users,national',
+            'mobile' => 'required|string|size:11|unique:users,mobile',
+            'password' => 'required|string|min:6',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        try {
+            // ایجاد کاربر جدید
+            $user = User::create([
+                'name' => $request->name,
+                'family' => $request->family,
+                'national' => $request->national,
+                'mobile' => $request->mobile,
+                'password' => Hash::make($request->password),
+                'role' => 3, // پیشفرض: دانشجو (role=2)
+                'active' => 1,
+                'email' => null, // میتونی از موبایل یا ایمیل استفاده کنی
+            ]);
+
+            $user->addRole('student');
+
+            Auth::login($user);
+
+            if ($user->hasRole('admin')) {
+                return redirect()->route('admin.dashboard')->with('success', 'خوش آمدید مدیر گرامی');
+            } elseif ($user->hasRole('teacher')) {
+                return redirect()->route('index_teacher')->with('success', 'خوش آمدید استاد گرامی');
+            } elseif ($user->hasRole('student')) {
+                return redirect()->route('index_student')->with('success', 'خوش آمدید دانشجو گرامی');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->with('danger', 'خطا در ثبت نام: ' . $e->getMessage())
+                ->withInput();
+        }
+    }
+
+    public function loginPost(Request $request)
+    {
+        // اعتبارسنجی
+        $validator = Validator::make($request->all(), [
+            'national' => 'required|string|size:10',
+            'password' => 'required|string',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
+
+        // جستجوی کاربر با کد ملی
+        $user = User::where('national', $request->national)->first();
+
+        if (!$user) {
+            return redirect()->back()
+                ->with('error', 'کد ملی یا رمز عبور اشتباه است')
+                ->withInput();
+        }
+
+        // بررسی پسورد
+        if (!Hash::check($request->password, $user->password)) {
+            return redirect()->back()
+                ->with('error', 'کد ملی یا رمز عبور اشتباه است')
+                ->withInput();
+        }
+
+        // بررسی فعال بودن کاربر
+        // if ($user->active != 1) {
+        //     return redirect()->back()
+        //         ->with('error', 'حساب کاربری شما غیرفعال است')
+        //         ->withInput();
+        // }
+
+        // ورود کاربر
+        Auth::login($user, $request->has('remember'));
+
+        if ($user->hasRole('admin')) {
+            return redirect()->route('admin.dashboard')->with('success', 'خوش آمدید مدیر گرامی');
+        } elseif ($user->hasRole('teacher')) {
+            return redirect()->route('index_teacher')->with('success', 'خوش آمدید استاد گرامی');
+        } elseif ($user->hasRole('student')) {
+            return redirect()->route('index_student')->with('success', 'خوش آمدید دانشجو گرامی');
+        }
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/login')->with('success', 'با موفقیت خارج شدید');
+    }
+
+    function roleFun() {
+        $admin = new Role();
+        $admin->name = 'admin';
+        $admin->display_name = 'مدیر سیستم';
+        $admin->description = 'مدیریت کامل سیستم';
+        $admin->save();
+
+        $teacher = new Role();
+        $teacher->name = 'teacher';
+        $teacher->display_name = 'استاد';
+        $teacher->description = 'مدیریت دوره‌ها';
+        $teacher->save();
+
+        $student = new Role();
+        $student->name = 'student';
+        $student->display_name = 'دانشجو';
+        $student->description = 'دسترسی به دوره‌ها';
+        $student->save();
+    }
+
+
+}
+</file>
+
+<file path="Http/Controllers/BlogsController.php">
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Blogs;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+class BlogsController extends Controller
+{
+    public function index()
+    {
+        $blogs = Blogs::latest()->paginate(10);
+
+        return view('admin.blogs.blogs', compact('blogs'));
+    }
+
+    public function create()
+    {
+        return view('admin.blogs.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'text'      => 'required|string',
+            'image'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'reading-time' => 'nullable|integer|min:1',
+            'number' => 'nullable|integer',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = $request
+                ->file('image')
+                ->store('blogs', 'public');
+        }
+
+        $blog = Blogs::create($validated);
+
+        // Redirect to index instead of back()
+        return redirect()->route('blogs.index')
+            ->with('success', "مقاله «{$blog->title}» با موفقیت ثبت شد.");
+    }
+
+    public function edit($id)
+    {
+        $blog = Blogs::findOrFail($id);
+
+        return view('admin.blogs.edit', compact('blog'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $blog = Blogs::findOrFail($id);
+
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'text'       => 'required|string',
+            'image'        => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'reading-time'=> 'nullable|integer|min:1',
+            'number'       => 'nullable|integer',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if (
+                $blog->image_url &&
+                Storage::disk('public')->exists($blog->image_url)
+            ) {
+                Storage::disk('public')->delete($blog->image_url);
+            }
+
+            $validated['image_url'] = $request
+                ->file('image')
+                ->store('blogs', 'public');
+        }
+
+        $blog->update($validated);
+
+        return redirect()->route('blogs.index')
+            ->with('success', "مقاله «{$blog->title}» با موفقیت بروزرسانی شد.");
+    }
+
+    public function destroy($id)
+    {
+        $blog = Blogs::findOrFail($id);
+
+        // Save info before delete
+        $title = $blog->title;
+        $deletedId = $blog->id;
+
+        if (
+            $blog->image_url &&
+            Storage::disk('public')->exists($blog->image_url)
+        ) {
+            Storage::disk('public')->delete($blog->image_url);
+        }
+
+        $blog->delete();
+
+        return redirect()->route('blogs.index')
+            ->with('success', "مقاله «{$title}» (شناسه: {$deletedId}) با موفقیت حذف شد.");
+    }
+}
+</file>
+
+<file path="Http/Controllers/Controller.php">
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as BaseController;
+
+class Controller extends BaseController
+{
+    use AuthorizesRequests, ValidatesRequests;
+}
+</file>
+
+<file path="Http/Controllers/ImageController.php">
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Images;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+class ImageController extends Controller
+{
+    public function store_image(Request $request)
+    {
+        $validated = $request->validate([
+            'type'    => 'required|integer',
+            'sub-id'  => 'required|integer',
+            'image'   => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // فعلا برای حداکثر اندازه ی فایل، 2 مگابایت تعیین کردم
+        ]);
+
+        if ($request->hasFile('image')) {
+            $path = $request->file('image')->store('images', 'public');
+            
+            // ذخیره اطلاعات در دیتابیس
+            Images::create([
+                'type'   => $validated['type'],
+                'sub-id' => $validated['sub-id'],
+                'url'    => $path, //مسیر فایل ذخیره شده
+            ]);
+
+            return response()->json(['success'=>true, 'message' => 'Image stored succesfully'], 201);
+        }
+
+        return response()->json(['error' => 'Failed to store the image', 'success'=>false], 400);
+    }
+
+    
+    public function edit_image(Request $request, $id)
+    {
+        
+        $image = Images::findOrFail($id);
+
+  
+        $validated = $request->validate([
+            'type'    => 'integer',
+            'sub-id'  => 'integer',
+            'image'   => 'image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+        ]);
+
+        // اگر کاربر عکس جدیی فرستاده بود، قبلی پاک شود و جدید اضافه شود
+        if ($request->hasFile('image')) {
+            if ($image->url && Storage::disk('public')->exists($image->url)) {
+                Storage::disk('public')->delete($image->url);
+            }
+
+            // آپلود فایل جدید
+            $path = $request->file('image')->store('images', 'public');
+            $validated['url'] = $path;
+        }
+
+        // آپدیت کردن اطلاعات دیتابیس
+        $image->update($validated);
+
+        return response()->json(['success'=>true, 'message' => 'Image edited successfully', 'data' => $image], 200);
+    }
+
+    
+    public function delete_image($id)
+    {
+        $image = Images::findOrFail($id);
+
+        if ($image->url && Storage::disk('public')->exists($image->url)) {
+            Storage::disk('public')->delete($image->url);
+        }
+
+        $image->delete();
+
+        return response()->json(['success'=>true, 'message'=> 'Image deleted successfully'], 200);
+    }
+
+
+}
+</file>
+
+<file path="Http/Controllers/projectController.php">
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use App\Models\Projects;
+use App\Models\Images;
+use App\Models\Features;
+use Illuminate\Support\Facades\Storage;
+use App\Models\Categories;
+
+class projectController extends Controller
+{
+    public function createProject(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:100',
+            'brief' => 'required|string|max:500',
+            'desc' => 'required|string',
+            'cat-id' => 'required|integer',
+            'image_url' => 'nullable|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors(),'success' => false],  422);
+        }
+
+        $project = new Projects();
+        $maxNumber = Projects::max('number');
+
+        $project->title = $request->input('title');
+        $project->brief = $request->input('brief');
+        $project->desc = $request->input('desc');
+        $project->cat_id = $request->input('cat-id');
+        $project->image_url = $request->input('image_url');
+        $project->number = $maxNumber + 1;
+
+        $project->save();
+
+        return redirect()->back()->with('success', true);
+    }
+
+    public function deleteProject($id)
+    {
+        $project = Projects::findOrFail($id);
+
+        if (!$project) {
+            return response()->json(['error' => 'Project not found', 'success' => false], 404);
+        }
+
+        $project->delete();
+
+        return redirect()->back()->with('success', true);
+    }
+
+    public function editeProject(Request $request, $id)
+    {
+        $validator = Validator::make($request->all(), [
+            'title' => 'required|string|max:100',
+            'brief' => 'required|string|max:500',
+            'desc' => 'required|string',
+            'cat-id' => 'required|integer',
+            'image_url' => 'nullable|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors(),'success' => false],  422);
+        }
+
+        $project = Projects::findOrFail($id);
+
+        if (!$project) {
+            return response()->json(['error' => 'Project not found', 'success' => false], 404);
+        }
+
+        $project->title = $request->input('title');
+        $project->brief = $request->input('brief');
+        $project->desc = $request->input('desc');
+        $project->cat_id = $request->input('cat-id');
+        $project->image_url = $request->input('image_url');
+
+        $project->save();
+
+        return redirect()->back()->with('success', true);
+    }
+
+    public function returnAllProjects()
+    {
+        $projects = Projects::all();$projects = Projects::select('id', 'title', 'brief',
+                    'cat-id','image_url','number')->get();
+
+        return response()->json(['projects' => $projects, 'success' => true], 200);
+    }
+
+    public function returnProjectById($id)
+    {
+        $project = Projects::findOrFail($id);
+
+        if (!$project) {
+            return response()->json(['error' => 'Project not found', 'success' => false], 404);
+        }
+
+        $project_images = Images::Where('type', 1)->where('sub-id', $id)->get();
+
+        return response()->json(['project' => $project, 'images' => $project_images, 'success' => true], 200);
+    }
+
+    public function addImageToProject(Request $request,$projectId)
+    {
+        $validator = Validator::make($request->all(), [
+            'url' => 'required|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors(),'success' => false],  422);
+        }
+
+
+
+        $image = new Images();
+
+        $image->type = 1; //فرضذ تایپ 1 برای پروژه ها هست
+        $image->url = $request->input('url');
+        $image->sub_id = $projectId;
+
+        $image->save();
+
+        return redirect()->back()->with('success', true);
+    }
+
+    public function deleteImageFromProject($imageId)
+    {
+        $image = Images::findOrFail($imageId);
+
+        if (!$image) {
+            return response()->json(['error' => 'Image not found', 'success' => false], 404);
+        }
+
+        $image->delete();
+
+        return redirect()->back()->with('success', true);
+    }
+
+    public function addFeatureToProject(Request $request, $projectId)
+    {
+        $validator = Validator::make($request->all(), [
+            'text' => 'required|string|max:255',
+            'image_url' => 'nullable|string|max:255',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors(),'success' => false],  422);
+        }
+
+        $feature = new Features();
+
+        $feature->text = $request->input('text');
+        $feature->image_url = $request->input('image_url');
+        $feature->type = 1; //فرضذ تایپ 1 برای پروژه ها هست
+        $feature->sub_id = $projectId;
+
+        $feature->save();
+
+        return redirect()->back()->with('success', true);
+    }
+
+    public function deleteFeatureFromProject($featureId)
+    {
+        $feature = Features::findOrFail($featureId);
+
+        if (!$feature) {
+            return response()->json(['error' => 'Feature not found', 'success' => false], 404);
+        }
+
+        $feature->delete();
+
+        return redirect()->back()->with('success', true);
+    }
+
+    public function changeNumberOfProject(Request $request, $projectId)
+    {
+        $validator = Validator::make($request->all(), [
+            'number' => 'required|integer',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors(),'success' => false],  422);
+        }
+
+        $project = Projects::findOrFail($projectId);
+
+        if (!$project) {
+            return response()->json(['error' => 'Project not found', 'success' => false], 404);
+        }
+
+        $project->number = $request->input('number');
+        $project->save();
+
+        return redirect()->back()->with('success', true);
+    }
+
+
+
+    public function index()
+    {
+        $projects = Projects::latest()->paginate(10);
+        return view('admin.projects.index', compact('projects'));
+    }
+
+    public function create()
+    {
+        $categories = Categories::all();
+        return view('admin.projects.create', compact('categories'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'title'   => 'required|string|max:255',
+            'brief'   => 'nullable|string|max:500',
+            'desc'    => 'nullable|string',
+            'cat-id'  => 'nullable|integer',
+            'image'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        $maxNumber = Projects::max('number');
+        $validated['number'] = $maxNumber + 1;
+
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = $request->file('image')->store('projects', 'public');
+        }
+
+        Projects::create($validated);
+
+        return redirect()->route('projects.index')->with('success', 'پروژه با موفقیت ایجاد شد.');
+    }
+
+    public function edit($id)
+    {
+        $project = Projects::findOrFail($id);
+        $categories = Categories::all();
+        return view('admin.projects.edit', compact('project', 'categories'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $project = Projects::findOrFail($id);
+
+        $validated = $request->validate([
+            'title'   => 'required|string|max:255',
+            'brief'   => 'nullable|string|max:500',
+            'desc'    => 'nullable|string',
+            'cat-id'  => 'nullable|integer',
+            'image'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($project->image_url && Storage::disk('public')->exists($project->image_url)) {
+                Storage::disk('public')->delete($project->image_url);
+            }
+            $validated['image_url'] = $request->file('image')->store('projects', 'public');
+        }
+
+        $project->update($validated);
+
+        return redirect()->route('projects.index')->with('success', 'پروژه با موفقیت بروزرسانی شد.');
+    }
+
+    public function destroy($id)
+    {
+        $project = Projects::findOrFail($id);
+
+        if ($project->image_url && Storage::disk('public')->exists($project->image_url)) {
+            Storage::disk('public')->delete($project->image_url);
+        }
+
+        $project->delete();
+
+        return redirect()->route('projects.index')->with('success', 'پروژه با موفقیت حذف شد.');
+    }
+
+}
+</file>
+
+<file path="Http/Controllers/QuestionsController.php">
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Questions;
+use Illuminate\Http\Request;
+
+class QuestionsController extends Controller
+{
+    public function index()
+    {
+        // مرتب‌سازی بر اساس فیلد number
+        $questions = Questions::orderBy('number', 'asc')->paginate(10);
+        return view('admin.questions.questions', compact('questions'));
+    }
+
+    public function create()
+    {
+        return view('admin.questions.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'number'   => 'required|integer|min:1',
+            'title' => 'required|string|max:255',
+            'answer'   => 'required|string',
+        ]);
+
+        Questions::create($validated);
+
+        return redirect()->route('questions.index')->with('success', 'سوال جدید با موفقیت اضافه شد.');
+    }
+
+    public function edit($id)
+    {
+        $question = Questions::findOrFail($id);
+        return view('admin.questions.edit', compact('question'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $question = Questions::findOrFail($id);
+
+        $validated = $request->validate([
+            'number'   => 'required|integer|min:1',
+            'title' => 'required|string|max:255',
+            'answer'   => 'required|string',
+        ]);
+
+        $question->update($validated);
+
+        return redirect()->route('questions.index')->with('success', 'سوال متداول با موفقیت بروزرسانی شد.');
+    }
+
+    public function destroy($id)
+    {
+        $question = Questions::findOrFail($id);
+        $question->delete();
+
+        return redirect()->route('questions.index')->with('success', 'سوال متداول با موفقیت حذف شد.');
+    }
+}
+</file>
+
+<file path="Http/Controllers/SaleController.php">
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Sale;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+class SaleController extends Controller
+{
+    public function index()
+    {
+        $sales = Sale::latest()->paginate(10);
+        return view('admin.sales.index', compact('sales'));
+    }
+
+    public function create()
+    {
+        return view('admin.sales.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'title'  => 'required|string|max:255',
+            'text'   => 'nullable|string',
+            'image'  => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'price'  => 'nullable|integer',
+            'number' => 'nullable|integer',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = $request->file('image')->store('sales', 'public');
+        }
+
+        Sale::create($validated);
+
+        return redirect()->route('admin.sales.index')->with('success', 'محصول با موفقیت ایجاد شد.');
+    }
+
+    public function edit($id)
+    {
+        $sale = Sale::findOrFail($id);
+        return view('admin.sales.edit', compact('sale'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $sale = Sale::findOrFail($id);
+
+        $validated = $request->validate([
+            'title'  => 'required|string|max:255',
+            'text'   => 'nullable|string',
+            'image'  => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'price'  => 'nullable|integer',
+            'number' => 'nullable|integer',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($sale->image_url && Storage::disk('public')->exists($sale->image_url)) {
+                Storage::disk('public')->delete($sale->image_url);
+            }
+            $validated['image_url'] = $request->file('image')->store('sales', 'public');
+        }
+
+        $sale->update($validated);
+
+        return redirect()->route('admin.sales.index')->with('success', 'محصول با موفقیت بروزرسانی شد.');
+    }
+
+    public function destroy($id)
+    {
+        $sale = Sale::findOrFail($id);
+
+        if ($sale->image_url && Storage::disk('public')->exists($sale->image_url)) {
+            Storage::disk('public')->delete($sale->image_url);
+        }
+
+        $sale->delete();
+
+        return redirect()->route('admin.sales.index')->with('success', 'محصول با موفقیت حذف شد.');
+    }
+}
+</file>
+
+<file path="Http/Controllers/ServiceController.php">
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Services;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+class ServiceController extends Controller
+{
+    public function index()
+    {
+        $services = Services::orderBy('number', 'asc')->paginate(10);
+        return view('admin.pages.index', compact('services'));
+    }
+
+    public function create()
+    {
+        return view('admin.pages.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'title'  => 'required|string|max:255',
+            'text'   => 'nullable|string',
+            'image'  => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
+            'icon'   => 'nullable|string|max:50',
+            'number' => 'nullable|integer',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = $request->file('image')->store('services', 'public');
+        }
+
+        Services::create($validated);
+
+        return redirect()->route('pages.index')->with('success', 'خدمت با موفقیت ایجاد شد.');
+    }
+
+    public function edit($id)
+    {
+        $service = Services::findOrFail($id);
+        return view('admin.pages.edit', compact('service'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $service = Services::findOrFail($id);
+
+        $validated = $request->validate([
+            'title'  => 'required|string|max:255',
+            'text'   => 'nullable|string',
+            'image'  => 'nullable|image|mimes:jpeg,png,jpg,webp,svg|max:2048',
+            'icon'   => 'nullable|string|max:50',
+            'number' => 'nullable|integer',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($service->image_url && Storage::disk('public')->exists($service->image_url)) {
+                Storage::disk('public')->delete($service->image_url);
+            }
+            $validated['image_url'] = $request->file('image')->store('services', 'public');
+        }
+
+        $service->update($validated);
+
+        return redirect()->route('pages.index')->with('success', 'خدمت با موفقیت بروزرسانی شد.');
+    }
+
+    public function destroy($id)
+    {
+        $service = Services::findOrFail($id);
+
+        if ($service->image_url && Storage::disk('public')->exists($service->image_url)) {
+            Storage::disk('public')->delete($service->image_url);
+        }
+
+        $service->delete();
+
+        return redirect()->route('pages.index')->with('success', 'خدمت با موفقیت حذف شد.');
+    }
+}
+</file>
+
+<file path="Http/Controllers/SiteController.php">
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Blogs;
+use App\Models\Projects;
+use App\Models\Services;
+use App\Models\Team;
+use App\Models\Questions;
+use App\Models\Comments;
+use App\Models\Images;
+use App\Models\Features;
+use App\Models\SiteText;
+use Illuminate\Http\Request;
+
+class SiteController extends Controller
+{
+    public function index()
+{
+    $services = Services::orderBy('number')->get();
+    $projects = Projects::orderBy('number')->limit(6)->get();
+    $team = Team::orderBy('number')->get();
+    $questions = Questions::orderBy('number')->get();
+    $blogs = Blogs::orderBy('number')->limit(4)->get();
+    
+    // تغییر نام از $testimonials به $comments
+    $comments = Comments::where('is_approved', true)->limit(4)->get();
+
+    $stats = [
+        'projects_count' => Projects::count(),
+        'customers_count' => 50,
+        'support_hours' => 24,
+    ];
+
+
+    return view('index', compact('services', 'projects', 'team', 'questions', 'blogs', 'comments', 'stats'));
+}
+
+    public function blog()
+    {
+        $blogs = Blogs::orderBy('number')->paginate(9);
+        return view('blog', compact('blogs'));
+    }
+
+    public function singleBlog($id)
+    {
+        $blog = Blogs::findOrFail($id);
+        $relatedBlogs = Blogs::where('id', '!=', $id)->orderBy('number')->limit(3)->get();
+        $comments = Comments::where('is_approved', true)->latest()->get();
+        return view('singleblog', compact('blog', 'relatedBlogs', 'comments'));
+    }
+
+    public function project($id)
+    {
+        $project = Projects::findOrFail($id);
+        $images = Images::where('type', 1)->where('sub-id', $id)->get();
+        $features = Features::where('type', 1)->where('sub-id', $id)->get();
+        return view('project', compact('project', 'images', 'features'));
+    }
+}
+</file>
+
+<file path="Http/Controllers/SocialsController.php">
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Socials;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+class SocialsController extends Controller
+{
+    public function index()
+    {   
+        $socials = Socials::latest()->paginate(10);
+        return view('admin.socials.socials', compact('socials'));
+    }
+
+    public function create()
+    {
+        return view('admin.socials.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name'      => 'required|string|max:100',
+            'url'       => 'required|url',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+        ]);
+
+        if ($request->hasFile('image_url')) {
+            $validated['image_url'] = $request->file('image_url')->store('socials', 'public');
+        }
+
+        Socials::create($validated);
+
+        return redirect()->route('socials.index')->with('success', 'شبکه اجتماعی با موفقیت اضافه شد.');
+    }
+
+    public function edit($id)
+    {
+        $social = Socials::findOrFail($id);
+        return view('admin.socials.edit', compact('social'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $social = Socials::findOrFail($id);
+
+        $validated = $request->validate([
+            'name'      => 'required|string|max:100',
+            'url'       => 'required|url',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+        ]);
+
+        if ($request->hasFile('image_url')) {
+            if ($social->image_url && Storage::disk('public')->exists($social->image_url)) {
+                Storage::disk('public')->delete($social->image_url);
+            }
+            $validated['image_url'] = $request->file('image_url')->store('socials', 'public');
+        }
+
+        $social->update($validated);
+
+        return redirect()->route('socials.index')->with('success', 'شبکه اجتماعی با موفقیت بروزرسانی شد.');
+    }
+
+    public function destroy($id)
+    {
+        $social = Socials::findOrFail($id);
+
+        if ($social->image_url && Storage::disk('public')->exists($social->image_url)) {
+            Storage::disk('public')->delete($social->image_url);
+        }
+
+        $social->delete();
+
+        return redirect()->route('socials.index')->with('success', 'شبکه اجتماعی با موفقیت حذف شد.');
+    }
+}
+</file>
+
+<file path="Http/Controllers/StudentSiteController.php">
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+
+class StudentSiteController extends Controller
+{
+    function index() {
+        return view('student.index');
+    }
+}
+</file>
+
+<file path="Http/Controllers/TeacherSiteController.php">
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\CourseUser;
+use App\Models\Konkor;
+use App\Models\Role;
+use Auth;
+use DB;
+use Illuminate\Http\Request;
+
+class TeacherSiteController extends Controller
+{
+    function index() {
+        $user = Auth::user();        
+        $coursesCount = $user->courses()->count();
+        
+        $course_count = Auth::user()
+            ->courses()
+            ->where('active', '1')
+            ->where('private', '1')
+            ->count();
+
+        $konkor_count = Konkor::where('active', 1)->count();
+        $student_role_id = Role::where('name', 'student')->value('id');
+        
+        $student_count = DB::table('course_user')
+            ->join('courses', 'courses.id', '=', 'course_user.course_id')
+            ->where('course_user.role_id', $student_role_id)
+            ->where('courses.active', 1)
+            ->where('courses.archieve', 0)
+            // فقط درس‌هایی که این استاد داره
+            ->whereIn('course_user.course_id', function($query) {
+                $query->select('course_id')
+                    ->from('course_user')
+                    ->where('user_id', Auth::id())
+                    ->where('role_id', DB::table('roles')->where('name','teacher')->value('id'));
+            })
+            ->distinct('course_user.user_id')
+            ->count('course_user.user_id');
+            
+        $teacher_role_id = Role::where('name', 'teacher')->value('id');
+        
+        $lesson_count = DB::table('course_user')
+            ->join('courses', 'courses.id', '=', 'course_user.course_id')
+            ->where('course_user.user_id', Auth::id())
+            ->where('course_user.role_id', $teacher_role_id)
+            ->where('courses.archieve', 0)
+            ->where('courses.active', 1)
+            ->count();
+
+            return $lesson_count;
+        
+        return view('teacher.index', compact('coursesCount'));
+    }
+}
+</file>
+
+<file path="Http/Controllers/TeamController.php">
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Team;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
+class TeamController extends Controller
+{
+    public function index()
+    {
+        $members = Team::all();
+
+        return view('admin.team.team', compact('members'));
+    }
+
+    public function create()
+    {
+        return view('admin.team.create');
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name'      => 'required|string|max:255',
+            'title'     => 'nullable|string|max:255',
+            'image'     => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'instagram' => 'nullable|url',
+            'twitter'   => 'nullable|url',
+            'github'    => 'nullable|url',
+            'telegram'  => 'nullable|url',
+            'whatsapp'  => 'nullable|url',
+            'linkedin'  => 'nullable|url',
+        ]);
+
+        if ($request->hasFile('image')) {
+            $validated['image_url'] = $request->file('image')->store('team', 'public');
+        }
+
+        Team::create($validated);
+
+        return redirect()->route('team.index')->with('success', 'عضو تیم اضافه شد.');
+    }
+
+    public function edit($id)
+    {
+        $team = Team::findOrFail($id);
+
+        return view('admin.team.edit', compact('team'));
+    }
+
+    public function update(Request $request, $id)
+    {
+        $team = Team::findOrFail($id);
+
+        $validated = $request->validate([
+            'name'      => 'required|string|max:255',
+            'title'     => 'nullable|string|max:255',
+            'image'     => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'instagram' => 'nullable|url',
+            'twitter'   => 'nullable|url',
+            'github'    => 'nullable|url',
+            'telegram'  => 'nullable|url',
+            'whatsapp'  => 'nullable|url',
+            'linkedin'  => 'nullable|url',
+        ]);
+
+        if ($request->hasFile('image')) {
+            if ($team->image_url && Storage::disk('public')->exists($team->image_url)) {
+                Storage::disk('public')->delete($team->image_url);
+            }
+            $validated['image_url'] = $request->file('image')->store('team', 'public');
+        }
+
+        $team->update($validated);
+
+        return redirect()->route('team.index')->with('success', 'عضو تیم بروزرسانی شد.');
+    }
+
+    public function destroy($id)
+    {
+        $member = Team::findOrFail($id);
+
+        if ($member->image_url) {
+            Storage::disk('public')->delete($member->image_url);
+        }
+
+        $member->delete();
+
+        return redirect()->route('team.index')->with('success', 'عضو مورد نظر حذف شد.');
+    }
+}
+</file>
+
+<file path="Http/Controllers/TestController.php">
+<?php
+
+namespace App\Http\Controllers;
+
+use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Projects;
+use App\Models\Services;
+use App\Models\Team;
+use App\Models\Blogs;
+use App\Models\Comments;
+use App\Models\Socials;
+use Auth;
+
+class TestController extends Controller
+{
+    public function index()
+    {
+        $projects = Projects::latest()->get();
+        $services = Services::latest()->get();
+        $teams = Team::latest()->get();
+        $blogs = Blogs::latest()->take(6)->get();
+        $comments = Comments::where('is_approved', true)->latest()->take(4)->get();
+        $socials = Socials::latest()->get();
+        $services = Services::orderBy('number', 'asc')->get();
+        return view('index', compact('projects', 'services', 'teams', 'blogs', 'comments', 'socials'));
+    }
+
+    public function courses()
+    {
+        return view('courses');
+    }
+
+    public function publics()
+    {
+        return view('publics');
+    }
+
+    public function exams()
+    {
+        return view('exams');
+    }
+
+    public function surveys()
+    {
+        return view('surveys');
+    }
+
+    public function content()
+    {
+        return view('content');
+    }
+
+    public function createQuiz()
+    {
+        return view('create-quiz');
+    }
+
+    public function quizzes()
+    {
+        return view('quizzes');
+    }
+}
+</file>
+
+<file path="Http/Middleware/Authenticate.php">
+<?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Auth\Middleware\Authenticate as Middleware;
+use Illuminate\Http\Request;
+
+class Authenticate extends Middleware
+{
+    /**
+     * Get the path the user should be redirected to when they are not authenticated.
+     */
+    protected function redirectTo(Request $request): ?string
+    {
+        return $request->expectsJson() ? null : route('login');
+    }
+}
+</file>
+
+<file path="Http/Middleware/CheckTeacherActive.php">
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
+
+class CheckTeacherActive
+{
+    public function handle(Request $request, Closure $next): Response
+    {
+        $user = Auth::user();
+
+        if ($user && $user->teacherProfile) {
+
+            if ($user->teacherProfile->status === 'archived') {
+
+                Auth::logout();
+
+                return redirect()->route('login')
+                    ->with('error', 'حساب معلمی شما توسط مدیریت مسدود شده است');
+            }
+        }
+
+        return $next($request);
+    }
+}
+</file>
+
+<file path="Http/Middleware/CheckVendorActive.php">
+<?php
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class CheckVendorActive
+{
+    public function handle(Request $request, Closure $next)
+    {
+        $user = Auth::user();
+
+        if ($user && $user->teacherProfile && $user->teacherProfile->status === 'archived') {
+
+            Auth::logout();
+
+            return redirect('/login')
+                ->with('error', 'حساب کاربری شما توسط مدیریت غیرفعال شده است');
+        }
+
+        return $next($request);
+    }
+}
+</file>
+
+<file path="Http/Middleware/CheckVendorSheba.php">
+<?php
+
+namespace App\Http\Middleware;
+
+use Auth;
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class CheckVendorSheba
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next)
+    {
+
+        $user = auth()->user();
+
+        if ($user && $user->hasRole('vendor') && $user->vendorProfile->status == 'wating') {
+            return redirect()->route('vendor_singup');
+        }
+        if ($user && $user->hasRole('vendor') && $user->vendorProfile->status == 'request') {
+            return redirect()->route('vendor_singup');
+        }
+        if ($user && $user->hasRole('vendor') && $user->vendorProfile->status == 'archived') {
+            Auth::logout();
+
+            return redirect('/login')
+                ->with('error', 'حساب کاربری شما توسط مدیریت غیرفعال شده است');
+        }
+
+
+        return $next($request);
+    }
+}
+</file>
+
+<file path="Http/Middleware/EncryptCookies.php">
+<?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Cookie\Middleware\EncryptCookies as Middleware;
+
+class EncryptCookies extends Middleware
+{
+    /**
+     * The names of the cookies that should not be encrypted.
+     *
+     * @var array<int, string>
+     */
+    protected $except = [
+        //
+    ];
+}
+</file>
+
+<file path="Http/Middleware/EnsureUserHasPassword.php">
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class EnsureUserHasPassword
+{
+    public function handle(Request $request, Closure $next)
+    {
+        $user = Auth::user();
+
+        if ($user && empty($user->password)) {
+            return redirect()->route('set_password_show');
+        }
+
+        if ($user->hasRole('vendor')) {
+            return redirect()->route('vendor_index');
+        }
+
+        if ($user->hasRole('admin')) {
+            return redirect()->route('admin_index');
+        }
+
+        return $next($request);
+    }
+}
+</file>
+
+<file path="Http/Middleware/EnsureVendorHasNoIban.php">
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class EnsureVendorHasNoIban
+{
+    /**
+     * Handle an incoming request.
+     */
+    public function handle(Request $request, Closure $next)
+    {
+        $user = Auth::user();
+
+        // اگر لاگین نیست، بفرست به لاگین
+        if (!$user) {
+            return redirect()->route('login');
+        }
+
+        // اگر نقش vendor ندارد، می‌توانی 403 بدهی یا ریدایرکتش کنی
+        // اگر از spatie/laravel-permission استفاده می‌کنی:
+        if (!$user->hasRole('vendor')) {
+            abort(403, 'دسترسی غیرمجاز');
+        }
+
+        $profile = $user->vendorProfile;
+
+        // اگر هنوز پروفایل ندارد، اجازه بده فرم را پر کند
+        if ($profile->status == 'wating') {
+            return $next($request);
+        }
+        if ($profile->status == 'request' || $profile->status == 'archived') {
+            return redirect()
+                ->route('client_index');
+        }
+
+        return redirect()
+            ->route('vendor_index');
+    }
+}
+</file>
+
+<file path="Http/Middleware/PreventRequestsDuringMaintenance.php">
+<?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Foundation\Http\Middleware\PreventRequestsDuringMaintenance as Middleware;
+
+class PreventRequestsDuringMaintenance extends Middleware
+{
+    /**
+     * The URIs that should be reachable while maintenance mode is enabled.
+     *
+     * @var array<int, string>
+     */
+    protected $except = [
+        //
+    ];
+}
+</file>
+
+<file path="Http/Middleware/RedirectIfAuthenticated.php">
+<?php
+
+namespace App\Http\Middleware;
+
+use App\Providers\RouteServiceProvider;
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
+
+class RedirectIfAuthenticated
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next, string ...$guards): Response
+    {
+        $guards = empty($guards) ? [null] : $guards;
+
+        foreach ($guards as $guard) {
+            if (Auth::guard($guard)->check()) {
+                return redirect(RouteServiceProvider::HOME);
+            }
+        }
+
+        return $next($request);
+    }
+}
+</file>
+
+<file path="Http/Middleware/RedirectIfAuthenticatedCustom.php">
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+class RedirectIfAuthenticatedCustom
+{
+    public function handle(Request $request, Closure $next)
+    {
+        // اگر کاربر لاگین است اجازه ورود به صفحه لاگین را نمی‌دهیم
+        if (Auth::check() && Auth::user()->hasRole('student')) {
+            return redirect()->route('client_dashboard'); // تغییر مسیر دلخواه
+        } elseif (Auth::check() && Auth::user()->hasRole('teacher')) {
+            return redirect()->route('teacher_index'); // تغییر مسیر دلخواه
+        }elseif (Auth::check() && Auth::user()->hasRole('admin')) {
+            return redirect()->route('admin_index'); // تغییر مسیر دلخواه
+        }
+
+        return $next($request);
+    }
+}
+</file>
+
+<file path="Http/Middleware/testApi.php">
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
+
+class testApi
+{
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     */
+    public function handle(Request $request, Closure $next): Response
+    {
+return $next($request)
+            ->header('Access-Control-Allow-Origin', 'http://localhost:3000') // پورت ریکت شما
+            ->header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS')
+            ->header('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With')
+            ->header('Access-Control-Allow-Credentials', 'true');
+            }
+}
+</file>
+
+<file path="Http/Middleware/TrimStrings.php">
+<?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Foundation\Http\Middleware\TrimStrings as Middleware;
+
+class TrimStrings extends Middleware
+{
+    /**
+     * The names of the attributes that should not be trimmed.
+     *
+     * @var array<int, string>
+     */
+    protected $except = [
+        'current_password',
+        'password',
+        'password_confirmation',
+    ];
+}
+</file>
+
+<file path="Http/Middleware/TrustHosts.php">
+<?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Http\Middleware\TrustHosts as Middleware;
+
+class TrustHosts extends Middleware
+{
+    /**
+     * Get the host patterns that should be trusted.
+     *
+     * @return array<int, string|null>
+     */
+    public function hosts(): array
+    {
+        return [
+            $this->allSubdomainsOfApplicationUrl(),
+        ];
+    }
+}
+</file>
+
+<file path="Http/Middleware/TrustProxies.php">
+<?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Http\Middleware\TrustProxies as Middleware;
+use Illuminate\Http\Request;
+
+class TrustProxies extends Middleware
+{
+    /**
+     * The trusted proxies for this application.
+     *
+     * @var array<int, string>|string|null
+     */
+    protected $proxies;
+
+    /**
+     * The headers that should be used to detect proxies.
+     *
+     * @var int
+     */
+    protected $headers =
+        Request::HEADER_X_FORWARDED_FOR |
+        Request::HEADER_X_FORWARDED_HOST |
+        Request::HEADER_X_FORWARDED_PORT |
+        Request::HEADER_X_FORWARDED_PROTO |
+        Request::HEADER_X_FORWARDED_AWS_ELB;
+}
+</file>
+
+<file path="Http/Middleware/ValidateSignature.php">
+<?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Routing\Middleware\ValidateSignature as Middleware;
+
+class ValidateSignature extends Middleware
+{
+    /**
+     * The names of the query string parameters that should be ignored.
+     *
+     * @var array<int, string>
+     */
+    protected $except = [
+        // 'fbclid',
+        // 'utm_campaign',
+        // 'utm_content',
+        // 'utm_medium',
+        // 'utm_source',
+        // 'utm_term',
+    ];
+}
+</file>
+
+<file path="Http/Middleware/VerifyCsrfToken.php">
+<?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
+
+class VerifyCsrfToken extends Middleware
+{
+    /**
+     * The URIs that should be excluded from CSRF verification.
+     *
+     * @var array<int, string>
+     */
+    protected $except = [
+        //
+    ];
+}
+</file>
+
+<file path="Http/Kernel.php">
+<?php
+
+namespace App\Http;
+
+use Illuminate\Foundation\Http\Kernel as HttpKernel;
+
+class Kernel extends HttpKernel
+{
+    /**
+     * The application's global HTTP middleware stack.
+     *
+     * These middleware are run during every request to your application.
+     *
+     * @var array<int, class-string|string>
+     */
+    protected $middleware = [
+        // \App\Http\Middleware\TrustHosts::class,
+        \App\Http\Middleware\TrustProxies::class,
+        \Illuminate\Http\Middleware\HandleCors::class,
+        \App\Http\Middleware\PreventRequestsDuringMaintenance::class,
+        \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
+        \App\Http\Middleware\TrimStrings::class,
+        \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
+    ];
+
+    /**
+     * The application's route middleware groups.
+     *
+     * @var array<string, array<int, class-string|string>>
+     */
+    protected $middlewareGroups = [
+        'web' => [
+            \App\Http\Middleware\EncryptCookies::class,
+            \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            \Illuminate\Session\Middleware\StartSession::class,
+            \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            \App\Http\Middleware\VerifyCsrfToken::class,
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+
+        'api' => [
+            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+            \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
+            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+        ],
+    ];
+
+    /**
+     * The application's middleware aliases.
+     *
+     * Aliases may be used to conveniently assign middleware to routes and groups.
+     *
+     * @var array<string, class-string|string>
+     */
+    protected $middlewareAliases = [
+        'auth' => \App\Http\Middleware\Authenticate::class,
+        'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
+        'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
+        'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
+        'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+        'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
+        'signed' => \App\Http\Middleware\ValidateSignature::class,
+        'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'has.password' => \App\Http\Middleware\EnsureUserHasPassword::class,
+        'vendor.sheba' => \App\Http\Middleware\CheckVendorSheba::class,
+        'teacher.active' => \App\Http\Middleware\CheckTeacherActive::class,
+        'vendor_no_iban' => \App\Http\Middleware\EnsureVendorHasNoIban::class,
+        'guest.custom' => \App\Http\Middleware\RedirectIfAuthenticatedCustom::class,
+    ];
+}
+</file>
+
+<file path="Imports/DiscountCodeImport.php">
+<?php
+
+namespace App\Imports;
+
+use App\Models\DiscountCode;
+use Illuminate\Support\Collection;
+use Maatwebsite\Excel\Concerns\ToCollection;
+
+class DiscountCodeImport implements ToCollection
+{
+    public function collection(Collection $rows)
+    {
+        foreach ($rows as $key => $row) {
+
+            // skip header row
+            if ($key == 0) continue;
+
+            $code = $row[0];         // ستون A
+            $percent = $row[1];      // ستون B
+            $productId = $row[2];    // ستون C
+
+            // 1. ایجاد کد تخفیف با new و save
+            $discount = new DiscountCode();
+            $discount->code = $code . $productId;
+            $discount->type = 'percent';
+            $discount->value = $percent;
+            $discount->max_usage = 1;
+            $discount->used_count = 0;
+            $discount->expire_at = now()->addDays(7);
+            $discount->is_active = 1;
+            $discount->save();
+
+            // 2. ثبت ارتباط با محصول
+            if ($productId) {
+                $discount->products()->attach($productId);
+            }
+        }
+    }
+}
+</file>
+
+<file path="Models/Blogs.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\Images;
+
+class Blogs extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['title', 'text', 'image_url', 'reading-time', 'number'];
+    protected $table = 'blogs';
+    protected $casts = [
+        'reading-time' => 'integer',
+        'number' => 'integer'
+];
+    
+        public function images(){
+            return $this->hasMany(Images::class);
+        }
+
+}
+</file>
+
+<file path="Models/Categories.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Categories extends Model
+{
+    use HasFactory;
+    public $fillable = ['name'];
+    public $table = 'categories';
+}
+</file>
+
+<file path="Models/Comments.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Comments extends Model
+{
+    use HasFactory;
+
+    protected $table="comments";
+    protected $fillable = ['user_name', 'content', 'is_approved'];
+
+    protected $casts = [
+        'is_approved' => 'boolean'
+    ];
+}
+</file>
+
+<file path="Models/Features.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Images;
+
+
+class Features extends Model
+{
+    use HasFactory;
+    public $fillable = ['text', 'image_url', 'type', 'sub-id'];
+    public $table = 'features';
+    public $casts = [
+        'type'=> 'integer',
+        'sub-id' => 'integer'
+    ];
+
+    public function images(){
+        return $this->hasMany(Images::class);
+    }
+}
+</file>
+
+<file path="Models/Format.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Format extends Model
+{
+    use HasFactory;
+
+    protected $table = 'formats';
+    protected $fillable = ['title', 'mime_type', 'extension'];
+}
+</file>
+
+<file path="Models/Images.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Models\Services;
+use App\Models\Projects;
+use App\Models\Features;
+use App\Models\Blogs;
+use App\Models\Teams;
+
+
+
+class Images extends Model
+{
+    use HasFactory;
+    public $fillable = ['type', 'url', 'sub-id'];
+    public $table = 'images';
+    public $casts = [
+        'type'=> 'integer',
+        'sub-id' => 'integer'
+    ];
+
+    public function services(){
+        return $this->belongsTo(Services::class);
+    }
+
+    public function projects(){
+        return $this->belongsTo(Projects::class, 'sub-id');
+    }
+
+    public function features(){
+        return $this->belongsTo(Features::class);
+    }
+    
+    public function blogs(){
+        return $this->belongsTo(Blogs::class);
+    }
+
+    public function teams(){
+        return $this->belongsTo(Teams::class);
+    }
+    
+}
+</file>
+
+<file path="Models/Permission.php">
+<?php
+
+namespace App\Models;
+
+use Laratrust\Models\Permission as PermissionModel;
+
+class Permission extends PermissionModel
+{
+    public $guarded = [];
+}
+</file>
+
+<file path="Models/Projects.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Images;
+
+class Projects extends Model
+{
+    use HasFactory;
+    public $table = 'projects';
+    public $fillable = ['title', 'brief', 'desc', 'cat-id', 'image_url','number'];
+    public $casts = [
+        'cat-id' => 'integer',
+        'number' => 'integer'
+    ];
+
+    public function Images(){
+        return $this->hasMany(Images::class);
+    }
+}
+</file>
+
+<file path="Models/Questions.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+
+class Questions extends Model
+{
+    use HasFactory;
+
+    public $fillable = ['title', 'answer', 'number'];
+    public $table = 'questions';
+    public $casts = [
+        'number' => 'integer',
+    ];
+
+    
+}
+</file>
+
+<file path="Models/Role.php">
+<?php
+
+namespace App\Models;
+
+use Laratrust\Models\Role as RoleModel;
+
+class Role extends RoleModel
+{
+    public $guarded = [];
+}
+</file>
+
+<file path="Models/Sale.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Sale extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['title', 'text', 'image_url', 'price', 'number'];
+
+    protected $table = 'sales';
+
+    protected $casts = [
+        'price' => 'integer',
+        'number' => 'integer'
+    ];
+}
+</file>
+
+<file path="Models/Services.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Images;
+
+class Services extends Model
+{
+    use HasFactory;
+    public $table = 'services';
+    public $fillable = ['title', 'text', 'image_url', 'number', 'icon'];
+
+    public function images(){
+        return $this->hasMany(Images::class);
+    }
+}
+</file>
+
+<file path="Models/Setting.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Setting extends Model
+{
+    protected $fillable = ['key', 'value'];
+
+    public static function get($key, $default = null)
+    {
+        $setting = self::where('key', $key)->first();
+        return $setting ? $setting->value : $default;
+    }
+
+    public static function set($key, $value)
+    {
+        return self::updateOrCreate(['key' => $key], ['value' => $value]);
+    }
+}
+</file>
+
+<file path="Models/SiteText.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class SiteText extends Model
+{
+    use HasFactory;
+
+    protected $table = 'site_texts';
+    protected $fillable = ['key', 'value'];
+
+    public static function get($key, $default = null)
+    {
+        $record = self::where('key', $key)->first();
+        return $record ? $record->value : $default;
+    }
+}
+</file>
+
+<file path="Models/Socials.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Socials extends Model
+{
+    use HasFactory;
+    public $fillable = ['name', 'image_url', 'url'];
+    public $table = 'socials';
+}
+</file>
+
+<file path="Models/Team.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class Team extends Model
+{
+    use HasFactory;
+
+    public $fillable = [
+        'name',
+        'title',
+        'number',
+        'image_url',
+        'instagram',
+        'twitter',
+        'github',
+        'telegram',
+        'whatsapp',
+        'linkedin',
+    ];
+
+    public $table = 'team';
+
+    public $casts = [
+        'number' => 'integer',
+    ];
+
+    public function images(){
+        return $this->belongsTo(Images::class);
+    }
+}
+</file>
+
+<file path="Models/Teams.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+
+class Team extends Model
+{
+    use HasFactory;
+    public $fillable = ['name', 'title', 'number', 'image_url'];
+    public $table = 'team';
+    public $casts = [
+        'number'=> 'integer',
+    ];
+
+
+    public function images(){
+        return $this->belongsTo(Images::class);
+    }
+}
+</file>
+
+<file path="Models/Ticket.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Ticket extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['user_name', 'email', 'subject', 'message', 'status'];
+
+    protected $casts = [
+        'status' => 'string'
+    ];
+}
+</file>
+
+<file path="Models/User.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+class User extends Authenticatable
+{
+    use HasFactory, Notifiable;
+
+    protected $fillable = [
+        'name',
+        'email',
+        'password',
+        'role',
+    ];
+
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+}
+</file>
+
+<file path="Models/Visitor.php">
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Visitor extends Model
+{
+    use HasFactory;
+
+    protected $fillable = ['ip_address', 'country', 'region', 'visited_at'];
+
+    protected $casts = [
+        'visited_at' => 'datetime'
+    ];
+}
+</file>
+
+<file path="Providers/AppServiceProvider.php">
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\ServiceProvider;
+
+class AppServiceProvider extends ServiceProvider
+{
+    /**
+     * Register any application services.
+     */
+    public function register(): void
+    {
+        //
+    }
+
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        //
+    }
+}
+</file>
+
+<file path="Providers/AuthServiceProvider.php">
+<?php
+
+namespace App\Providers;
+
+// use Illuminate\Support\Facades\Gate;
+use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+
+class AuthServiceProvider extends ServiceProvider
+{
+    /**
+     * The model to policy mappings for the application.
+     *
+     * @var array<class-string, class-string>
+     */
+    protected $policies = [
+        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+    ];
+
+    /**
+     * Register any authentication / authorization services.
+     */
+    public function boot(): void
+    {
+        $this->registerPolicies();
+
+        //
+    }
+}
+</file>
+
+<file path="Providers/BroadcastServiceProvider.php">
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Support\Facades\Broadcast;
+use Illuminate\Support\ServiceProvider;
+
+class BroadcastServiceProvider extends ServiceProvider
+{
+    /**
+     * Bootstrap any application services.
+     */
+    public function boot(): void
+    {
+        Broadcast::routes();
+
+        require base_path('routes/channels.php');
+    }
+}
+</file>
+
+<file path="Providers/EventServiceProvider.php">
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Auth\Events\Registered;
+use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
+use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Event;
+
+class EventServiceProvider extends ServiceProvider
+{
+    /**
+     * The event to listener mappings for the application.
+     *
+     * @var array<class-string, array<int, class-string>>
+     */
+    protected $listen = [
+        Registered::class => [
+            SendEmailVerificationNotification::class,
+        ],
+    ];
+
+    /**
+     * Register any events for your application.
+     */
+    public function boot(): void
+    {
+        //
+    }
+
+    /**
+     * Determine if events and listeners should be automatically discovered.
+     */
+    public function shouldDiscoverEvents(): bool
+    {
+        return false;
+    }
+}
+</file>
+
+<file path="Providers/RouteServiceProvider.php">
+<?php
+
+namespace App\Providers;
+
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Support\Facades\Route;
+
+class RouteServiceProvider extends ServiceProvider
+{
+    /**
+     * The path to the "home" route for your application.
+     *
+     * Typically, users are redirected here after authentication.
+     *
+     * @var string
+     */
+    public const HOME = '/home';
+
+    /**
+     * Define your route model bindings, pattern filters, and other route configuration.
+     */
+    public function boot(): void
+    {
+        $this->configureRateLimiting();
+
+        $this->routes(function () {
+            Route::middleware('api')
+                ->prefix('api')
+                ->group(base_path('routes/api.php'));
+
+            Route::middleware('web')
+                ->group(base_path('routes/web.php'));
+        });
+    }
+
+    /**
+     * Configure the rate limiters for the application.
+     */
+    protected function configureRateLimiting(): void
+    {
+        RateLimiter::for('api', function (Request $request) {
+            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        });
+    }
+}
+</file>
+
+</files>

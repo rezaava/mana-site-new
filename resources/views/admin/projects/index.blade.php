@@ -20,7 +20,7 @@
                 @forelse($projects as $i => $project)
                     <tr style="border-bottom: 1px solid var(--border);">
                         <td style="padding: 12px;">{{ $projects->firstItem() + $i }}</td>
-                        <td style="padding: 12px;">@if($project->image_url)<img src="{{ asset('storage/'.$project->image_url) }}" style="width:45px;height:45px;object-fit:cover;border-radius:6px;">@else --- @endif</td>
+                        <td style="padding: 12px;">@if($project->image_url)<img src="{{ asset('storage/') }}) }}.$project->image_url) }}" style="width:45px;height:45px;object-fit:cover;border-radius:6px;">@else --- @endif</td>
                         <td style="padding: 12px;">{{ $project->title }}</td>
                         <td style="padding: 12px;">{{ Str::limit($project->brief, 40) }}</td>
                         <td style="padding: 12px;">{{ $project->number ?? '-' }}</td>

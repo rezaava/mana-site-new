@@ -74,7 +74,7 @@
                 <div style="margin-top: 10px;">
                     @if($blog->image_url)
                         <small style="color: var(--text-light); display: block; margin-bottom: 5px;">تصویر فعلی:</small>
-                        <img src="{{ asset('storage/' . $blog->image_url) }}" alt="{{ $blog->title }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);">
+                        <img src="{{ asset('storage/') }}) }} . $blog->image_url) }}" alt="{{ $blog->title }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; border: 1px solid var(--border);">
                     @else
                         <small style="color: var(--text-light); display: block;">تصویری برای این مقاله ثبت نشده است.</small>
                     @endif

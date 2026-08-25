@@ -31,7 +31,7 @@
                         <td style="padding: 12px;">{{ $teamMembers->firstItem() + $i }}</td>
                         <td style="padding: 12px;">
                             @if($member->image_url)
-                                <img src="{{ asset('storage/'.$member->image_url) }}" style="width:45px;height:45px;object-fit:cover;border-radius:50%;">
+                                <img src="{{ asset('storage/') }}) }}.$member->image_url) }}" style="width:45px;height:45px;object-fit:cover;border-radius:50%;">
                             @else --- @endif
                         </td>
                         <td style="padding: 12px;">{{ $member->name }}</td>

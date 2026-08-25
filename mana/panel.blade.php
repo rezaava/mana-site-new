@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="fa" dir="rtl" data-theme="dark">
 <head>
-    <link rel="icon" type="image/x-icon" href="{{ asset('img/mana.png') }}">
+    <link rel="icon" type="image/x-icon" href="{{ asset('img/mana.png') }}) }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>پنل مدیریت | مانا</title>
@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.min.css">
-    <link rel="stylesheet" href="{{ asset('css/paneladmin.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/paneladmin.css') }}') }}) }}') }}">
 </head>
 <body>
 <!-- ===== CURSOR ===== -->
@@ -24,7 +24,7 @@
     <aside class="sidebar" id="sidebar">
         <div class="brand">
             <span class="mark">
-                <img src="{{ asset('img/mana.png') }}" alt="مانا">
+                <img src="{{ asset('img/mana.png') }}) }}" alt="مانا">
             </span>
             <span>پنل مدیریت</span>
         </div>
@@ -89,7 +89,7 @@
         <!-- کارت کاربر -->
         <div class="user-card">
             <div class="avatar">
-                <img src="{{ asset('img/contect3.jpg') }}" alt="admin">
+                <img src="{{ asset('img/contect3.jpg') }}) }}" alt="admin">
             </div>
             <div class="info">
                 <h6>رضا آواره</h6>
@@ -128,7 +128,7 @@
 <!-- ===== SCRIPTS ===== -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script src="{{ asset('js/paneladmin.js') }}"></script>
+<script src="{{ asset('js/paneladmin.js') }}') }}) }}') }}"></script>
 @yield('scripts')
 </body>
 </html>

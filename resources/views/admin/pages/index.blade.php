@@ -35,7 +35,7 @@
                             <td style="padding: 12px;">{{ persianNum($services->firstItem() + $index) }}</td>
                             <td style="padding: 12px;">
                                 @if($service->image_url)
-                                    <img src="{{ asset('storage/' . $service->image_url) }}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px;">
+                                    <img src="{{ asset('storage/') }}) }} . $service->image_url) }}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px;">
                                 @else
                                     <span style="color: var(--text-light);">بدون تصویر</span>
                                 @endif
