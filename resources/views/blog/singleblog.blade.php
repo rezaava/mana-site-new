@@ -11,6 +11,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="stylesheet" href="{{ asset('css/index.css') }}" />
     
+    @if($blog->created_at)
+  <span>
+    <i class="fa-regular fa-calendar"></i> 
+    {{ \Morilog\Jalali\Jalalian::fromDateTime($blog->created_at)->format('Y/m/d') }}
+  </span>
+@endif
+    
     <style>
       .blog-single-hero {
         padding-top: 140px;
@@ -129,7 +136,7 @@
               {{-- متاداده (زمان مطالعه و تاریخ) --}}
               <div class="blog-meta-bar">
                 @if($blog->created_at)
-                  <span><i class="fa-regular fa-calendar"></i> {{ $blog->created_at->format('Y/m/d') }}</span>
+                  <span><i class="fa-regular fa-calendar"></i> {{ \Morilog\Jalali\Jalalian::fromDateTime($blog->created_at)->format('Y/m/d') }}</span>
                 @endif
                 
                 @if($blog->{'reading-time'})
