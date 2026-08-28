@@ -93,6 +93,9 @@ Route::prefix('/admin')->group(function () {
     Route::delete('/comments/{id}', [CommentController::class, 'destroy'])->name('comments.destroy');
     Route::get('/comments/create', [CommentController::class, 'create'])->name('comments.create');
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
+    Route::get('/comments/{id}/unapprove', [CommentController::class, 'unapprove'])->name('comments.unapprove');
+    Route::get('/comments/{id}/edit', [CommentController::class, 'edit'])->name('comments.edit');
+    Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
 
     // کاربران
     Route::get('/users', [UserController::class, 'index'])->name('users.index');

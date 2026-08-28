@@ -118,9 +118,21 @@ document.querySelectorAll(".acc-item").forEach((item) => {
 
 /* ---------- counters 0 -> target ---------- */
 function animateCounter(el) {
-  const target = +el.dataset.target;
+  // ۱. خواندن مقدار اولیه
+  const rawTarget = el.dataset.target || "0";
+  
+  // ۲. تبدیل اعداد فارسی/عربی به انگلیسی و حذف کاراکترهای اضافی
+  const cleanTarget = rawTarget
+    .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+    .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
+    .replace(/[^\d.-]/g, '');
+
+  // ۳. تبدیل امن به عدد
+  const target = parseFloat(cleanTarget) || 0;
+  
   const dur = 1600;
   const start = performance.now();
+
   function step(now) {
     const p = Math.min((now - start) / dur, 1);
     const eased = 1 - Math.pow(1 - p, 3);
@@ -129,6 +141,7 @@ function animateCounter(el) {
   }
   requestAnimationFrame(step);
 }
+
 const statStrip = document.querySelector(".stat-strip");
 if (statStrip) {
   const cio = new IntersectionObserver(
@@ -274,4 +287,38 @@ if (window.matchMedia("(pointer:fine)").matches) {
       el.addEventListener("mouseenter", () => ring.classList.add("hover"));
       el.addEventListener("mouseleave", () => ring.classList.remove("hover"));
     });
+
+    /* ---------- global english to persian digits converter ---------- */
+function convertNodeNumbers(node) {
+  // اگر نود متنی بود و داخل اسکریپت یا استایل نبود
+  if (node.nodeType === Node.TEXT_NODE) {
+    if (node.parentNode && !['SCRIPT', 'STYLE', 'TEXTAREA', 'INPUT'].includes(node.parentNode.tagName)) {
+      node.nodeValue = toFa(node.nodeValue);
+    }
+  } else {
+    // پیمایش فرزندان نود
+    for (let child of node.childNodes) {
+      convertNodeNumbers(child);
+    }
+  }
+}
+
+// ۱. تبدیل تمام اعداد موجود در DOM موقع لود صفحه
+document.addEventListener("DOMContentLoaded", () => {
+  convertNodeNumbers(document.body);
+
+  // ۲. زیر نظر گرفتن تغییرات صفحه (برای محتوایی که با JS یا Ajax اضافه می‌شن)
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      mutation.addedNodes.forEach((node) => {
+        convertNodeNumbers(node);
+      });
+    });
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true
+  });
+});
 }

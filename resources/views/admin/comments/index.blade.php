@@ -48,15 +48,27 @@
                             </td>
                             <td style="padding: 12px;">{{ $comment->created_at->format('Y/m/d H:i') }}</td>
                             <td style="padding: 12px;">
+                                {{-- دکمه تایید / عدم تایید --}}
                                 @if(!$comment->is_approved)
-                                    <a href="{{ route('comments.approve', $comment->id) }}" class="btn btn-sm btn-success" style="margin-left: 3px; display: inline-block; padding: 6px 10px; border-radius: 6px; text-decoration: none;" onclick="return confirm('تایید این نظر؟');">
+                                    <a href="{{ route('comments.approve', $comment->id) }}" class="btn btn-sm btn-success" style="margin-left: 3px; display: inline-block; padding: 6px 10px; border-radius: 6px; text-decoration: none;" onclick="return confirm('تایید این نظر؟');" title="تایید">
                                         <i class="fa-solid fa-check"></i>
                                     </a>
+                                @else
+                                    <a href="{{ route('comments.unapprove', $comment->id) }}" class="btn btn-sm btn-secondary" style="margin-left: 3px; display: inline-block; padding: 6px 10px; border-radius: 6px; text-decoration: none; background: #6b7280; color: white;" onclick="return confirm('عدم تایید و انتقال به در انتظار؟');" title="عدم تایید">
+                                        <i class="fa-solid fa-xmark"></i>
+                                    </a>
                                 @endif
+
+                                {{-- دکمه ویرایش --}}
+                                <a href="{{ route('comments.edit', $comment->id) }}" class="btn btn-sm btn-warning" style="margin-left: 3px; display: inline-block; padding: 6px 10px; border-radius: 6px; text-decoration: none;" title="ویرایش">
+                                    <i class="fa-solid fa-edit"></i>
+                                </a>
+
+                                {{-- دکمه حذف --}}
                                 <form action="{{ route('comments.destroy', $comment->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('آیا از حذف این نظر اطمینان دارید؟');">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" style="padding: 6px 10px; border-radius: 6px; border: none; cursor: pointer;">
+                                    <button type="submit" class="btn btn-sm btn-danger" style="padding: 6px 10px; border-radius: 6px; border: none; cursor: pointer;" title="حذف">
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
                                 </form>

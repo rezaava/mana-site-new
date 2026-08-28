@@ -20,25 +20,18 @@ class SiteController extends Controller
      */
     public function index()
     {
-        // ۱. دریافت خدمات مرتب‌شده بر اساس ستون number
         $services = Services::orderBy('number', 'asc')->get();
 
-        // ۲. دریافت ۶ پروژه اخیر/مرتب‌شده
         $projects = Projects::orderBy('number', 'asc')->limit(6)->get();
 
-        // ۳. اعضای تیم
-        $team = Team::orderBy('id', 'desc')->get();
+        $teams = Team::orderBy('id', 'desc')->get();
 
-        // ۴. سوالات متداول مرتب‌شده
         $questions = Questions::orderBy('number', 'asc')->get();
 
-        // ۵. ۴ مقاله اخیر وبلاگ
         $blogs = Blogs::orderBy('number', 'asc')->limit(4)->get();
 
-        // ۶. نظرات تایید شده
         $comments = Comments::where('is_approved', true)->latest()->limit(6)->get();
 
-        // ۷. محاسبه آمار واقعی از روی دیتابیس (با قابلیت دریافت متن جایگزین از site_texts)
         $stats = [
             'projects_count'  => SiteText::where('key', 'stat1_num')->value('value') ?? Projects::count(),
             'satisfaction'    => SiteText::where('key', 'stat2_num')->value('value') ?? '۹۸%',
@@ -49,7 +42,7 @@ class SiteController extends Controller
         return view('index', compact(
             'services', 
             'projects', 
-            'team', 
+            'teams', 
             'questions', 
             'blogs', 
             'comments', 
@@ -73,13 +66,11 @@ class SiteController extends Controller
     {
         $blog = Blogs::findOrFail($id);
         
-        // مقالات مرتبط (به جز مقاله فعلی)
         $relatedBlogs = Blogs::where('id', '!=', $id)
             ->orderBy('number', 'asc')
             ->limit(3)
             ->get();
 
-        // نظرات تایید شده
         $comments = Comments::where('is_approved', true)->latest()->get();
 
         return view('blog.singleblog', compact('blog', 'relatedBlogs', 'comments'));
@@ -92,10 +83,8 @@ class SiteController extends Controller
     {
         $project = Projects::findOrFail($id);
         
-        // عکس‌های گالری پروژه (Type 1 مربوط به پروژه‌ها)
         $images = Images::where('type', 1)->where('sub_id', $id)->get();
 
-        // ویژگی‌های پروژه (Type 1)
         $features = Features::where('type', 1)->where('sub_id', $id)->get();
 
         return view('project', compact('project', 'images', 'features'));
