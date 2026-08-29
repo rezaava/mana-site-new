@@ -2593,9 +2593,27 @@ footer.site-footer::after {
     color: var(--text);
     white-space: nowrap;
   }
-  .fmt-btn.active {
+.fmt-btn.active {
     background: var(--brand);
     color: #fff;
     border-color: var(--brand);
   }
+} /* آکاد مربوط به media query یا بلاک قبلی */
+
+/* ----------------------------------------------------
+   استایل اختصاصی برای چپ‌چین کردن دو کارت سمت چپ وبلاگ
+   ---------------------------------------------------- */
+.blog-side-card {
+  direction: ltr !important;
+  text-align: left !important;
+  justify-content: flex-end;
+}
+
+.blog-side-card a {
+  text-align: left !important;
+}
+
+.blog-side-card .thumb {
+  margin-right: 0 !important;
+  margin-left: 12px !important;
 }

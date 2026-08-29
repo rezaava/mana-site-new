@@ -338,83 +338,102 @@
 </section>
 
     <!-- ============ BLOG ============ -->
-    <section class="blog" id="blog">
-      <div class="container-x">
-        <div class="blog-shell">
-          <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
-          <div class="blog-top reveal">
-            <div class="blog-avatar"><i class="fa-solid fa-pen-nib"></i></div>
-            <div>
-              <h2 class="section-title" style="margin-bottom: 6px">
-                {{ \App\Models\SiteText::get('blog_title', 'مقالات و نکات دنیای دیجیتال') }}
-              </h2>
-              <p class="section-sub" style="margin-bottom: 0">
-                {{ \App\Models\SiteText::get('blog_sub', 'آخرین یافته‌ها، راهنماها و تجربیات تیم فنی') }}
-              </p>
-            </div>
-          </div>
+<section class="blog" id="blog">
+  <div class="container-x">
+    <div class="blog-shell">
+      <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
+      <div class="blog-top reveal">
+        <div class="blog-avatar"><i class="fa-solid fa-pen-nib"></i></div>
+        <div>
+          <h2 class="section-title" style="margin-bottom: 6px; color: #fff;">
+  @php
+    $fullTitle = \App\Models\SiteText::get('blog_title', 'مقالات و نکات دنیای دیجیتال');
+    $words = explode(' ', $fullTitle);
+    if (count($words) >= 2) {
+        $lastTwo = array_splice($words, -2);
+        $firstPart = implode(' ', $words);
+        $styledLastTwo = implode(' ', $lastTwo);
+    } else {
+        $firstPart = $fullTitle;
+        $styledLastTwo = '';
+    }
+  @endphp
 
-          <div class="blog-layout">
-            {{-- ۱. لیست متنی مقالات سمت راست (۴ مقاله اول) --}}
-            <div class="blog-list reveal">
-              @forelse($blogs->take(4) as $blog)
-                <a href="{{ route('blogs.singleBlog', $blog->id) }}" class="blog-list-item">
-                  {{ Str::limit($blog->title, 50) }}
-                  <span class="arr"><i class="fa-solid fa-arrow-up-left"></i></span>
-                </a>
-              @empty
-                <p style="color: var(--text-dim);">مقاله‌ای ثبت نشده</p>
-              @endforelse
-            </div>
-
-            {{-- ۲. کارت ویژه بزرگ وسط (مقاله پنجم) --}}
-            @php 
-              $featuredBlog = $blogs->slice(4, 1)->first() ?? $blogs->first(); 
-            @endphp
-            @if($featuredBlog)
-              <div class="blog-feature reveal reveal-delay-1">
-                <div class="deco">
-                  <img src="{{ $featuredBlog->image_url ? asset('storage/' . $featuredBlog->image_url) : asset('img/mana2.jpg') }}" alt="{{ $featuredBlog->title }}">
-                </div>
-                <div class="blog-feature-inner">
-                  <div class="meta">
-                    <i class="fa-regular fa-clock"></i> زمان مطالعه: {{ $featuredBlog->{'reading-time'} ?? 5 }} دقیقه
-                  </div>
-                  <h5>{{ Str::limit($featuredBlog->title, 60) }}</h5>
-                  <a href="{{ route('blogs.singleBlog', $featuredBlog->id) }}" class="pill">
-                    مطالعه مقاله <i class="fa-solid fa-arrow-up-left"></i>
-                  </a>
-                </div>
-              </div>
-            @endif
-
-            {{-- ۳. مقالات جانبی سمت چپ (از مقاله ششم به بعد) --}}
-            <div class="blog-side">
-              @foreach($blogs->skip(5)->take(2) as $index => $blog)
-                <div class="blog-side-card reveal reveal-delay-{{ $index + 2 }}">
-                  <div class="thumb {{ $loop->first ? 'a' : 'b' }}">
-                    <i class="fa-solid {{ $loop->first ? 'fa-robot' : 'fa-mobile-screen' }}"></i>
-                  </div>
-                  <a href="{{ route('blogs.singleBlog', $blog->id) }}">
-                    <div>
-                      <span class="tag">مقاله</span>
-                      <h6>{{ Str::limit($blog->title, 40) }}</h6>
-                      <span class="time">{{ $blog->{'reading-time'} ?? 5 }} دقیقه مطالعه</span>
-                    </div>
-                  </a>
-                </div>
-              @endforeach
-            </div>
-          </div>
-
-          <div class="blog-more reveal">
-            <a href="{{ route('blogs.all_blogs') }}" class="btn-ghost">
-              {{ \App\Models\SiteText::get('blog_more', 'مشاهده همه مقالات') }} <i class="fa-solid fa-arrow-left"></i>
-            </a>
-          </div>
+  {{ $firstPart }}
+  @if($styledLastTwo)
+    <span style="background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+      {{ $styledLastTwo }}
+    </span>
+  @endif
+</h2>
+          <p class="section-sub" style="margin-bottom: 0">
+            {{ \App\Models\SiteText::get('blog_sub', 'آخرین یافته‌ها، راهنماها و تجربیات تیم فنی') }}
+          </p>
         </div>
       </div>
-    </section>
+
+      <div class="blog-layout">
+        <div class="blog-list reveal">
+          @forelse($blogs->take(4) as $blog)
+            <a href="{{ route('blogs.singleBlog', $blog->id) }}" class="blog-list-item">
+              {{ Str::limit($blog->title, 50) }}
+              <span class="arr"><i class="fa-solid fa-arrow-up-left"></i></span>
+            </a>
+          @empty
+            <p style="color: var(--text-dim);">مقاله‌ای ثبت نشده</p>
+          @endforelse
+        </div>
+
+        @php 
+          $featuredBlog = $blogs->skip(4)->first() ?? $blogs->first(); 
+        @endphp
+        @if($featuredBlog)
+          <div class="blog-feature reveal reveal-delay-1">
+            <div class="deco">
+              <img src="{{ $featuredBlog->image_url ? asset('storage/' . $featuredBlog->image_url) : asset('img/mana2.jpg') }}" alt="{{ $featuredBlog->title }}">
+            </div>
+            <div class="blog-feature-inner">
+              <div class="meta">
+                <i class="fa-regular fa-clock"></i> زمان مطالعه: {{ $featuredBlog->{'reading-time'} ?? 5 }} دقیقه
+              </div>
+              <h5>{{ Str::limit($featuredBlog->title, 60) }}</h5>
+              <a href="{{ route('blogs.singleBlog', $featuredBlog->id) }}" class="pill">
+                مطالعه مقاله <i class="fa-solid fa-arrow-up-left"></i>
+              </a>
+            </div>
+          </div>
+        @endif
+
+        <div class="blog-side">
+          @php 
+            $sideBlogs = $blogs->count() > 5 ? $blogs->skip(5)->take(2) : $blogs->take(2); 
+          @endphp
+
+          @foreach($sideBlogs as $index => $blog)
+            <div class="blog-side-card reveal reveal-delay-{{ $index + 2 }}">
+              <div class="thumb {{ $loop->first ? 'a' : 'b' }}">
+                <i class="fa-solid {{ $loop->first ? 'fa-robot' : 'fa-mobile-screen' }}"></i>
+              </div>
+              <a href="{{ route('blogs.singleBlog', $blog->id) }}">
+                <div>
+                  <span class="tag">مقاله</span>
+                  <h6>{{ Str::limit($blog->title, 40) }}</h6>
+                  <span class="time">{{ $blog->{'reading-time'} ?? 5 }} دقیقه مطالعه</span>
+                </div>
+              </a>
+            </div>
+          @endforeach
+        </div>
+      </div>
+
+      <div class="blog-more reveal">
+        <a href="{{ route('blogs.all_blogs') }}" class="btn-ghost">
+          {{ \App\Models\SiteText::get('blog_more', 'مشاهده همه مقالات') }} <i class="fa-solid fa-arrow-left"></i>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
 
     <footer class="site-footer">
       <div class="footer-inner">
