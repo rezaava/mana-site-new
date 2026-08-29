@@ -26,11 +26,9 @@ use App\Http\Controllers\SiteController;
 
 Route::get('/', [SiteController::class, 'index'])->name('home');
 
-Route::get('/login', [AuthController::class, 'login'])->name('login');
-Route::get('/register', [AuthController::class, 'register'])->name('register');
-
-Route::post('/loginPost', [AuthController::class, 'loginPost'])->name('loginPost');
-Route::post('/registerPost', [AuthController::class, 'registerPost'])->name('registerPost');
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'loginPost'])->name('loginPost');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/blog', [BlogsController::class, 'blog'])->name('blog');
 Route::get('/blog/{id}', [BlogsController::class, 'singleBlog'])->name('singleBlog');
@@ -54,7 +52,7 @@ Route::prefix('/student')->middleware(['role:student|admin'])->group(function ()
 });
 
 
-Route::prefix('/admin')->group(function () {
+Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
 
     // متن‌های سایت
     Route::get('/site-texts', [SiteTextController::class, 'index'])->name('site-texts.index');
@@ -169,7 +167,9 @@ Route::prefix('/admin')->group(function () {
         Route::get('/{id}/edit', [BlogsController::class, 'edit'])->name('edit');
         Route::put('/{id}', [BlogsController::class, 'update'])->name('update');
         Route::delete('/{id}', [BlogsController::class, 'destroy'])->name('destroy');
-    });
+        Route::get('/all_blogs', [SiteController::class, 'all_blogs'])->name('all_blogs');
+        Route::get('/blog/{id}', [SiteController::class, 'singleBlog'])->name('singleBlog');
+        });
 
     Route::prefix('/team')->group(function () {
     Route::get('/', [TeamController::class, 'index'])->name('team.index');
@@ -193,5 +193,8 @@ Route::prefix('/admin')->group(function () {
         Route::get('/{id}/edit', [SocialsController::class, 'edit'])->name('socials.edit');
         Route::put('/{id}', [SocialsController::class, 'update'])->name('socials.update');
         Route::delete('/{id}', [SocialsController::class, 'destroy'])->name('socials.destroy');
+    });
+    Route::prefix('projects')->group(function(){
+        Route::get('/{id}', [ProjectController::class, 'show'])->name('projects.show');
     });
 });

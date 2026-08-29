@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-    <link rel="stylesheet" href="/css/index.css" />
+    <link rel="stylesheet" href="{{asset('css/index.css')}}" />
   </head>
   <body>
     <div class="cur-dot" id="curDot"></div>
@@ -168,26 +168,81 @@
       </div>
     </section>
 
-    <section class="folio" id="folio">
-      <div class="container-x">
-        <div class="row align-items-end mb-4 reveal">
-          <div class="col-md-8">
-            <span class="eyebrow"><i class="fa-solid fa-briefcase"></i> {{ \App\Models\SiteText::get('folio_badge') }}</span>
-            <h2 class="section-title">{{ \App\Models\SiteText::get('folio_title') }}</h2>
-          </div>
-          <div class="col-md-4"><p class="section-sub" style="margin-top: 12px">{{ \App\Models\SiteText::get('folio_sub') }}</p></div>
-        </div>
-        <div class="folio-shell reveal">
-          <div class="folio-tabs" id="folioTabs"></div>
-          <div class="folio-mobile-tabs" id="folioMobileTabs"></div>
-          <div class="folio-preview" id="folioPreview">
-            <div class="fp-dots" id="fpDots"></div>
-            <div class="fp-bg" id="fpBg"></div>
-            <div class="fp-content" id="fpContent"></div>
-          </div>
-        </div>
+    @php
+    $projects = \App\Models\Projects::all();
+    @endphp
+
+<section class="folio" id="folio">
+  <div class="container-x">
+    <div class="row align-items-end mb-4 reveal">
+      <div class="col-md-8">
+        <span class="eyebrow"><i class="fa-solid fa-briefcase"></i> {{ \App\Models\SiteText::get('folio_badge') }}</span>
+        <h2 class="section-title">{{ \App\Models\SiteText::get('folio_title') }}</h2>
       </div>
-    </section>
+      <div class="col-md-4"><p class="section-sub" style="margin-top: 12px">{{ \App\Models\SiteText::get('folio_sub') }}</p></div>
+    </div>
+    
+    <div class="folio-shell reveal">
+      {{-- تب‌های سمت راست (دسکتاپ) --}}
+      <div class="folio-tabs" id="folioTabs">
+        @foreach($projects as $index => $project)
+          <div class="folio-tab {{ $loop->first ? 'active' : '' }}" data-project-id="{{ $project->id }}">
+            <div class="ft-ic"><i class="{{ $project->icon ?? 'fa-solid fa-layer-group' }}"></i></div>
+            <div>
+              <h5>{{ $project->title }}</h5>
+              <span>{{ $project->category ?? 'نمونه کار' }}</span>
+            </div>
+            <div class="bar"></div>
+          </div>
+        @endforeach
+      </div>
+
+      {{-- تب‌های موبایل --}}
+      <div class="folio-mobile-tabs" id="folioMobileTabs">
+        @foreach($projects as $index => $project)
+          <button class="fmt-btn {{ $loop->first ? 'active' : '' }}" data-project-id="{{ $project->id }}">
+            {{ $project->title }}
+          </button>
+        @endforeach
+      </div>
+
+      {{-- پیش‌نمایش کارت پروژه فعال --}}
+      <div class="folio-preview" id="folioPreview">
+        <div class="fp-dots" id="fpDots">
+          @foreach($projects as $index => $project)
+            <span class="dot {{ $loop->first ? 'active' : '' }}" data-project-id="{{ $project->id }}"></span>
+          @endforeach
+        </div>
+
+        @foreach($projects as $index => $project)
+          @php
+            $imagePath = $project->image_url ?? $project->image ?? null;
+            $imageUrl = $imagePath ? asset('storage/' . $imagePath) : asset('img/mana.png');
+          @endphp
+          <div class="fp-item {{ $loop->first ? 'active' : '' }}" id="project-card-{{ $project->id }}" data-project-id="{{ $project->id }}">
+            <div class="fp-bg" style="background-image: url('{{ $imageUrl }}');"></div>
+            <div class="fp-content">
+              <span class="fp-cat">{{ $project->category ?? 'نمونه کار' }}</span>
+              <h3 class="fp-title">{{ $project->title }}</h3>
+              <p class="fp-desc">{{ Str::limit(strip_tags($project->description ?? $project->text ?? ''), 140) }}</p>
+              
+              <div class="fp-actions">
+                <a href="{{ route('projects.show', $project->id) }}" class="btn-flow">
+                  مشاهده جزئیات <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                @if(!empty($project->link))
+                  <a href="{{ $project->link }}" target="_blank" class="btn-ghost">
+                    لینک مستقیم <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                  </a>
+                @endif
+              </div>
+            </div>
+          </div>
+        @endforeach
+      </div>
+    </div>
+  </div>
+</section>
 
     <section class="team" id="team">
       <div class="container-x">
@@ -227,10 +282,6 @@
 
     <section class="testi">
       <div class="container-x">
-        <div class="text-center mb-5 reveal">
-          <span class="eyebrow"><i class="fa-solid fa-comment-dots"></i> {{ \App\Models\SiteText::get('testi_badge') }}</span>
-          <h2 class="section-title">{{ \App\Models\SiteText::get('testi_title') }}</h2>
-        </div>
         <div class="testi-track">
           @forelse($comments as $comment)
             <div class="testi-card reveal">
@@ -286,6 +337,7 @@
   </div>
 </section>
 
+    <!-- ============ BLOG ============ -->
     <section class="blog" id="blog">
       <div class="container-x">
         <div class="blog-shell">
@@ -293,28 +345,73 @@
           <div class="blog-top reveal">
             <div class="blog-avatar"><i class="fa-solid fa-pen-nib"></i></div>
             <div>
-              <h2 class="section-title" style="margin-bottom: 6px">{{ \App\Models\SiteText::get('blog_title') }}</h2>
-              <p class="section-sub" style="margin-bottom: 0">{{ \App\Models\SiteText::get('blog_sub') }}</p>
+              <h2 class="section-title" style="margin-bottom: 6px">
+                {{ \App\Models\SiteText::get('blog_title', 'مقالات و نکات دنیای دیجیتال') }}
+              </h2>
+              <p class="section-sub" style="margin-bottom: 0">
+                {{ \App\Models\SiteText::get('blog_sub', 'آخرین یافته‌ها، راهنماها و تجربیات تیم فنی') }}
+              </p>
             </div>
           </div>
+
           <div class="blog-layout">
+            {{-- ۱. لیست متنی مقالات سمت راست (۴ مقاله اول) --}}
             <div class="blog-list reveal">
               @forelse($blogs->take(4) as $blog)
-                <a href="/singleblog.html" class="blog-list-item">{{ $blog->title }} <span class="arr"><i class="fa-solid fa-arrow-up-left"></i></span></a>
+                <a href="{{ route('blogs.singleBlog', $blog->id) }}" class="blog-list-item">
+                  {{ Str::limit($blog->title, 50) }}
+                  <span class="arr"><i class="fa-solid fa-arrow-up-left"></i></span>
+                </a>
               @empty
                 <p style="color: var(--text-dim);">مقاله‌ای ثبت نشده</p>
               @endforelse
             </div>
+
+            {{-- ۲. کارت ویژه بزرگ وسط (مقاله پنجم) --}}
+            @php 
+              $featuredBlog = $blogs->slice(4, 1)->first() ?? $blogs->first(); 
+            @endphp
+            @if($featuredBlog)
+              <div class="blog-feature reveal reveal-delay-1">
+                <div class="deco">
+                  <img src="{{ $featuredBlog->image_url ? asset('storage/' . $featuredBlog->image_url) : asset('img/mana2.jpg') }}" alt="{{ $featuredBlog->title }}">
+                </div>
+                <div class="blog-feature-inner">
+                  <div class="meta">
+                    <i class="fa-regular fa-clock"></i> زمان مطالعه: {{ $featuredBlog->{'reading-time'} ?? 5 }} دقیقه
+                  </div>
+                  <h5>{{ Str::limit($featuredBlog->title, 60) }}</h5>
+                  <a href="{{ route('blogs.singleBlog', $featuredBlog->id) }}" class="pill">
+                    مطالعه مقاله <i class="fa-solid fa-arrow-up-left"></i>
+                  </a>
+                </div>
+              </div>
+            @endif
+
+            {{-- ۳. مقالات جانبی سمت چپ (از مقاله ششم به بعد) --}}
             <div class="blog-side">
-              @foreach($blogs->skip(4)->take(2) as $blog)
-                <div class="blog-side-card reveal">
-                  <div class="thumb a"><i class="fa-solid fa-newspaper"></i></div>
-                  <a href="/singleblog.html"><div><span class="tag">مقاله</span><h6>{{ Str::limit($blog->title, 40) }}</h6><span class="time">{{ $blog->{'reading-time'} ?? 5 }} دقیقه مطالعه</span></div></a>
+              @foreach($blogs->skip(5)->take(2) as $index => $blog)
+                <div class="blog-side-card reveal reveal-delay-{{ $index + 2 }}">
+                  <div class="thumb {{ $loop->first ? 'a' : 'b' }}">
+                    <i class="fa-solid {{ $loop->first ? 'fa-robot' : 'fa-mobile-screen' }}"></i>
+                  </div>
+                  <a href="{{ route('blogs.singleBlog', $blog->id) }}">
+                    <div>
+                      <span class="tag">مقاله</span>
+                      <h6>{{ Str::limit($blog->title, 40) }}</h6>
+                      <span class="time">{{ $blog->{'reading-time'} ?? 5 }} دقیقه مطالعه</span>
+                    </div>
+                  </a>
                 </div>
               @endforeach
             </div>
           </div>
-          <div class="blog-more reveal"><a href="/blog.html" class="btn-ghost">{{ \App\Models\SiteText::get('blog_more') }} <i class="fa-solid fa-arrow-left"></i></a></div>
+
+          <div class="blog-more reveal">
+            <a href="{{ route('blogs.all_blogs') }}" class="btn-ghost">
+              {{ \App\Models\SiteText::get('blog_more', 'مشاهده همه مقالات') }} <i class="fa-solid fa-arrow-left"></i>
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -347,6 +444,6 @@
     <a href="#contact" class="chat-fab" id="chatFab"><i class="fa-solid fa-comment-dots"></i></a>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/index.js"></script>
+    <script src="{{ asset('js/index.js') }}"></script>
   </body>
 </html>

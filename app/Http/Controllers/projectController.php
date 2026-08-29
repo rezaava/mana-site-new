@@ -281,4 +281,13 @@ class projectController extends Controller
         return redirect()->route('projects.index')->with('success', 'پروژه با موفقیت حذف شد.');
     }
 
+    public function show($id)
+    {
+        $project = Projects::findOrFail($id);
+        
+        $relatedProjects = Projects::where('id', '!=', $id)->take(3)->get();
+
+        return view('projects.show', compact('project', 'relatedProjects'));
+    }
+
 }

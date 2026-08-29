@@ -21,4 +21,13 @@ class User extends Authenticatable
         'password',
         'remember_token',
     ];
+
+      public function hasRole($role)
+    {
+        if (is_array($role)) {
+            return in_array($this->role, $role);
+        }
+        
+        return $this->role === $role;
+    }
 }

@@ -53,10 +53,10 @@ class SiteController extends Controller
     /**
      * صفحه لیست وبلاگ‌ها
      */
-    public function blog()
+    public function all_blogs()
     {
         $blogs = Blogs::orderBy('number', 'asc')->latest()->paginate(9);
-        return view('blog', compact('blogs'));
+        return view('blog.all_blogs', compact('blogs'));
     }
 
     /**
@@ -66,14 +66,14 @@ class SiteController extends Controller
     {
         $blog = Blogs::findOrFail($id);
         
+        $siteTexts = SiteText::pluck('value', 'key')->toArray();
+
         $relatedBlogs = Blogs::where('id', '!=', $id)
             ->orderBy('number', 'asc')
             ->limit(3)
             ->get();
 
-        $comments = Comments::where('is_approved', true)->latest()->get();
-
-        return view('blog.singleblog', compact('blog', 'relatedBlogs', 'comments'));
+        return view('blog.singleblog', compact('blog', 'relatedBlogs', 'siteTexts'));
     }
 
     /**

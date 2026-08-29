@@ -118,18 +118,13 @@ document.querySelectorAll(".acc-item").forEach((item) => {
 
 /* ---------- counters 0 -> target ---------- */
 function animateCounter(el) {
-  // ۱. خواندن مقدار اولیه
   const rawTarget = el.dataset.target || "0";
-  
-  // ۲. تبدیل اعداد فارسی/عربی به انگلیسی و حذف کاراکترهای اضافی
   const cleanTarget = rawTarget
-    .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
-    .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
+    .replace(/[۰-۹]/g, d <= "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+    .replace(/[٠-٩]/g, d <= "٠١٢٣٤٥٦٧٨٩".indexOf(d))
     .replace(/[^\d.-]/g, '');
 
-  // ۳. تبدیل امن به عدد
   const target = parseFloat(cleanTarget) || 0;
-  
   const dur = 1600;
   const start = performance.now();
 
@@ -158,106 +153,6 @@ if (statStrip) {
   cio.observe(statStrip);
 }
 
-/* ---------- portfolio switcher ---------- */
-const folioData = [
-  {
-    icon: "fa-gauge-high",
-    tag: "پنل مدیریت",
-    title: "داشبورد هوشمند فروش",
-    desc: "داشبوردی تحلیلی برای رصد لحظه‌ای فروش، موجودی و رفتار مشتریان با گزارش‌های هوشمند.",
-    
-    from: "#1d2a6b",
-    to: "#28300b",
-  },
-  {
-    icon: "fa-gauge-high",
-    tag: "پنل مدیریت",
-    title: "داشبورد هوشمند فروش",
-    desc: "داشبوردی تحلیلی برای رصد لحظه‌ای فروش، موجودی و رفتار مشتریان با گزارش‌های هوشمند.",
-    from: "#1d2a6b",
-    to: "#0b1030",
-  },
-  {
-    icon: "fa-bag-shopping",
-    tag: "فروشگاه آنلاین",
-    title: "پلتفرم تجارت الکترونیک",
-    desc: "فروشگاهی سریع و مقیاس‌پذیر با تجربه‌ی خرید یکپارچه در وب و موبایل.",
-    from: "#0d5c52",
-    to: "#07211d",
-  },
-  {
-    icon: "fa-building-columns",
-    tag: "اپلیکیشن بانکی",
-    title: "اپ موبایل بانکداری نوین",
-    desc: "اپلیکیشن بانکی امن با احراز هویت بیومتریک و تجربه‌ی کاربری ساده.",
-    from: "#6b2a4a",
-    to: "#2b0f1e",
-  },
-  {
-    icon: "fa-graduation-cap",
-    tag: "آموزش آنلاین",
-    title: "پلتفرم یادگیری هوشمند",
-    desc: "سامانه‌ی آموزش آنلاین با مسیرهای یادگیری شخصی‌سازی‌شده توسط هوش مصنوعی.",
-    from: "#2f7dfb",
-    to: "#0d1030",
-  },
-  {
-    icon: "fa-heart-pulse",
-    tag: "سلامت دیجیتال",
-    title: "سامانه نوبت‌دهی پزشکی",
-    desc: "سامانه‌ای برای نوبت‌دهی، پرونده الکترونیک و مشاوره آنلاین با پزشکان.",
-    from: "#17c3b2",
-    to: "#08211f",
-  },
-];
-const folioTabs = document.getElementById("folioTabs");
-const folioMobileTabs = document.getElementById("folioMobileTabs");
-const fpBg = document.getElementById("fpBg");
-const fpContent = document.getElementById("fpContent");
-const fpDots = document.getElementById("fpDots");
-
-folioData.forEach((d, i) => {
-  const tab = document.createElement("div");
-  tab.className = "folio-tab" + (i === 0 ? " active" : "");
-  tab.innerHTML = `<div class="ft-ic"><i class="fa-solid ${d.icon}"></i></div><div><h5>${d.title}</h5><span>${d.tag}</span></div><div class="bar"></div>`;
-  tab.addEventListener("click", () => setFolio(i));
-  folioTabs.appendChild(tab);
-
-  const chip = document.createElement("div");
-  chip.className = "fmt-chip" + (i === 0 ? " active" : "");
-  chip.textContent = d.tag;
-  chip.addEventListener("click", () => setFolio(i));
-  folioMobileTabs.appendChild(chip);
-
-  const dot = document.createElement("span");
-  if (i === 0) dot.className = "active";
-  fpDots.appendChild(dot);
-});
-
-function setFolio(i) {
-  const d = folioData[i];
-  fpContent.style.opacity = 0;
-  fpContent.style.transform = "translateY(10px)";
-  fpBg.style.opacity = 0;
-  setTimeout(() => {
-    fpBg.style.background = `linear-gradient(150deg, ${d.from}, ${d.to})`;
-    fpContent.innerHTML = `<span class="tag">${d.tag}</span><h4>${d.title}</h4><p>${d.desc}</p><a href="/project.html" class="pill">مشاهده جزئیات <i class="fa-solid fa-arrow-up-left"></i></a>`;
-    fpBg.style.opacity = 1;
-    fpContent.style.opacity = 1;
-    fpContent.style.transform = "translateY(0)";
-  }, 220);
-  [...folioTabs.children].forEach((t, idx) =>
-    t.classList.toggle("active", idx === i),
-  );
-  [...folioMobileTabs.children].forEach((c, idx) =>
-    c.classList.toggle("active", idx === i),
-  );
-  [...fpDots.children].forEach((dt, idx) =>
-    dt.classList.toggle("active", idx === i),
-  );
-}
-setFolio(0);
-
 /* ---------- cute custom cursor ---------- */
 if (window.matchMedia("(pointer:fine)").matches) {
   document.body.classList.add("has-cursor");
@@ -281,33 +176,31 @@ if (window.matchMedia("(pointer:fine)").matches) {
   loop();
   document
     .querySelectorAll(
-      "a, button, .svc-card, .folio-tab, .team-card, input, textarea, .theme-switch, .mnav-panel nav a, .chat-fab, .fmt-chip",
+      "a, button, .svc-card, .folio-tab, .team-card, input, textarea, .theme-switch, .mnav-panel nav a, .chat-fab, .fmt-chip, .fmt-btn",
     )
     .forEach((el) => {
       el.addEventListener("mouseenter", () => ring.classList.add("hover"));
       el.addEventListener("mouseleave", () => ring.classList.remove("hover"));
     });
+} /* <--- براکت مهم: این باید اینجا بسته می‌شد که در کد شما باز مانده بود */
 
-    /* ---------- global english to persian digits converter ---------- */
+/* ---------- global english to persian digits converter ---------- */
 function convertNodeNumbers(node) {
-  // اگر نود متنی بود و داخل اسکریپت یا استایل نبود
   if (node.nodeType === Node.TEXT_NODE) {
     if (node.parentNode && !['SCRIPT', 'STYLE', 'TEXTAREA', 'INPUT'].includes(node.parentNode.tagName)) {
       node.nodeValue = toFa(node.nodeValue);
     }
   } else {
-    // پیمایش فرزندان نود
     for (let child of node.childNodes) {
       convertNodeNumbers(child);
     }
   }
 }
 
-// ۱. تبدیل تمام اعداد موجود در DOM موقع لود صفحه
+/* ---------- DOMContentLoaded (اجرای کدهای وابسته به رندر صفحه) ---------- */
 document.addEventListener("DOMContentLoaded", () => {
+  // ۱. اجرای تبدیل اعداد فارسی
   convertNodeNumbers(document.body);
-
-  // ۲. زیر نظر گرفتن تغییرات صفحه (برای محتوایی که با JS یا Ajax اضافه می‌شن)
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
       mutation.addedNodes.forEach((node) => {
@@ -315,10 +208,55 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
   });
-
   observer.observe(document.body, {
     childList: true,
     subtree: true
   });
+
+  // ۲. منطق سوئیچ کردن تب‌های پورتفولیو (سازگار با دیتابیس لارول)
+  const desktopTabs = document.querySelectorAll('.folio-tab');
+  const mobileTabs = document.querySelectorAll('.fmt-btn');
+  const projectCards = document.querySelectorAll('.fp-item');
+  const dots = document.querySelectorAll('.dot');
+
+  const switchProject = (projectId) => {
+    const removeActive = (elements) => {
+      elements.forEach(el => el.classList.remove('active'));
+    };
+    removeActive(desktopTabs);
+    removeActive(mobileTabs);
+    removeActive(projectCards);
+    removeActive(dots);
+
+    const targetDesktopTab = document.querySelector(`.folio-tab[data-project-id="${projectId}"]`);
+    const targetMobileTab = document.querySelector(`.fmt-btn[data-project-id="${projectId}"]`);
+    const targetCard = document.querySelector(`.fp-item[data-project-id="${projectId}"]`);
+    const targetDot = document.querySelector(`.dot[data-project-id="${projectId}"]`);
+
+    if (targetDesktopTab) targetDesktopTab.classList.add('active');
+    if (targetMobileTab) targetMobileTab.classList.add('active');
+    if (targetCard) targetCard.classList.add('active');
+    if (targetDot) targetDot.classList.add('active');
+  };
+
+  desktopTabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const projectId = this.getAttribute('data-project-id');
+      switchProject(projectId);
+    });
+  });
+
+  mobileTabs.forEach(tab => {
+    tab.addEventListener('click', function() {
+      const projectId = this.getAttribute('data-project-id');
+      switchProject(projectId);
+    });
+  });
+
+  dots.forEach(dot => {
+    dot.addEventListener('click', function() {
+      const projectId = this.getAttribute('data-project-id');
+      switchProject(projectId);
+    });
+  });
 });
-}

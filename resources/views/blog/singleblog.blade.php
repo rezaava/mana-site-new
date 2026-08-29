@@ -2,22 +2,16 @@
 <html lang="fa" dir="rtl" data-theme="dark">
   <head>
     <link rel="icon" type="image/x-icon" href="{{ asset('img/mana.png') }}">
-    <meta charset="UTF-8" >
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ $blog->title }} | {{ $siteTexts['footer_brand'] ?? 'مانا' }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="stylesheet" href="{{ asset('css/index.css') }}" />
-    
-    @if($blog->created_at)
-  <span>
-    <i class="fa-regular fa-calendar"></i> 
     {{ \Morilog\Jalali\Jalalian::fromDateTime($blog->created_at)->format('Y/m/d') }}
-  </span>
-@endif
-    
+
     <style>
       .blog-single-hero {
         padding-top: 140px;
@@ -139,8 +133,8 @@
                   <span><i class="fa-regular fa-calendar"></i> {{ \Morilog\Jalali\Jalalian::fromDateTime($blog->created_at)->format('Y/m/d') }}</span>
                 @endif
                 
-                @if($blog->{'reading-time'})
-                  <span><i class="fa-regular fa-clock"></i> زمان مطالعه: {{ $blog->{'reading-time'} }} دقیقه</span>
+                @if($blog->getAttribute('reading-time'))
+                  <span><i class="fa-regular fa-clock"></i> زمان مطالعه: {{ $blog->getAttribute('reading-time') }} دقیقه</span>
                 @endif
               </div>
 
@@ -150,9 +144,9 @@
               </div>
 
               {{-- دکمه بازگشت --}}
-              <div class="mt-5 pt-4 border-top border-secondary border-opacity-25">
+              <div class="mt-5 pt-4 border-top border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
                 <a href="{{ route('home') }}#blog" class="btn-flow">
-                  <i class="fa-solid fa-arrow-right me-2"></i> بازگشت
+                  <i class="fa-solid fa-arrow-right me-2"></i> بازگشت به وبلاگ
                 </a>
               </div>
             </article>
