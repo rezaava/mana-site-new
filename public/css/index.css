@@ -2598,11 +2598,7 @@ footer.site-footer::after {
     color: #fff;
     border-color: var(--brand);
   }
-} /* آکاد مربوط به media query یا بلاک قبلی */
-
-/* ----------------------------------------------------
-   استایل اختصاصی برای چپ‌چین کردن دو کارت سمت چپ وبلاگ
-   ---------------------------------------------------- */
+} 
 .blog-side-card {
   direction: ltr !important;
   text-align: left !important;
