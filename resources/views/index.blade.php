@@ -58,7 +58,34 @@
         <div class="hero-grid">
           <div class="hero-text reveal in">
             <span class="eyebrow"><i class="fa-solid fa-sparkles"></i> {{ \App\Models\SiteText::get('hero_badge') }}</span>
-            <h1>{{ \App\Models\SiteText::get('hero_title') }}</h1>
+            <h1>
+                @php
+                    $fullTitle = 'ساختن آینده دیجیتال شما، امروز شروع می‌شود';
+
+                    $words = explode(' ', $fullTitle);
+
+                    if (count($words) >= 2) {
+                        $lastTwo = array_splice($words, -2);
+                        $firstPart = implode(' ', $words);
+                        $styledLastTwo = implode(' ', $lastTwo);
+                    } else {
+                        $firstPart = $fullTitle;
+                        $styledLastTwo = '';
+                    }
+                @endphp
+
+                {{ $firstPart }}
+
+                @if($styledLastTwo)
+                    <span style="
+                        background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+                        -webkit-background-clip: text;
+                        -webkit-text-fill-color: transparent;
+                    ">
+                        {{ $styledLastTwo }}
+                    </span>
+                @endif
+            </h1>
             <p class="lead-x">{{ \App\Models\SiteText::get('hero_desc') }}</p>
             <div class="hero-btns">
               <a href="#contact" class="btn-flow">{{ \App\Models\SiteText::get('hero_start', 'شروع پروژه') }} <i class="fa-solid fa-arrow-left"></i></a>
@@ -97,12 +124,15 @@
     <section class="services" id="services">
       <div class="container-x">
         <div class="services-head reveal">
-          <div>
-            <span class="eyebrow"><i class="fa-solid fa-layer-group"></i> {{ \App\Models\SiteText::get('services_badge') }}</span>
-            <h2 class="section-title">{!! nl2br(e(\App\Models\SiteText::get('services_title'))) !!}</h2>
+          <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; flex-wrap: wrap;">
+            <div style="flex: 1;">
+              <span class="eyebrow"><i class="fa-solid fa-layer-group"></i> {{ \App\Models\SiteText::get('services_badge') }}</span>
+              <h2 class="section-title">{!! nl2br(e(\App\Models\SiteText::get('services_title'))) !!}</h2>
+            </div>
+            <p class="section-sub" style="flex: 0 0 auto; max-width: 45%; margin: 0;">{{ \App\Models\SiteText::get('services_sub') }}</p>
           </div>
-          <p class="section-sub">{{ \App\Models\SiteText::get('services_sub') }}</p>
-        </div>
+        </div>  
+      
 
         <div class="flow-wrap">
           <svg class="flow-svg" viewBox="0 0 1200 500" preserveAspectRatio="none">
@@ -251,36 +281,37 @@
           <h2 class="section-title">{{ \App\Models\SiteText::get('team_title') }}</h2>
         </div>
         <div class="team-grid">
-          @forelse($teams as $team)
-            <div class="team-card reveal">
-              <div class="team-ring">
-                <div class="team-avatar tc1">
-                  @if($team->image_url)
-                    <img src="{{ asset('storage/' . $team->image_url) }}" alt="{{ $team->name }}">
-                  @else
-                    <img src="/img/contact5.jpg" alt="contect">
-                  @endif
-                  <div class="ov">
-                    @if($team->linkedin)<a href="{{ $team->linkedin }}"><i class="fa-brands fa-linkedin-in"></i></a>@endif
-                    @if($team->instagram)<a href="{{ $team->instagram }}"><i class="fa-brands fa-instagram"></i></a>@endif
-                    @if($team->telegram)<a href="{{ $team->telegram }}"><i class="fa-brands fa-telegram"></i></a>@endif
-                    @if($team->github)<a href="{{ $team->github }}"><i class="fa-brands fa-github"></i></a>@endif
-                    @if($team->twitter)<a href="{{ $team->twitter }}"><i class="fa-brands fa-twitter"></i></a>@endif
-                    @if($team->whatsapp)<a href="{{ $team->whatsapp }}"><i class="fa-brands fa-whatsapp"></i></a>@endif
+            @forelse($teams as $team)
+              <div class="team-card reveal" style= "{{ trim($team->title) === 'مدیر عامل' ? 'transform: scale(1.4); z-index: 2;' : '' }}">
+                <div class="team-ring">
+                  <div class="team-avatar tc1">
+                    @if($team->image_url)
+                      <img src="{{ asset('storage/' . $team->image_url) }}" alt="{{ $team->name }}">
+                    @else
+                      <img src="/img/contact5.jpg" alt="contect">
+                    @endif
+                    <div class="ov">
+                      @if($team->linkedin)<a href="{{ $team->linkedin }}"><i class="fa-brands fa-linkedin-in"></i></a>@endif
+                      @if($team->instagram)<a href="{{ $team->instagram }}"><i class="fa-brands fa-instagram"></i></a>@endif
+                      @if($team->telegram)<a href="{{ $team->telegram }}"><i class="fa-brands fa-telegram"></i></a>@endif
+                      @if($team->github)<a href="{{ $team->github }}"><i class="fa-brands fa-github"></i></a>@endif
+                      @if($team->twitter)<a href="{{ $team->twitter }}"><i class="fa-brands fa-twitter"></i></a>@endif
+                      @if($team->whatsapp)<a href="{{ $team->whatsapp }}"><i class="fa-brands fa-whatsapp"></i></a>@endif
+                    </div>
                   </div>
                 </div>
+                <h4>{{ $team->name }}</h4>
+                <p>{{ $team->title }}</p>
               </div>
-              <h4>{{ $team->name }}</h4>
-              <p>{{ $team->title }}</p>
-            </div>
-          @empty
-            <p style="color: var(--text-dim); text-align: center; grid-column: 1/-1;">عضوی یافت نشد</p>
-          @endforelse
-        </div>
+            @empty
+    <p style="color: var(--text-dim); text-align: center; grid-column: 1/-1;">عضوی یافت نشد</p>
+  @endforelse
+</div>
       </div>
     </section>
 
-    <section class="testi">
+    <!-- بخش نظرات کامنت شده است موقتا -->
+    <!-- <section class="testi">
       <div class="container-x">
         <div class="testi-track">
           @forelse($comments as $comment)
@@ -297,7 +328,7 @@
           @endforelse
         </div>
       </div>
-    </section>
+    </section> -->
 
     <section class="faqc" id="contact">
   <div class="container-x">
@@ -346,26 +377,26 @@
         <div class="blog-avatar"><i class="fa-solid fa-pen-nib"></i></div>
         <div>
           <h2 class="section-title" style="margin-bottom: 6px; color: #fff;">
-  @php
-    $fullTitle = \App\Models\SiteText::get('blog_title', 'مقالات و نکات دنیای دیجیتال');
-    $words = explode(' ', $fullTitle);
-    if (count($words) >= 2) {
-        $lastTwo = array_splice($words, -2);
-        $firstPart = implode(' ', $words);
-        $styledLastTwo = implode(' ', $lastTwo);
-    } else {
-        $firstPart = $fullTitle;
-        $styledLastTwo = '';
-    }
-  @endphp
+          @php
+            $fullTitle = \App\Models\SiteText::get('blog_title', 'مقالات و نکات دنیای دیجیتال');
+            $words = explode(' ', $fullTitle);
+            if (count($words) >= 2) {
+                $lastTwo = array_splice($words, -2);
+                $firstPart = implode(' ', $words);
+                $styledLastTwo = implode(' ', $lastTwo);
+            } else {
+                $firstPart = $fullTitle;
+                $styledLastTwo = '';
+            }
+          @endphp
 
-  {{ $firstPart }}
-  @if($styledLastTwo)
-    <span style="background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-      {{ $styledLastTwo }}
-    </span>
-  @endif
-</h2>
+          {{ $firstPart }}
+          @if($styledLastTwo)
+            <span style="background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+              {{ $styledLastTwo }}
+            </span>
+          @endif
+        </h2>
           <p class="section-sub" style="margin-bottom: 0">
             {{ \App\Models\SiteText::get('blog_sub', 'آخرین یافته‌ها، راهنماها و تجربیات تیم فنی') }}
           </p>

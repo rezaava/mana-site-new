@@ -119,10 +119,11 @@ document.querySelectorAll(".acc-item").forEach((item) => {
 /* ---------- counters 0 -> target ---------- */
 function animateCounter(el) {
   const rawTarget = el.dataset.target || "0";
+
   const cleanTarget = rawTarget
-    .replace(/[۰-۹]/g, d <= "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
-    .replace(/[٠-٩]/g, d <= "٠١٢٣٤٥٦٧٨٩".indexOf(d))
-    .replace(/[^\d.-]/g, '');
+    .replace(/[۰-۹]/g, d => "۰۱۲۳۴۵۶۷۸۹".indexOf(d))
+    .replace(/[٠-٩]/g, d => "٠١٢٣٤٥٦٧٨٩".indexOf(d))
+    .replace(/[^\d.-]/g, "");
 
   const target = parseFloat(cleanTarget) || 0;
   const dur = 1600;
@@ -131,9 +132,14 @@ function animateCounter(el) {
   function step(now) {
     const p = Math.min((now - start) / dur, 1);
     const eased = 1 - Math.pow(1 - p, 3);
+
     el.textContent = toFa(Math.round(eased * target));
-    if (p < 1) requestAnimationFrame(step);
+
+    if (p < 1) {
+      requestAnimationFrame(step);
+    }
   }
+
   requestAnimationFrame(step);
 }
 
