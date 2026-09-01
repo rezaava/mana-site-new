@@ -1,0 +1,174 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+create.blade.php
+edit.blade.php
+index.blade.php
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="create.blade.php">
+@extends('admin.panel')
+@section('content')
+<div style="padding:20px;"><div style="background:var(--card-bg);border-radius:12px;padding:20px;">
+<h5 style="margin-bottom:20px;"><i class="fa-solid fa-plus-circle"></i> افزودن پروژه</h5>
+<form action="{{ route('projects.store') }}" method="POST" enctype="multipart/form-data">
+@csrf
+<div style="margin-bottom:15px;"><label>عنوان</label><input type="text" name="title" required style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;"></div>
+<div style="margin-bottom:15px;"><label>توضیح کوتاه</label><textarea name="brief" rows="2" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;"></textarea></div>
+<div style="margin-bottom:15px;"><label>توضیحات کامل</label><textarea name="desc" rows="4" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;"></textarea></div>
+<div style="margin-bottom:15px;"><label>تصویر</label><input type="file" name="image" style="width:100%;padding:10px;"></div>
+<div style="margin-bottom: 15px;">
+    <label style="display: block; margin-bottom: 8px;">دسته‌بندی</label>
+    <select name="cat-id" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+        <option value="">انتخاب کنید</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}">{{ $category->name ?? $category->title }}</option>
+        @endforeach
+    </select>
+</div>
+<button type="submit" class="btn btn-primary">ذخیره</button>
+<a href="{{ route('projects.index') }}" class="btn btn-secondary">بازگشت</a>
+</form>
+</div></div>
+@endsection
+</file>
+
+<file path="edit.blade.php">
+@extends('admin.panel')
+@section('content')
+<div style="padding:20px;"><div style="background:var(--card-bg);border-radius:12px;padding:20px;">
+<h5 style="margin-bottom:20px;"><i class="fa-solid fa-pen-to-square"></i> ویرایش پروژه</h5>
+<form action="{{ route('projects.update', $project->id) }}" method="POST" enctype="multipart/form-data">
+@csrf @method('PUT')
+
+<div style="margin-bottom:15px;">
+    <label style="display:block;margin-bottom:8px;">عنوان</label>
+    <input type="text" name="title" value="{{ $project->title }}" required style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;">
+</div>
+
+<div style="margin-bottom:15px;">
+    <label style="display:block;margin-bottom:8px;">توضیح کوتاه</label>
+    <textarea name="brief" rows="2" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;">{{ $project->brief }}</textarea>
+</div>
+
+<div style="margin-bottom:15px;">
+    <label style="display:block;margin-bottom:8px;">توضیحات کامل</label>
+    <textarea name="desc" rows="4" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;">{{ $project->desc }}</textarea>
+</div>
+
+<div style="margin-bottom:15px;">
+    <label style="display:block;margin-bottom:8px;">دسته‌بندی</label>
+    <select name="cat-id" style="width:100%;padding:10px;border-radius:8px;border:1px solid var(--border);background:transparent;color:inherit;">
+        <option value="">انتخاب کنید</option>
+        @foreach($categories as $category)
+            <option value="{{ $category->id }}" {{ $project->cat_id == $category->id ? 'selected' : '' }}>
+                {{ $category->name ?? $category->title }}
+            </option>
+        @endforeach
+    </select>
+</div>
+
+<div style="margin-bottom:15px;">
+    <label style="display:block;margin-bottom:8px;">تصویر جدید</label>
+    <input type="file" name="image" style="width:100%;padding:10px;">
+    @if($project->image_url)
+        <img src="{{ asset('storage/') }}) }}.$project->image_url) }}" style="width:70px;margin-top:10px;border-radius:8px;">
+    @endif
+</div>
+
+<button type="submit" class="btn btn-primary">بروزرسانی</button>
+<a href="{{ route('projects.index') }}" class="btn btn-secondary">بازگشت</a>
+</form>
+</div></div>
+@endsection
+</file>
+
+<file path="index.blade.php">
+@extends('admin.panel')
+
+@section('content')
+<div style="padding: 20px;">
+    <div style="background: var(--card-bg); border-radius: 12px; padding: 20px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h5 style="margin: 0;"><i class="fa-solid fa-diagram-project"></i> مدیریت پروژه‌ها</h5>
+            <a href="{{ route('projects.create') }}" class="btn btn-sm btn-primary" style="padding: 8px 16px; border-radius: 8px; text-decoration: none;">
+                <i class="fa-solid fa-plus"></i> افزودن پروژه
+            </a>
+        </div>
+        @if(session('success'))
+            <div style="background: rgba(16,185,129,0.1); border: 1px solid #10b981; color: #10b981; padding: 12px; border-radius: 8px; margin-bottom: 20px;">{{ session('success') }}</div>
+        @endif
+        <table style="width: 100%; border-collapse: collapse;">
+            <thead><tr style="border-bottom: 1px solid var(--border);">
+                <th style="padding: 12px;">#</th><th style="padding: 12px;">تصویر</th><th style="padding: 12px;">عنوان</th><th style="padding: 12px;">توضیح</th><th style="padding: 12px;">شماره</th><th style="padding: 12px;">عملیات</th>
+            </tr></thead>
+            <tbody>
+                @forelse($projects as $i => $project)
+                    <tr style="border-bottom: 1px solid var(--border);">
+                        <td style="padding: 12px;">{{ $projects->firstItem() + $i }}</td>
+                        <td style="padding: 12px;">@if($project->image_url)<img src="{{ asset('storage/') }}) }}.$project->image_url) }}" style="width:45px;height:45px;object-fit:cover;border-radius:6px;">@else --- @endif</td>
+                        <td style="padding: 12px;">{{ $project->title }}</td>
+                        <td style="padding: 12px;">{{ Str::limit($project->brief, 40) }}</td>
+                        <td style="padding: 12px;">{{ $project->number ?? '-' }}</td>
+                        <td style="padding: 12px;">
+                            <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-sm btn-warning" style="margin-left:3px;padding:6px 10px;border-radius:6px;text-decoration:none;"><i class="fa-solid fa-edit"></i></a>
+                            <form action="{{ route('projects.destroy', $project->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('حذف شود؟')">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn btn-sm btn-danger" style="padding:6px 10px;border-radius:6px;border:none;"><i class="fa-solid fa-trash"></i></button>
+                            </form>
+                        </td>
+                    </tr>
+                @empty
+                    <tr><td colspan="6" style="text-align:center;padding:40px;">پروژه‌ای یافت نشد</td></tr>
+                @endforelse
+            </tbody>
+        </table>
+        <div style="margin-top:20px;">{{ $projects->links() }}</div>
+    </div>
+</div>
+@endsection
+</file>
+
+</files>

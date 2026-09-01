@@ -11,9 +11,10 @@ class Projects extends Model
 {
     use HasFactory;
     public $table = 'projects';
-    public $fillable = ['title', 'brief', 'desc', 'cat-id', 'image_url','number'];
+    public $fillable = ['title', 'brief', 'desc', 'cat_id', 'image_url','number', 'challenge',
+        'solution'];
     public $casts = [
-        'cat-id' => 'integer',
+        'cat_id' => 'integer',
         'number' => 'integer'
     ];
 

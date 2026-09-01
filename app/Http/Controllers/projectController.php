@@ -16,26 +16,30 @@ class projectController extends Controller
     public function createProject(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:100',
-            'brief' => 'required|string|max:500',
-            'desc' => 'required|string',
-            'cat-id' => 'required|integer',
+            'title'     => 'required|string|max:100',
+            'brief'     => 'required|string|max:500',
+            'desc'      => 'required|string',
+            'challenge' => 'nullable|string',
+            'solution'  => 'nullable|string',
+            'cat_id'    => 'required|integer',
             'image_url' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(),'success' => false],  422);
+            return response()->json(['errors' => $validator->errors(), 'success' => false], 422);
         }
 
         $project = new Projects();
         $maxNumber = Projects::max('number');
 
-        $project->title = $request->input('title');
-        $project->brief = $request->input('brief');
-        $project->desc = $request->input('desc');
-        $project->cat_id = $request->input('cat-id');
+        $project->title     = $request->input('title');
+        $project->brief     = $request->input('brief');
+        $project->desc      = $request->input('desc');
+        $project->challenge = $request->input('challenge');
+        $project->solution  = $request->input('solution');
+        $project->cat_id    = $request->input('cat_id');
         $project->image_url = $request->input('image_url');
-        $project->number = $maxNumber + 1;
+        $project->number    = ($maxNumber ?? 0) + 1;
 
         $project->save();
 
@@ -45,11 +49,6 @@ class projectController extends Controller
     public function deleteProject($id)
     {
         $project = Projects::findOrFail($id);
-
-        if (!$project) {
-            return response()->json(['error' => 'Project not found', 'success' => false], 404);
-        }
-
         $project->delete();
 
         return redirect()->back()->with('success', true);
@@ -58,27 +57,27 @@ class projectController extends Controller
     public function editeProject(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'title' => 'required|string|max:100',
-            'brief' => 'required|string|max:500',
-            'desc' => 'required|string',
-            'cat-id' => 'required|integer',
+            'title'     => 'required|string|max:100',
+            'brief'     => 'required|string|max:500',
+            'desc'      => 'required|string',
+            'challenge' => 'nullable|string',
+            'solution'  => 'nullable|string',
+            'cat_id'    => 'required|integer',
             'image_url' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(),'success' => false],  422);
+            return response()->json(['errors' => $validator->errors(), 'success' => false], 422);
         }
 
         $project = Projects::findOrFail($id);
 
-        if (!$project) {
-            return response()->json(['error' => 'Project not found', 'success' => false], 404);
-        }
-
-        $project->title = $request->input('title');
-        $project->brief = $request->input('brief');
-        $project->desc = $request->input('desc');
-        $project->cat_id = $request->input('cat-id');
+        $project->title     = $request->input('title');
+        $project->brief     = $request->input('brief');
+        $project->desc      = $request->input('desc');
+        $project->challenge = $request->input('challenge');
+        $project->solution  = $request->input('solution');
+        $project->cat_id    = $request->input('cat_id');
         $project->image_url = $request->input('image_url');
 
         $project->save();
@@ -88,8 +87,7 @@ class projectController extends Controller
 
     public function returnAllProjects()
     {
-        $projects = Projects::all();$projects = Projects::select('id', 'title', 'brief',
-                    'cat-id','image_url','number')->get();
+        $projects = Projects::select('id', 'title', 'brief', 'cat_id', 'image_url', 'number', 'challenge', 'solution')->get();
 
         return response()->json(['projects' => $projects, 'success' => true], 200);
     }
@@ -97,34 +95,25 @@ class projectController extends Controller
     public function returnProjectById($id)
     {
         $project = Projects::findOrFail($id);
-
-        if (!$project) {
-            return response()->json(['error' => 'Project not found', 'success' => false], 404);
-        }
-
-        $project_images = Images::Where('type', 1)->where('sub-id', $id)->get();
+        $project_images = Images::where('type', 1)->where('sub_id', $id)->get();
 
         return response()->json(['project' => $project, 'images' => $project_images, 'success' => true], 200);
     }
 
-    public function addImageToProject(Request $request,$projectId)
+    public function addImageToProject(Request $request, $projectId)
     {
         $validator = Validator::make($request->all(), [
             'url' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(),'success' => false],  422);
+            return response()->json(['errors' => $validator->errors(), 'success' => false], 422);
         }
 
-
-
         $image = new Images();
-
-        $image->type = 1; //فرضذ تایپ 1 برای پروژه ها هست
-        $image->url = $request->input('url');
+        $image->type   = 1;
+        $image->url    = $request->input('url');
         $image->sub_id = $projectId;
-
         $image->save();
 
         return redirect()->back()->with('success', true);
@@ -133,11 +122,6 @@ class projectController extends Controller
     public function deleteImageFromProject($imageId)
     {
         $image = Images::findOrFail($imageId);
-
-        if (!$image) {
-            return response()->json(['error' => 'Image not found', 'success' => false], 404);
-        }
-
         $image->delete();
 
         return redirect()->back()->with('success', true);
@@ -146,21 +130,19 @@ class projectController extends Controller
     public function addFeatureToProject(Request $request, $projectId)
     {
         $validator = Validator::make($request->all(), [
-            'text' => 'required|string|max:255',
+            'text'      => 'required|string|max:255',
             'image_url' => 'nullable|string|max:255',
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(),'success' => false],  422);
+            return response()->json(['errors' => $validator->errors(), 'success' => false], 422);
         }
 
         $feature = new Features();
-
-        $feature->text = $request->input('text');
+        $feature->text      = $request->input('text');
         $feature->image_url = $request->input('image_url');
-        $feature->type = 1; //فرضذ تایپ 1 برای پروژه ها هست
-        $feature->sub_id = $projectId;
-
+        $feature->type      = 1;
+        $feature->sub_id    = $projectId;
         $feature->save();
 
         return redirect()->back()->with('success', true);
@@ -169,11 +151,6 @@ class projectController extends Controller
     public function deleteFeatureFromProject($featureId)
     {
         $feature = Features::findOrFail($featureId);
-
-        if (!$feature) {
-            return response()->json(['error' => 'Feature not found', 'success' => false], 404);
-        }
-
         $feature->delete();
 
         return redirect()->back()->with('success', true);
@@ -186,23 +163,17 @@ class projectController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors(),'success' => false],  422);
+            return response()->json(['errors' => $validator->errors(), 'success' => false], 422);
         }
 
         $project = Projects::findOrFail($projectId);
-
-        if (!$project) {
-            return response()->json(['error' => 'Project not found', 'success' => false], 404);
-        }
-
         $project->number = $request->input('number');
         $project->save();
 
         return redirect()->back()->with('success', true);
     }
 
-
-
+    // Web Routes for Admin Area
     public function index()
     {
         $projects = Projects::latest()->paginate(10);
@@ -218,15 +189,17 @@ class projectController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'title'   => 'required|string|max:255',
-            'brief'   => 'nullable|string|max:500',
-            'desc'    => 'nullable|string',
-            'cat-id'  => 'nullable|integer',
-            'image'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'title'     => 'required|string|max:255',
+            'brief'     => 'nullable|string|max:500',
+            'desc'      => 'nullable|string',
+            'challenge' => 'nullable|string',
+            'solution'  => 'nullable|string',
+            'cat_id'    => 'nullable|integer',
+            'image'     => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         $maxNumber = Projects::max('number');
-        $validated['number'] = $maxNumber + 1;
+        $validated['number'] = ($maxNumber ?? 0) + 1;
 
         if ($request->hasFile('image')) {
             $validated['image_url'] = $request->file('image')->store('projects', 'public');
@@ -249,11 +222,13 @@ class projectController extends Controller
         $project = Projects::findOrFail($id);
 
         $validated = $request->validate([
-            'title'   => 'required|string|max:255',
-            'brief'   => 'nullable|string|max:500',
-            'desc'    => 'nullable|string',
-            'cat-id'  => 'nullable|integer',
-            'image'   => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'title'     => 'required|string|max:255',
+            'brief'     => 'nullable|string|max:500',
+            'desc'      => 'nullable|string',
+            'challenge' => 'nullable|string',
+            'solution'  => 'nullable|string',
+            'cat_id'    => 'nullable|integer',
+            'image'     => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
 
         if ($request->hasFile('image')) {
@@ -284,10 +259,8 @@ class projectController extends Controller
     public function show($id)
     {
         $project = Projects::findOrFail($id);
-        
         $relatedProjects = Projects::where('id', '!=', $id)->take(3)->get();
 
         return view('projects.show', compact('project', 'relatedProjects'));
     }
-
 }

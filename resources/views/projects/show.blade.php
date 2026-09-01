@@ -11,6 +11,64 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
     <link rel="stylesheet" href="{{ asset('css/index.css') }}" />
+
+    <style>
+      /* استایل‌های اختصاصی کارت‌های چالش و راه‌حل */
+      .cs-card {
+        background-color: var(--card-bg, #12161f);
+        border-radius: 20px;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: right;
+        width: 100%;
+        margin-bottom: 20px;
+      }
+
+      .cs-card-challenge {
+        border: 1px solid rgba(212, 143, 56, 0.4);
+      }
+
+      .cs-card-solution {
+        border: 1px solid rgba(0, 168, 150, 0.4);
+      }
+
+      .cs-icon-box {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 16px;
+        font-size: 20px;
+      }
+
+      .cs-icon-challenge {
+        background-color: rgba(212, 143, 56, 0.15);
+        color: #f5a623;
+      }
+
+      .cs-icon-solution {
+        background-color: rgba(0, 168, 150, 0.15);
+        color: #00d1b2;
+      }
+
+      .cs-title {
+        color: var(--text-main, #ffffff);
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 12px;
+      }
+
+      .cs-text {
+        color: var(--text-dim, #a0aec0);
+        font-size: 0.95rem;
+        line-height: 1.8;
+        margin: 0;
+      }
+    </style>
   </head>
   <body>
     <div class="cur-dot" id="curDot"></div>
@@ -74,9 +132,13 @@
     {{-- Main Project Details Section --}}
     <section class="project-details" style="padding: 40px 0 100px;">
       <div class="container-x">
+        <span class="eyebrow">
+            <i class="fa-solid fa-briefcase"></i> معرفی پروژه
+          </span>
         <div class="row g-4">
           
-          {{-- Main Image & Description --}}
+          
+          {{-- ستون راست: تصویر اصلی + توضیحات پروژه --}}
           <div class="col-lg-8">
             <div class="reveal mb-4">
               @php
@@ -129,41 +191,70 @@
             @endif
           </div>
 
-          {{-- Sidebar Meta Information --}}
+          {{-- ستون چپ: چالش اصلی، راه‌حل ما و اطلاعات شناسنامه‌ای --}}
           <div class="col-lg-4">
-            <div class="reveal" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 30px; position: sticky; top: 100px;">
-              <h4 style="font-weight: 700; margin-bottom: 25px; font-size: 1.3rem;">اطلاعات شناسنامه‌ای</h4>
-              
-              <ul style="list-style: none; padding: 0; margin: 0 0 30px 0;">
-                <li style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-color);">
-                  <span style="color: var(--text-dim);"><i class="fa-solid fa-folder me-2"></i> دسته‌بندی:</span>
-                  <span style="font-weight: 600;">{{ $project->category->name ?? $project->category ?? 'عمومی' }}</span>
-                </li>
-                @if(!empty($project->created_at))
-                  <li style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-color);">
-                    <span style="color: var(--text-dim);"><i class="fa-solid fa-calendar me-2"></i> تاریخ انتشار:</span>
-                    <span style="font-weight: 600;">{{ \Morilog\Jalali\Jalalian::fromCarbon($project->created_at)->format('Y/m/d') }}</span>
-                  </li>
-                @endif
-              </ul>
+            <div style="position: sticky; top: 100px;">
 
-              @if(!empty($project->link))
-                <a href="{{ $project->link }}" target="_blank" class="btn-flow w-100 justify-content-center mb-3">
-                  مشاهده آنلاین پروژه <i class="fa-solid fa-arrow-up-right-from-square ms-2"></i>
-                </a>
+              {{-- باکس چالش اصلی --}}
+              @if(!empty($project->challenge))
+                <div class="cs-card cs-card-challenge reveal">
+                  <div class="cs-icon-box cs-icon-challenge">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                  </div>
+                  <h4 class="cs-title">چالش اصلی</h4>
+                  <p class="cs-text">
+                    {!! nl2br(e($project->challenge)) !!}
+                  </p>
+                </div>
               @endif
 
-              <a href="{{ url('/') }}#contact" class="btn-ghost w-100 justify-content-center">
-                سفارش پروژه مشابه <i class="fa-solid fa-headset ms-2"></i>
-              </a>
+              {{-- باکس راه‌حل ما --}}
+              @if(!empty($project->solution))
+                <div class="cs-card cs-card-solution reveal">
+                  <div class="cs-icon-box cs-icon-solution">
+                    <i class="fa-solid fa-lightbulb"></i>
+                  </div>
+                  <h4 class="cs-title">راه‌حل ما</h4>
+                  <p class="cs-text">
+                    {!! nl2br(e($project->solution)) !!}
+                  </p>
+                </div>
+              @endif
+
+              {{-- اطلاعات شناسنامه‌ای --}}
+              <div class="reveal" style="background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 20px; padding: 30px;">
+                <h4 style="font-weight: 700; margin-bottom: 25px; font-size: 1.3rem;">اطلاعات شناسنامه‌ای</h4>
+                
+                <ul style="list-style: none; padding: 0; margin: 0 0 30px 0;">
+                  <li style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-color);">
+                    <span style="color: var(--text-dim);"><i class="fa-solid fa-folder me-2"></i> دسته‌بندی:</span>
+                    <span style="font-weight: 600;">{{ $project->category->name ?? $project->category ?? 'عمومی' }}</span>
+                  </li>
+                  @if(!empty($project->created_at))
+                    <li style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-color);">
+                      <span style="color: var(--text-dim);"><i class="fa-solid fa-calendar me-2"></i> تاریخ انتشار:</span>
+                      <span style="font-weight: 600;">{{ \Morilog\Jalali\Jalalian::fromCarbon($project->created_at)->format('Y/m/d') }}</span>
+                    </li>
+                  @endif
+                </ul>
+
+                @if(!empty($project->link))
+                  <a href="{{ $project->link }}" target="_blank" class="btn-flow w-100 justify-content-center mb-3">
+                    مشاهده آنلاین پروژه <i class="fa-solid fa-arrow-up-right-from-square ms-2"></i>
+                  </a>
+                @endif
+
+                <a href="{{ url('/') }}#contact" class="btn-ghost w-100 justify-content-center">
+                  سفارش پروژه مشابه <i class="fa-solid fa-headset ms-2"></i>
+                </a>
+              </div>
+
             </div>
           </div>
 
         </div>
       </div>
     </section>
-
-   
 
     {{-- Footer --}}
     <footer class="site-footer">

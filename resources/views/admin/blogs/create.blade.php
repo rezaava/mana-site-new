@@ -63,8 +63,8 @@
             </div>
 
             <div style="margin-bottom: 20px;">
-                <label style="display: block; margin-bottom: 8px;">متن مقاله</label>
-                <textarea name="text" rows="8" required style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">{{ old('text') }}</textarea>
+                <label for="description" class="col-sm-3 text-end control-label col-form-label">توضیحات</label>                             
+                <textarea class="form-control" id="editor" style="color: black;" name="text"></textarea>
                 @error('text')
                     <small style="color: #ef4444; display: block; margin-top: 4px;">{{ $message }}</small>
                 @enderror
@@ -76,4 +76,118 @@
         </form>
     </div>
 </div>
+@endsection
+@section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/jodit/build/jodit.min.js"></script>
+<script>
+        const editor = new Jodit('#editor', {
+            width: 1400,
+            height: 200,
+            allowResize: true,
+            allowResizeImages: true,
+            buttons: [
+                'source', '|',
+                'undo', 'redo', '|',
+                'cut', 'copy', 'paste', 'selectall', 'removeformat', '|',
+                'bold', 'italic', 'underline', 'strikethrough', 'subscript', 'superscript', '|',
+                'font', 'fontsize', 'brush', 'paragraph', '|',
+                'ul', 'ol', 'outdent', 'indent', '|',
+                'align', 'hr', 'table', '|',
+                'link', 'unlink',
+                {
+                    name: 'uploadImage',
+                    iconURL: 'https://cdn-icons-png.flaticon.com/512/1829/1829586.png',
+                    tooltip: 'آپلود تصویر',
+                    exec: (editor) => {
+                        let input = document.createElement('input');
+                        input.type = 'file';
+                        input.accept = 'image/*';
+                        input.onchange = () => {
+                            let file = input.files[0];
+                            if (!file) return;
+
+                            let formData = new FormData();
+                            formData.append('file', file);
+
+                            fetch('{{ route('upload.image') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: formData
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.files && data.files[0].url) {
+                                    let img = document.createElement('img');
+                                    img.src = data.files[0].url;
+                                    editor.s.insertNode(img);
+                                } else {
+                                    alert('خطا در آپلود تصویر');
+                                }
+                            })
+                            .catch(err => alert('Upload error: ' + err));
+                        };
+                        input.click();
+                    }
+                },
+                {
+                    name: 'uploadVideo',
+                    iconURL: 'https://cdn-icons-png.flaticon.com/512/727/727245.png',
+                    tooltip: 'آپلود ویدیو',
+                    exec: (editor) => {
+                        let input = document.createElement('input');
+                        input.type = 'file';
+                        input.accept = 'video/*';
+                        input.onchange = () => {
+                            let file = input.files[0];
+                            if (!file) return;
+
+                            let formData = new FormData();
+                            formData.append('file', file);
+
+                            fetch('{{ route('upload.video') }}', {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                },
+                                body: formData
+                            })
+                            .then(res => res.json())
+                            .then(data => {
+                                if (data.files && data.files[0].url) {
+                                    let wrapper = document.createElement('div');
+                                    wrapper.classList.add('video-wrapper');
+
+                                    let video = document.createElement('video');
+                                    video.setAttribute('controls', '');
+                                    video.src = data.files[0].url;
+
+                                    wrapper.appendChild(video);
+                                    editor.s.insertNode(wrapper);
+                                } else {
+
+alert('خطا در آپلود ویدیو');
+                                }
+                            })
+                            .catch(err => alert('Upload error: ' + err));
+                        };
+                        input.click();
+                    }
+                },
+                '|', 'symbols', 'emoticons', 'specialCharacters', '|',
+                'print', 'fullsize', 'preview', '|', 'about'
+            ],
+            colors: {
+                text: ['#000000', '#ff0000', '#00ff00', '#0000ff', '#ff00ff', '#00ffff'],
+                background: ['#ffffff', '#ffff00', '#00ffff', '#ffcc99']
+            },
+            defaultFont: 'Vazir, Tahoma, Arial, sans-serif',
+            defaultFontSize: '14px',
+            fonts: ['Vazir', 'Tahoma', 'Arial', 'Courier New']
+        });
+    </script>
+@endsection
+@section('css')
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jodit/build/jodit.min.css">
 @endsection

@@ -22,9 +22,13 @@ use App\Http\Controllers\Admin\TicketController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SiteTextController;
 use App\Http\Controllers\SiteController;
+use App\Http\Controllers\UploadController;
 
 
 Route::get('/', [SiteController::class, 'index'])->name('home');
+
+Route::post('/upload/video', [UploadController::class, 'uploadVideo'])->name('upload.video');
+Route::post('/upload/image', [UploadController::class, 'uploadImage'])->name('upload.image');
 
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'loginPost'])->name('loginPost');

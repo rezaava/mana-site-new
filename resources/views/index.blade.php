@@ -202,7 +202,7 @@
     $projects = \App\Models\Projects::all();
     @endphp
 
-<section class="folio" id="folio">
+<!-- <section class="folio" id="folio">
   <div class="container-x">
     <div class="row align-items-end mb-4 reveal">
       <div class="col-md-8">
@@ -272,7 +272,7 @@
       </div>
     </div>
   </div>
-</section>
+</section> -->
 
     <section class="team" id="team">
       <div class="container-x">
