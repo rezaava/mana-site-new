@@ -223,9 +223,9 @@
                 <div class="col-md-6">
                     <label class="form-label">دسته‌بندی</label>
                     <select name="cat_id" class="form-control-custom">
-                        <option value="">انتخاب دسته‌بندی...</option>
+                        <option style="color: var(--text-dim);" value="">انتخاب دسته‌بندی...</option>
                         @foreach($categories as $category)
-                            <option value="{{ $category->id }}" {{ old('cat_id', $project->cat_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
+                            <option value="{{ $category->id }}" style="color: var(--text-dim);" {{ old('cat_id', $project->cat_id) == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
                         @endforeach
                     </select>
                 </div>

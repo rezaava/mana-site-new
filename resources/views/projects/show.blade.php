@@ -527,10 +527,9 @@
                 <a href="{{ url('/') }}#contact" class="btn-flow">شروع گفتگو <i class="fa-solid fa-arrow-left"></i></a>
             </div>
 
-            <div class="text-center mt-5 reveal">
-                <a href="{{ url('/') }}" class="btn-ghost" style="margin-left: 15px;">
-                    <i class="fa-solid fa-house"></i> بازگشت به سایت اصلی
-                </a>
+             <a href="{{ url('/') }}" class="btn-flow" target="_blank">
+        <i class="fa-solid fa-house"></i> صفحه اصلی
+    </a>
                 <a href="{{ url('/') }}#folio" class="btn-ghost">
                     <i class="fa-solid fa-briefcase"></i> بازگشت به نمونه‌کارها
                 </a>
