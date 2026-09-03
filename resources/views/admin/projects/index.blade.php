@@ -1,142 +1,85 @@
 @extends('admin.panel')
 
 @section('content')
-<style>
-    /* استایل‌های بخش چالش و راه‌حل */
-    .project-grid-container {
-        display: grid;
-        grid-template-columns: 2fr 1fr; /* ستون اصلی پروژه‌ دو برابر سایدبار */
-        gap: 24px;
-        align-items: start;
-        margin-top: 30px;
-    }
+<div style="padding:20px;">
+    <div style="background:var(--card-bg);border-radius:12px;padding:20px;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h5 style="margin:0;"><i class="fa-solid fa-diagram-project"></i> مدیریت پروژه‌ها</h5>
+            <a href="{{ route('projects.create') }}" class="btn btn-sm btn-primary" style="padding:8px 16px;border-radius:8px;text-decoration:none;">
+                <i class="fa-solid fa-plus"></i> افزودن پروژه جدید
+            </a>
+        </div>
 
-    /* اگر در سایز موبایل بود، برن زیر هم */
-    @media (max-width: 992px) {
-        .project-grid-container {
-            grid-template-columns: 1fr;
-        }
-    }
-
-    .project-main-content {
-        background-color: #12161f;
-        border-radius: 20px;
-        padding: 28px;
-        color: #a0aec0;
-        line-height: 1.8;
-    }
-
-    .project-sidebar {
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    .cs-card {
-        background-color: #12161f;
-        border-radius: 20px;
-        padding: 24px;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start; /* ترازبندی با توجه به راست‌چین بودن */
-        text-align: right;
-    }
-
-    .cs-card-challenge {
-        border: 1px solid rgba(212, 143, 56, 0.4);
-    }
-
-    .cs-card-solution {
-        border: 1px solid rgba(44, 122, 123, 0.5);
-    }
-
-    .cs-icon-box {
-        width: 48px;
-        height: 48px;
-        border-radius: 14px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 16px;
-        font-size: 20px;
-    }
-
-    .cs-icon-challenge {
-        background-color: rgba(212, 143, 56, 0.15);
-        color: #f5a623;
-    }
-
-    .cs-icon-solution {
-        background-color: rgba(0, 168, 150, 0.15);
-        color: #00d1b2;
-    }
-
-    .cs-title {
-        color: #ffffff;
-        font-size: 1.2rem;
-        font-weight: 700;
-        margin-bottom: 12px;
-    }
-
-    .cs-text {
-        color: #a0aec0;
-        font-size: 0.95rem;
-        line-height: 1.8;
-        margin: 0;
-    }
-</style>
-
-<div class="container py-5" dir="rtl">
-    
-    {{-- هدر پروژه (عنوان و کاور) --}}
-    <div class="mb-4">
-        <h1 class="text-white fw-bold mb-3">{{ $project->title }}</h1>
-        @if($project->image_url)
-            <img src="{{ asset('storage/' . $project->image_url) }}" alt="{{ $project->title }}" class="img-fluid w-100 rounded-4 mb-4" style="max-height: 450px; object-fit: cover;">
+        @if(session('success'))
+            <div style="background:rgba(16,185,129,0.1);border:1px solid #10b981;color:#10b981;padding:12px;border-radius:8px;margin-bottom:20px;">{{ session('success') }}</div>
         @endif
-    </div>
 
-    {{-- گرید اصلی: توضیحات پروژه + باکس‌های کناری --}}
-    <div class="project-grid-container">
-        
-        {{-- بخش اصلی: درباره پروژه --}}
-        <div class="project-main-content">
-            <h3 class="text-white fw-bold mb-3">درباره پروژه</h3>
-            <p>{{ $project->desc }}</p>
+        @if(session('error'))
+            <div style="background:rgba(239,68,68,0.1);border:1px solid #ef4444;color:#ef4444;padding:12px;border-radius:8px;margin-bottom:20px;">{{ session('error') }}</div>
+        @endif
+
+        <div style="overflow-x:auto;">
+            <table style="width:100%;border-collapse:collapse;">
+                <thead>
+                    <tr style="border-bottom:1px solid var(--border);">
+                        <th style="padding:12px;text-align:right;">#</th>
+                        <th style="padding:12px;text-align:right;">تصویر</th>
+                        <th style="padding:12px;text-align:right;">عنوان</th>
+                        <th style="padding:12px;text-align:right;">کارفرما</th>
+                        <th style="padding:12px;text-align:right;">سال</th>
+                        <th style="padding:12px;text-align:right;">وضعیت</th>
+                        <th style="padding:12px;text-align:right;">عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($projects as $index => $project)
+                        <tr style="border-bottom:1px solid var(--border);">
+                            <td style="padding:12px;">{{ $projects->firstItem() + $index }}</td>
+                            <td style="padding:12px;">
+                                @if($project->image_url)
+                                    <img src="{{ asset('storage/' . $project->image_url) }}" style="width:45px;height:45px;object-fit:cover;border-radius:6px;border:1px solid var(--border);">
+                                @else
+                                    <span style="color:var(--text-dimmer);font-size:0.8rem;">بدون تصویر</span>
+                                @endif
+                            </td>
+                            <td style="padding:12px;font-weight:600;">{{ $project->title }}</td>
+                            <td style="padding:12px;">{{ $project->client_name ?? '-' }}</td>
+                            <td style="padding:12px;">{{ $project->launch_year ?? '-' }}</td>
+                            <td style="padding:12px;">
+                                @if($project->stats->count() > 0)
+                                    <span style="background:rgba(16,185,129,0.2);color:#10b981;padding:2px 10px;border-radius:10px;font-size:12px;">فعال</span>
+                                @else
+                                    <span style="background:rgba(239,68,68,0.2);color:#ef4444;padding:2px 10px;border-radius:10px;font-size:12px;">ناقص</span>
+                                @endif
+                            </td>
+                            <td style="padding:12px;">
+                                <a href="{{ route('projects.edit', $project->id) }}" class="btn btn-sm btn-warning" style="margin-left:3px;padding:6px 10px;border-radius:6px;text-decoration:none;display:inline-block;background:#f59e0b;color:#fff;">
+                                    <i class="fa-solid fa-edit"></i>
+                                </a>
+                                <form action="{{ route('projects.destroy', $project->id) }}" method="POST" style="display:inline-block;" onsubmit="return confirm('آیا از حذف این پروژه اطمینان دارید؟');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="btn btn-sm btn-danger" style="padding:6px 10px;border-radius:6px;border:none;cursor:pointer;background:#ef4444;color:#fff;">
+                                        <i class="fa-solid fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="7" style="text-align:center;padding:40px;color:var(--text-dimmer);">
+                                <i class="fa-solid fa-inbox" style="font-size:2rem;display:block;margin-bottom:10px;opacity:0.3;"></i>
+                                هیچ پروژه‌ای یافت نشد
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
 
-        {{-- سایدبار کناری: چالش اصلی و راه‌حل ما --}}
-        <div class="project-sidebar">
-            
-            {{-- باکس چالش اصلی --}}
-            @if(!empty($project->challenge))
-            <div class="cs-card cs-card-challenge">
-                <div class="cs-icon-box cs-icon-challenge">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                </div>
-                <h4 class="cs-title">چالش اصلی</h4>
-                <p class="cs-text">
-                    {{ $project->challenge }}
-                </p>
-            </div>
-            @endif
-
-            {{-- باکس راه‌حل ما --}}
-            @if(!empty($project->solution))
-            <div class="cs-card cs-card-solution">
-                <div class="cs-icon-box cs-icon-solution">
-                    <i class="fa-solid fa-lightbulb"></i>
-                </div>
-                <h4 class="cs-title">راه‌حل ما</h4>
-                <p class="cs-text">
-                    {{ $project->solution }}
-                </p>
-            </div>
-            @endif
-
+        <div style="margin-top:20px;display:flex;justify-content:center;">
+            {{ $projects->links() }}
         </div>
-
     </div>
-
 </div>
 @endsection

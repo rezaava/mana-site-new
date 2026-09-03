@@ -198,7 +198,9 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/{id}', [SocialsController::class, 'update'])->name('socials.update');
         Route::delete('/{id}', [SocialsController::class, 'destroy'])->name('socials.destroy');
     });
-    Route::prefix('projects')->group(function(){
+    
+});
+
+Route::prefix('projects')->group(function(){
         Route::get('/{id}', [ProjectController::class, 'show'])->name('projects.show');
     });
-});
