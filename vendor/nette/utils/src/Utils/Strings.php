@@ -1,15 +1,17 @@
-<?php declare(strict_types=1);
+<?php
 
 /**
  * This file is part of the Nette Framework (https://nette.org)
  * Copyright (c) 2004 David Grudl (https://davidgrudl.com)
  */
 
+declare(strict_types=1);
+
 namespace Nette\Utils;
 
 use JetBrains\PhpStorm\Language;
 use Nette;
-use function array_keys, array_map, array_shift, array_values, bin2hex, class_exists, defined, extension_loaded, function_exists, htmlspecialchars, htmlspecialchars_decode, iconv, iconv_strlen, iconv_substr, implode, in_array, is_array, is_callable, is_int, is_object, is_string, key, max, mb_convert_case, mb_strlen, mb_strtolower, mb_strtoupper, mb_substr, pack, preg_last_error, preg_last_error_msg, preg_quote, preg_replace, str_contains, str_ends_with, str_repeat, str_replace, str_starts_with, strlen, strpos, strrev, strrpos, strtolower, strtoupper, strtr, substr, trim, unpack;
+use function array_keys, array_map, array_shift, array_values, bin2hex, class_exists, defined, extension_loaded, function_exists, htmlspecialchars, htmlspecialchars_decode, iconv, iconv_strlen, iconv_substr, implode, in_array, is_array, is_callable, is_int, is_object, is_string, key, max, mb_convert_case, mb_strlen, mb_strtolower, mb_strtoupper, mb_substr, pack, preg_last_error, preg_last_error_msg, preg_quote, preg_replace, str_contains, str_ends_with, str_repeat, str_replace, str_starts_with, strlen, strpos, strrev, strrpos, strtolower, strtoupper, strtr, substr, trim, unpack, utf8_decode;
 use const ENT_IGNORE, ENT_NOQUOTES, ICONV_IMPL, MB_CASE_TITLE, PHP_EOL, PREG_OFFSET_CAPTURE, PREG_PATTERN_ORDER, PREG_SET_ORDER, PREG_SPLIT_DELIM_CAPTURE, PREG_SPLIT_NO_EMPTY, PREG_SPLIT_OFFSET_CAPTURE, PREG_UNMATCHED_AS_NULL;
 
 
@@ -333,8 +335,8 @@ class Strings
 	public static function compare(string $left, string $right, ?int $length = null): bool
 	{
 		if (class_exists('Normalizer', autoload: false)) {
-			$left = \Normalizer::normalize($left, \Normalizer::FORM_D) ?: $left; // form NFD is faster, false on invalid UTF-8
-			$right = \Normalizer::normalize($right, \Normalizer::FORM_D) ?: $right; // form NFD is faster, false on invalid UTF-8
+			$left = \Normalizer::normalize($left, \Normalizer::FORM_D); // form NFD is faster
+			$right = \Normalizer::normalize($right, \Normalizer::FORM_D); // form NFD is faster
 		}
 
 		if ($length < 0) {
@@ -385,7 +387,7 @@ class Strings
 		return match (true) {
 			extension_loaded('mbstring') => (int) mb_strlen($s, 'UTF-8'),
 			extension_loaded('iconv') => (int) iconv_strlen($s, 'UTF-8'),
-			default => strlen((string) preg_replace('#[\x80-\xBF]#', '', $s)), // strips UTF-8 continuation bytes
+			default => strlen(@utf8_decode($s)), // deprecated
 		};
 	}
 
@@ -396,7 +398,7 @@ class Strings
 	public static function trim(string $s, string $charlist = self::TrimCharacters): string
 	{
 		$charlist = preg_quote($charlist, '#');
-		return self::replace($s, '#^[' . $charlist . ']+|[' . $charlist . ']+$#Du');
+		return self::replace($s, '#^[' . $charlist . ']+|[' . $charlist . ']+$#Du', '');
 	}
 
 
@@ -514,7 +516,7 @@ class Strings
 
 
 	/**
-	 * Splits the string by a regular expression. Expressions in parentheses will be captured and returned as well.
+	 * Divides the string into arrays according to the regular expression. Expressions in parentheses will be captured and returned as well.
 	 * @return list<string>
 	 */
 	public static function split(
@@ -540,8 +542,8 @@ class Strings
 
 
 	/**
-	 * Searches the string for the first match of the regular expression and returns
-	 * an array with the found expression and individual subexpressions, or null.
+	 * Searches the string for the part matching the regular expression and returns
+	 * an array with the found expression and individual subexpressions, or `null`.
 	 * @return ?array<string>
 	 */
 	public static function match(
@@ -577,8 +579,8 @@ class Strings
 
 
 	/**
-	 * Searches the string for all occurrences matching the regular expression and returns
-	 * an array of arrays containing the found expression and each subexpression.
+	 * Searches the string for all occurrences matching the regular expression and
+	 * returns an array of arrays containing the found expression and each subexpression.
 	 * @return ($lazy is true ? \Generator<int, array<string>> : list<array<string>>)
 	 */
 	public static function matchAll(
@@ -640,7 +642,7 @@ class Strings
 
 
 	/**
-	 * Replaces all occurrences matching the regular expression $pattern, which can be a string or array in the form `pattern => replacement`.
+	 * Replaces all occurrences matching regular expression $pattern which can be string or array in the form `pattern => replacement`.
 	 * @param  string|array<string, string>  $pattern
 	 */
 	public static function replace(

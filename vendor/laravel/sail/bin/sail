@@ -319,9 +319,7 @@ elif [ "$1" == "artisan" ] || [ "$1" == "art" ] || [ "$1" == "a" ]; then
 
     if [ "$EXEC" == "yes" ]; then
         ARGS+=(exec -u "$APP_USER")
-        if [ ! -t 0 ] || [ "$1" == "schedule:run" ]; then
-            ARGS+=(-T)
-        fi
+        [ ! -t 0 ] && ARGS+=(-T)
         forward_agent_env
         ARGS+=("$APP_SERVICE" php artisan)
     else

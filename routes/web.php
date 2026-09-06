@@ -26,6 +26,7 @@ use App\Http\Controllers\UploadController;
 
 
 Route::get('/', [SiteController::class, 'index'])->name('home');
+Route::get('/servise/{id}', [SiteController::class, 'servise'])->name('servise');
 
 Route::post('/upload/video', [UploadController::class, 'uploadVideo'])->name('upload.video');
 Route::post('/upload/image', [UploadController::class, 'uploadImage'])->name('upload.image');
@@ -37,13 +38,6 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/blog', [BlogsController::class, 'blog'])->name('blog');
 Route::get('/blog/{id}', [BlogsController::class, 'singleBlog'])->name('singleBlog');
 
-Route::get('/courses', [TestController::class, 'courses'])->name('courses');
-Route::get('/publics', [TestController::class, 'publics'])->name('publics');
-Route::get('/exams', [TestController::class, 'exams'])->name('exams');
-Route::get('/surveys', [TestController::class, 'surveys'])->name('surveys');
-Route::get('/content', [TestController::class, 'content'])->name('content');
-Route::get('/create-quiz', [TestController::class, 'createQuiz'])->name('createQuiz');
-Route::get('/quizzes', [TestController::class, 'quizzes'])->name('quizzes');
 
 Route::get('/role', [AuthController::class, 'roleFun']);
 

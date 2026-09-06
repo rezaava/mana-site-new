@@ -39,7 +39,6 @@ class ReverseSearchAction implements ActionInterface
             $readline->clearSuggestion();
             $this->search->saveBuffer($buffer);
             $this->search->enter($buffer->getCurrentLineText());
-            $readline->pushMode($this->search);
         }
 
         return true;

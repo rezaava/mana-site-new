@@ -1,499 +1,385 @@
-<!doctype html>
-<html lang="fa" dir="rtl" data-theme="dark">
-  <head>
-     <link rel="icon" type="image/x-icon" href="/img/mana.png">
-    <meta charset="UTF-8" >
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" >
-    <title>{{ \App\Models\SiteText::get('footer_brand', 'مانا') }} | راهکارهای هوشمند دیجیتال</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" >
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-    <link rel="stylesheet" href="{{asset('css/index.css')}}" />
-  </head>
-  <body>
-    <div class="cur-dot" id="curDot"></div>
-    <div class="cur-ring" id="curRing"></div>
-    <div class="scroll-progress" id="scrollProgress"></div>
+@extends('layout.master')
 
-    <header class="site-header" id="siteHeader">
-      <div class="container-x nav-wrap">
-        <a href="#home" class="brand"><span class="mark"><img src="/img/mana.png" alt=""></span></a>
-        <nav class="main-nav">
-          <a href="#home" class="active">{{ \App\Models\SiteText::get('nav_home', 'خانه') }}</a>
-          <a href="#services">{{ \App\Models\SiteText::get('services_badge', 'خدمات') }}</a>
-          <a href="#folio">{{ \App\Models\SiteText::get('folio_badge', 'نمونه‌کار') }}</a>
-          <a href="#team">{{ \App\Models\SiteText::get('team_badge', 'تیم') }}</a>
-          <a href="#contact">{{ \App\Models\SiteText::get('contact_badge', 'تماس') }}</a>
-          <a href="#blog">{{ \App\Models\SiteText::get('blog_nav', 'وبلاگ') }}</a>
-        </nav>
-        <div class="header-cta">
-          <div class="theme-switch" id="themeSwitch"><div class="knob"><i class="fa-solid fa-moon" id="themeIcon"></i></div></div>
-          <a href="#contact" class="btn-flow"><i class="fa-solid fa-arrow-left"></i> {{ \App\Models\SiteText::get('hero_cta', 'مشاوره رایگان') }}</a>
-          <button class="burger" id="burgerBtn"><i class="fa-solid fa-bars"></i></button>
-        </div>
-      </div>
-    </header>
+@section('title')
+ملیسان | صفحه اصلی
+@endsection
 
-    <div class="mnav-backdrop" id="mnavBackdrop"></div>
-    <div class="mnav-panel" id="mnavPanel">
-      <div class="mnav-handle"></div>
-      <div class="top"><h6>{{ \App\Models\SiteText::get('nav_quick', 'منوی سریع') }}</h6><button class="burger" id="closeDrawer"><i class="fa-solid fa-xmark"></i></button></div>
-      <nav>
-        <a href="#home" class="active" data-close><i class="fa-solid fa-house"></i> {{ \App\Models\SiteText::get('nav_home', 'خانه') }}</a>
-        <a href="#services" data-close><i class="fa-solid fa-layer-group"></i> {{ \App\Models\SiteText::get('services_badge', 'خدمات') }}</a>
-        <a href="#folio" data-close><i class="fa-solid fa-briefcase"></i> {{ \App\Models\SiteText::get('folio_badge', 'نمونه‌کار') }}</a>
-        <a href="#team" data-close><i class="fa-solid fa-people-group"></i> {{ \App\Models\SiteText::get('team_badge', 'تیم') }}</a>
-        <a href="#blog" data-close><i class="fa-solid fa-pen-nib"></i> {{ \App\Models\SiteText::get('blog_nav', 'وبلاگ') }}</a>
-        <a href="#contact" data-close><i class="fa-solid fa-phone"></i> {{ \App\Models\SiteText::get('contact_badge', 'تماس') }}</a>
-      </nav>
-      <div class="foot">
-        <div class="theme-switch" id="themeSwitchMobile"><div class="knob"><i class="fa-solid fa-moon"></i></div></div>
-        <a href="#contact" class="btn-flow" data-close>{{ \App\Models\SiteText::get('hero_cta', 'مشاوره رایگان') }} <i class="fa-solid fa-arrow-left"></i></a>
-      </div>
-    </div>
+@section('head')
+<link rel="stylesheet" href="{{ asset('css/index.css') }}">
+@endsection
 
-    <section class="hero" id="home">
-      <div class="container-x">
-        <div class="hero-grid">
-          <div class="hero-text reveal in">
-            <span class="eyebrow"><i class="fa-solid fa-sparkles"></i> {{ \App\Models\SiteText::get('hero_badge') }}</span>
-            <h1>
-                @php
-                    $fullTitle = 'ساختن آینده دیجیتال شما، امروز شروع می‌شود';
+@section('main')
 
-                    $words = explode(' ', $fullTitle);
-
-                    if (count($words) >= 2) {
-                        $lastTwo = array_splice($words, -2);
-                        $firstPart = implode(' ', $words);
-                        $styledLastTwo = implode(' ', $lastTwo);
-                    } else {
-                        $firstPart = $fullTitle;
-                        $styledLastTwo = '';
-                    }
-                @endphp
-
-                {{ $firstPart }}
-
-                @if($styledLastTwo)
-                    <span style="
-                        background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-                        -webkit-background-clip: text;
-                        -webkit-text-fill-color: transparent;
-                    ">
-                        {{ $styledLastTwo }}
-                    </span>
-                @endif
-            </h1>
-            <p class="lead-x">{{ \App\Models\SiteText::get('hero_desc') }}</p>
-            <div class="hero-btns">
-              <a href="#contact" class="btn-flow">{{ \App\Models\SiteText::get('hero_start', 'شروع پروژه') }} <i class="fa-solid fa-arrow-left"></i></a>
-              <a href="#folio" class="btn-ghost"><i class="fa-solid fa-play"></i> {{ \App\Models\SiteText::get('hero_view', 'مشاهده نمونه‌کارها') }}</a>
-            </div>
-            <div class="hero-trust mb-4">
-              <div class="avatar-stack"><span>ع.ک</span><span>ف.م</span><span>س.ا</span><span>+۵۰</span></div>
-              <span>{{ \App\Models\SiteText::get('hero_trust') }}</span>
-            </div>
-          </div>
-          <div class="hero-visual">
-            <div class="orbit-ring r1"></div><div class="orbit-ring r2"></div>
-            <div class="core-cube"><i class="fa-solid fa-cube"></i></div>
-            <div class="float-chip c1"><i class="fa-solid fa-code"></i></div>
-            <div class="float-chip c2"><i class="fa-solid fa-chart-line"></i></div>
-            <div class="float-chip c3"><i class="fa-solid fa-cloud"></i></div>
-            <div class="float-chip c4"><i class="fa-solid fa-shield-halved"></i></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <div class="stat-strip-outer">
-      <div class="container-x">
-        <div class="stat-strip reveal">
-          <div class="row g-3">
-            <div class="col-6 col-md-3 stat-item"><h3><span class="count-num" data-target="{{ \App\Models\SiteText::get('stat1_num', '250') }}">۰</span><span class="grad-text">+</span></h3><span>{{ \App\Models\SiteText::get('stat1_text') }}</span></div>
-            <div class="col-6 col-md-3 stat-item"><h3><span class="count-num" data-target="{{ \App\Models\SiteText::get('stat2_num', '98') }}">۰</span><span class="grad-text">%</span></h3><span>{{ \App\Models\SiteText::get('stat2_text') }}</span></div>
-            <div class="col-6 col-md-3 stat-item"><h3><span class="count-num" data-target="{{ \App\Models\SiteText::get('stat3_num', '50') }}">۰</span><span class="grad-text">+</span></h3><span>{{ \App\Models\SiteText::get('stat3_text') }}</span></div>
-            <div class="col-6 col-md-3 stat-item"><h3><span class="count-num" data-target="{{ \App\Models\SiteText::get('stat4_num', '24') }}">۰</span><span class="grad-text">/۷</span></h3><span>{{ \App\Models\SiteText::get('stat4_text') }}</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <section class="services" id="services">
-      <div class="container-x">
-        <div class="services-head reveal">
-          <div style="display: flex; align-items: flex-end; justify-content: space-between; gap: 40px; flex-wrap: wrap;">
-            <div style="flex: 1;">
-              <span class="eyebrow"><i class="fa-solid fa-layer-group"></i> {{ \App\Models\SiteText::get('services_badge') }}</span>
-              <h2 class="section-title">{!! nl2br(e(\App\Models\SiteText::get('services_title'))) !!}</h2>
-            </div>
-            <p class="section-sub" style="flex: 0 0 auto; max-width: 45%; margin: 0;">{{ \App\Models\SiteText::get('services_sub') }}</p>
-          </div>
-        </div>  
-      
-
-        <div class="flow-wrap">
-          <svg class="flow-svg" viewBox="0 0 1200 500" preserveAspectRatio="none">
-            <path d="M0,250 C200,100 300,400 600,250 C900,100 1000,400 1200,250" stroke="url(#g1)" stroke-width="1.5" fill="none" />
-            <defs>
-              <linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0%" stop-color="#2f7dfb" />
-                <stop offset="100%" stop-color="#17c3b2" />
-              </linearGradient>
-            </defs>
-          </svg>
-
-          <div class="svc-grid">
-            @forelse($services as $index => $service)
-              <div class="svc-card reveal reveal-delay-{{ $index % 3 + 1 }}" data-tilt>
-                <span class="svc-num">{{ persianNum(str_pad($index + 1, 2, '0', STR_PAD_LEFT)) }}</span>
-                <div class="svc-icon">
-                  @if($service->image_url)
-                    <img src="{{ asset('storage/' . $service->image_url) }}" style="width: 35px; height: 35px; object-fit: contain;">
-                  @elseif($service->icon)
-                    <i class="fa-solid {{ $service->icon }}"></i>
-                  @else
-                    <i class="fa-solid fa-layer-group"></i>
-                  @endif
-                </div>
-                <h3>{{ $service->title }}</h3>
-                <p>{!! nl2br(e(Str::limit($service->text, 150))) !!}</p>
-              </div>
-            @empty
-              <p style="color: var(--text-dim); text-align: center; grid-column: 1/-1;">خدمتی یافت نشد</p>
-            @endforelse
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="why">
-      <div class="container-x">
-        <div class="row align-items-center g-4 why-grid">
-          <div class="col-lg-5">
-            <div class="why-visual reveal">
-              <div class="why-photo"><img src="/img/mana1.png" alt=""></div>
-              <div class="badge-float">
-                <span class="num">{{ \App\Models\SiteText::get('exp_num') }}</span>
-                <div>
-                  <div style="font-size: 0.82rem; font-weight: 600">{{ \App\Models\SiteText::get('exp_title') }}</div>
-                  <div style="font-size: 0.74rem; color: var(--text-dim)">{{ \App\Models\SiteText::get('exp_desc') }}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-7">
-            <span class="eyebrow reveal"><i class="fa-solid fa-star"></i> {{ \App\Models\SiteText::get('why_badge') }}</span>
-            <h2 class="section-title reveal reveal-delay-1">{{ \App\Models\SiteText::get('why_title') }}</h2>
-            <ul class="why-list">
-              <li class="reveal reveal-delay-1"><div class="ico"><i class="fa-solid fa-user-graduate"></i></div><div><h4>{{ \App\Models\SiteText::get('why1_title') }}</h4><p>{{ \App\Models\SiteText::get('why1_desc') }}</p></div></li>
-              <li class="reveal reveal-delay-2"><div class="ico"><i class="fa-solid fa-medal"></i></div><div><h4>{{ \App\Models\SiteText::get('why2_title') }}</h4><p>{{ \App\Models\SiteText::get('why2_desc') }}</p></div></li>
-              <li class="reveal reveal-delay-3"><div class="ico"><i class="fa-solid fa-headset"></i></div><div><h4>{{ \App\Models\SiteText::get('why3_title') }}</h4><p>{{ \App\Models\SiteText::get('why3_desc') }}</p></div></li>
-              <li class="reveal reveal-delay-4"><div class="ico"><i class="fa-solid fa-tags"></i></div><div><h4>{{ \App\Models\SiteText::get('why4_title') }}</h4><p>{{ \App\Models\SiteText::get('why4_desc') }}</p></div></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    @php
-    $projects = \App\Models\Projects::all();
-    @endphp
-
- <section class="folio" id="folio">
-  <div class="container-x">
-    <div class="row align-items-end mb-4 reveal">
-      <div class="col-md-8">
-        <span class="eyebrow"><i class="fa-solid fa-briefcase"></i> {{ \App\Models\SiteText::get('folio_badge') }}</span>
-        <h2 class="section-title">{{ \App\Models\SiteText::get('folio_title') }}</h2>
-      </div>
-      <div class="col-md-4"><p class="section-sub" style="margin-top: 12px">{{ \App\Models\SiteText::get('folio_sub') }}</p></div>
-    </div>
-    
-    <div class="folio-shell reveal">
-      {{-- تب‌های سمت راست (دسکتاپ) --}}
-      <div class="folio-tabs" id="folioTabs">
-        @foreach($projects as $index => $project)
-          <div class="folio-tab {{ $loop->first ? 'active' : '' }}" data-project-id="{{ $project->id }}">
-            <div class="ft-ic"><i class="{{ $project->icon ?? 'fa-solid fa-layer-group' }}"></i></div>
-            <div>
-              <h5>{{ $project->title }}</h5>
-              <span>{{ $project->category ?? 'نمونه کار' }}</span>
-            </div>
-            <div class="bar"></div>
-          </div>
-        @endforeach
-      </div>
-
-      {{-- تب‌های موبایل --}}
-      <div class="folio-mobile-tabs" id="folioMobileTabs">
-        @foreach($projects as $index => $project)
-          <button class="fmt-btn {{ $loop->first ? 'active' : '' }}" data-project-id="{{ $project->id }}">
-            {{ $project->title }}
-          </button>
-        @endforeach
-      </div>
-
-      {{-- پیش‌نمایش کارت پروژه فعال --}}
-      <div class="folio-preview" id="folioPreview">
-        <div class="fp-dots" id="fpDots">
-          @foreach($projects as $index => $project)
-            <span class="dot {{ $loop->first ? 'active' : '' }}" data-project-id="{{ $project->id }}"></span>
-          @endforeach
-        </div>
-
-        @foreach($projects as $index => $project)
-          @php
-            $imagePath = $project->image_url ?? $project->image ?? null;
-            $imageUrl = $imagePath ? asset('storage/' . $imagePath) : asset('img/mana.png');
-          @endphp
-          <div class="fp-item {{ $loop->first ? 'active' : '' }}" id="project-card-{{ $project->id }}" data-project-id="{{ $project->id }}">
-            <div class="fp-bg" style="background-image: url('{{ $imageUrl }}');"></div>
-            <div class="fp-content">
-              <span class="fp-cat">{{ $project->category ?? 'نمونه کار' }}</span>
-              <h3 class="fp-title">{{ $project->title }}</h3>
-              <p class="fp-desc">{{ Str::limit(strip_tags($project->description ?? $project->text ?? ''), 140) }}</p>
-              
-              <div class="fp-actions">
-                <a href="{{ route('projects.show', $project->id) }}" class="btn-flow">
-                  مشاهده جزئیات <i class="fa-solid fa-arrow-left"></i>
-                </a>
-                @if(!empty($project->link))
-                  <a href="{{ $project->link }}" target="_blank" class="btn-ghost">
-                    لینک مستقیم <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                  </a>
-                @endif
-              </div>
-            </div>
-          </div>
-        @endforeach
-      </div>
-    </div>
-  </div>
-</section> 
-
-    <section class="team" id="team">
-      <div class="container-x">
-        <div class="text-center mb-5 reveal">
-          <span class="eyebrow"><i class="fa-solid fa-people-group"></i> {{ \App\Models\SiteText::get('team_badge') }}</span>
-          <h2 class="section-title">{{ \App\Models\SiteText::get('team_title') }}</h2>
-        </div>
-        <div class="team-grid">
-            @forelse($teams as $team)
-              <div class="team-card reveal" style= "{{ trim($team->title) === 'مدیر عامل' ? 'transform: scale(1.4); z-index: 2;' : '' }}">
-                <div class="team-ring">
-                  <div class="team-avatar tc1">
-                    @if($team->image_url)
-                      <img src="{{ asset('storage/' . $team->image_url) }}" alt="{{ $team->name }}">
-                    @else
-                      <img src="/img/contact5.jpg" alt="contect">
-                    @endif
-                    <div class="ov">
-                      @if($team->linkedin)<a href="{{ $team->linkedin }}"><i class="fa-brands fa-linkedin-in"></i></a>@endif
-                      @if($team->instagram)<a href="{{ $team->instagram }}"><i class="fa-brands fa-instagram"></i></a>@endif
-                      @if($team->telegram)<a href="{{ $team->telegram }}"><i class="fa-brands fa-telegram"></i></a>@endif
-                      @if($team->github)<a href="{{ $team->github }}"><i class="fa-brands fa-github"></i></a>@endif
-                      @if($team->twitter)<a href="{{ $team->twitter }}"><i class="fa-brands fa-twitter"></i></a>@endif
-                      @if($team->whatsapp)<a href="{{ $team->whatsapp }}"><i class="fa-brands fa-whatsapp"></i></a>@endif
-                    </div>
-                  </div>
-                </div>
-                <h4>{{ $team->name }}</h4>
-                <p>{{ $team->title }}</p>
-              </div>
-            @empty
-    <p style="color: var(--text-dim); text-align: center; grid-column: 1/-1;">عضوی یافت نشد</p>
-  @endforelse
+<section class="hero" id="home">
+<div class="container-x">
+<div class="hero-grid">
+<div class="hero-text reveal in">
+<span class="eyebrow">
+<i class="fa-solid fa-sparkles"></i>
+{{ $siteTexts['hero_badge']->value ?? 'استودیوی محصولات دیجیتال' }}
+</span>
+<h1>
+{{ $siteTexts['hero_title']->value ?? 'ساختن آینده دیجیتال شما،' }}
+<span class="grad-text">{{ $siteTexts['hero_title_highlight']->value ?? 'امروز شروع می‌شود' }}</span>
+</h1>
+<p class="lead-x">{{ $siteTexts['hero_desc']->value ?? 'از ایده تا محصول؛ تیم نوین‌آی با ترکیب هوش مصنوعی، طراحی مدرن و مهندسی دقیق، محصولاتی می‌سازد که کسب‌وکار شما را برای فردا آماده می‌کند.' }}</p>
+<div class="hero-btns">
+<a href="#contact" class="btn-flow">{{ $siteTexts['hero_cta']->value ?? 'شروع پروژه' }} <i class="fa-solid fa-arrow-left"></i></a>
+<a href="#folio" class="btn-ghost"><i class="fa-solid fa-play"></i>{{ $siteTexts['hero_secondary_cta']->value ?? 'مشاهده نمونه‌کارها' }}</a>
 </div>
-      </div>
-    </section>
-
-    <!-- بخش نظرات کامنت شده است موقتا -->
-    <!-- <section class="testi">
-      <div class="container-x">
-        <div class="testi-track">
-          @forelse($comments as $comment)
-            <div class="testi-card reveal">
-              <i class="fa-solid fa-quote-right quote"></i>
-              <p>{{ $comment->content }}</p>
-              <div class="testi-person">
-                <div class="av" style="background: linear-gradient(135deg, var(--brand), var(--accent-2));">{{ Str::substr($comment->user_name, 0, 2) }}</div>
-                <div><h5>{{ $comment->user_name }}</h5><span>مشتری</span></div>
-              </div>
-            </div>
-          @empty
-            <p style="color: var(--text-dim); text-align: center;">نظری ثبت نشده</p>
-          @endforelse
-        </div>
-      </div>
-    </section> -->
-
-    <section class="faqc" id="contact">
-  <div class="container-x">
-    <div class="row g-4">
-      <div class="col-lg-6">
-        <span class="eyebrow reveal"><i class="fa-solid fa-circle-question"></i> {{ \App\Models\SiteText::get('faq_badge') }}</span>
-        <h2 class="section-title reveal reveal-delay-1 mb-4">{{ \App\Models\SiteText::get('faq_title') }}</h2>
-        <div class="acc-list">
-          @forelse($questions as $index => $question)
-            <div class="acc-item {{ $loop->first ? 'open' : '' }} reveal reveal-delay-{{ $index % 4 }}">
-              <button class="acc-btn">
-                {{ $question->title }}
-                <i class="fa-solid fa-plus"></i>
-              </button>
-              <div class="acc-panel">
-                <p>{!! nl2br(e($question->answer)) !!}</p>
-              </div>
-            </div>
-          @empty
-            <p style="color: var(--text-dim);">سوالی یافت نشد.</p>
-          @endforelse
-        </div>
-      </div>
-      <div class="col-lg-6">
-        <div class="contact-card reveal reveal-delay-2">
-          <span class="eyebrow"><i class="fa-solid fa-paper-plane"></i> {{ \App\Models\SiteText::get('contact_badge') }}</span>
-          <h3 style="font-weight: 800; font-size: 1.5rem; margin-bottom: 6px">{{ \App\Models\SiteText::get('contact_title') }}</h3>
-          <p class="section-sub" style="margin-bottom: 26px">{{ \App\Models\SiteText::get('contact_sub') }}</p>
-          <form onsubmit="return false;">
-            <div class="row"><div class="col-sm-6"><input class="form-control-x" placeholder="نام و نام‌خانوادگی" /></div><div class="col-sm-6"><input class="form-control-x" placeholder="شماره تماس" /></div></div>
-            <input class="form-control-x" placeholder="ایمیل" /><textarea class="form-control-x" placeholder="شرح پروژه شما"></textarea>
-            <button class="btn-flow w-100 justify-content-center" style="border: none">{{ \App\Models\SiteText::get('contact_btn') }} <i class="fa-solid fa-paper-plane"></i></button>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="hero-trust mb-4">
+<div class="avatar-stack">
+<span>ع.ک</span>
+<span>ف.م</span>
+<span>س.ا</span>
+<span>+۵۰</span>
+</div>
+<span>{{ $siteTexts['hero_trust']->value ?? 'مورد اعتماد بیش از ۵۰ کسب‌وکار موفق' }}</span>
+</div>
+</div>
+<div class="hero-visual">
+<div class="orbit-ring r1"></div>
+<div class="orbit-ring r2"></div>
+<div class="core-cube"><i class="fa-solid fa-cube"></i></div>
+<div class="float-chip c1"><i class="fa-solid fa-code"></i></div>
+<div class="float-chip c2"><i class="fa-solid fa-chart-line"></i></div>
+<div class="float-chip c3"><i class="fa-solid fa-cloud"></i></div>
+<div class="float-chip c4"><i class="fa-solid fa-shield-halved"></i></div>
+</div>
+</div>
+</div>
 </section>
 
-    <!-- ============ BLOG ============ -->
+@php
+$projectsCount=$stats['projects_count']??Projects::count();
+$customersCount=$stats['customers_count']??'۵۰+';
+$supportHours=$stats['support_hours']??'۲۴/۷';
+$satisfaction=$stats['satisfaction']??'۹۸%';
+$toEnglishNumber=function($number){
+return strtr((string)$number,['۰'=>'0','۱'=>'1','۲'=>'2','۳'=>'3','۴'=>'4','۵'=>'5','۶'=>'6','۷'=>'7','۸'=>'8','۹'=>'9']);
+};
+$projectsTarget=preg_replace('/[^0-9]/','',$toEnglishNumber($projectsCount))?:'0';
+$customersTarget=preg_replace('/[^0-9]/','',$toEnglishNumber($customersCount))?:'0';
+$supportTarget=preg_replace('/[^0-9]/','',$toEnglishNumber($supportHours))?:'0';
+$satisfactionTarget=preg_replace('/[^0-9]/','',$toEnglishNumber($satisfaction))?:'0';
+@endphp
+
+<div class="stat-strip-outer">
+<div class="container-x">
+<div class="stat-strip reveal">
+<div class="row g-3">
+<div class="col-6 col-md-3 stat-item">
+<h3><span class="count-num" data-target="{{ $projectsTarget }}">۰</span>@if(str_contains((string)$projectsCount,'+'))<span class="grad-text">+</span>@endif</h3>
+<span>{{ $siteTexts['stat1_text']->value ?? 'پروژه موفق' }}</span>
+</div>
+<div class="col-6 col-md-3 stat-item">
+<h3><span class="count-num" data-target="{{ $satisfactionTarget }}">۰</span><span class="grad-text">%</span></h3>
+<span>{{ $siteTexts['stat2_text']->value ?? 'رضایت مشتریان' }}</span>
+</div>
+<div class="col-6 col-md-3 stat-item">
+<h3><span class="count-num" data-target="{{ $customersTarget }}">۰</span><span class="grad-text">+</span></h3>
+<span>{{ $siteTexts['stat3_text']->value ?? 'مشتری فعال' }}</span>
+</div>
+<div class="col-6 col-md-3 stat-item">
+<h3><span class="count-num" data-target="{{ $supportTarget }}">۰</span><span class="grad-text">/۷</span></h3>
+<span>{{ $siteTexts['stat4_text']->value ?? 'پشتیبانی' }}</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<section class="services" id="services">
+<div class="container-x">
+<div class="services-head reveal row">
+<div class="col">
+<span class="eyebrow"><i class="fa-solid fa-layer-group"></i>{{ $siteTexts['services_badge']->value ?? 'خدمات ما' }}</span>
+<h2 class="section-title">{!! nl2br(e($siteTexts['services_title']->value ?? 'هر آنچه برای رشد دیجیتال نیاز دارید، اینجاست')) !!}</h2>
+</div>
+<p class="section-sub col">{{ $siteTexts['services_desc']->value ?? 'از هوش مصنوعی تا اپلیکیشن موبایل؛ راهکارهایی که بر پایه‌ی داده، طراحی و مهندسی مدرن ساخته شده‌اند.' }}</p>
+</div>
+<div class="flow-wrap">
+<svg class="flow-svg" viewBox="0 0 1200 500" preserveAspectRatio="none">
+<path d="M0,250 C200,100 300,400 600,250 C900,100 1000,400 1200,250" stroke="url(#g1)" stroke-width="1.5" fill="none"/>
+<defs>
+<linearGradient id="g1" x1="0" y1="0" x2="1" y2="0">
+<stop offset="0%" stop-color="#2f7dfb"/>
+<stop offset="100%" stop-color="#17c3b2"/>
+</linearGradient>
+</defs>
+</svg>
+<div class="svc-grid">
+@foreach($services as $index=>$service)
+<a href="{{ route('servise', $service->id) }}">
+    <div class="svc-card reveal reveal-delay-{{ ($index%3)+1 }}" data-tilt>
+    <span class="svc-num">{{ str_pad($index+1,2,'0',STR_PAD_LEFT) }}</span>
+    <div class="svc-icon"><i class="fa-solid {!! $service->icon !!}"></i></div>
+    <h3>{{ $service->title }}</h3>
+    <p>{{ $service->text }}</p>
+    </div>
+</a>
+@endforeach
+</div>
+</div>
+</div>
+</section>
+
+<section class="why">
+<div class="container-x">
+<div class="row align-items-center g-4 why-grid">
+<div class="col-lg-5">
+<div class="why-visual reveal">
+<div class="why-photo"><img src="{{ asset('img/mana1.png') }}" alt="Mana"></div>
+<div class="badge-float">
+<span class="num">{{ $siteTexts['experience_num']->value ?? '۱۵+' }}</span>
+<div>
+<div style="font-size:.82rem;font-weight:600">{{ $siteTexts['experience_title']->value ?? 'سال تجربه' }}</div>
+<div style="font-size:.74rem;color:var(--text-dim)">{{ $siteTexts['experience_desc']->value ?? 'در ساخت محصولات دیجیتال' }}</div>
+</div>
+</div>
+</div>
+</div>
+<div class="col-lg-7">
+<span class="eyebrow reveal"><i class="fa-solid fa-star"></i>{{ $siteTexts['why_badge']->value ?? 'چرا مانا' }}</span>
+<h2 class="section-title reveal reveal-delay-1">{{ $siteTexts['why_title']->value ?? 'شریکی که رشد دیجیتال شما را جدی می‌گیرد' }}</h2>
+<ul class="why-list">
+<li class="reveal reveal-delay-1">
+<div class="ico"><i class="fa-solid fa-user-graduate"></i></div>
+<div>
+<h4>{{ $siteTexts['why1_title']->value ?? 'تیمی متخصص و باتجربه' }}</h4>
+<p>{{ $siteTexts['why1_desc']->value ?? 'متخصصانی با سال‌ها تجربه در پروژه‌های واقعی و پیچیده.' }}</p>
+</div>
+</li>
+<li class="reveal reveal-delay-2">
+<div class="ico"><i class="fa-solid fa-medal"></i></div>
+<div>
+<h4>{{ $siteTexts['why2_title']->value ?? 'کیفیت تضمین‌شده' }}</h4>
+<p>{{ $siteTexts['why2_desc']->value ?? 'تست و بازبینی دقیق در هر مرحله از توسعه‌ی پروژه.' }}</p>
+</div>
+</li>
+<li class="reveal reveal-delay-3">
+<div class="ico"><i class="fa-solid fa-headset"></i></div>
+<div>
+<h4>{{ $siteTexts['why3_title']->value ?? 'پشتیبانی ۲۴/۷' }}</h4>
+<p>{{ $siteTexts['why3_desc']->value ?? 'همراهی و پاسخگویی سریع در تمام ساعات شبانه‌روز.' }}</p>
+</div>
+</li>
+<li class="reveal reveal-delay-4">
+<div class="ico"><i class="fa-solid fa-tags"></i></div>
+<div>
+<h4>{{ $siteTexts['why4_title']->value ?? 'قیمت‌گذاری شفاف' }}</h4>
+<p>{{ $siteTexts['why4_desc']->value ?? 'بدون هزینه‌ی پنهان؛ برآورد دقیق پیش از شروع کار.' }}</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+
+<section class="folio" id="folio">
+<div class="container-x">
+<div class="row align-items-end mb-4 reveal">
+<div class="col-md-8">
+<span class="eyebrow"><i class="fa-solid fa-briefcase"></i>{{ $siteTexts['folio_badge']->value ?? 'نمونه‌کارها' }}</span>
+<h2 class="section-title">{{ $siteTexts['folio_title']->value ?? 'بخشی از پروژه‌های موفق ما' }}</h2>
+</div>
+<div class="col-md-4">
+<p class="section-sub" style="margin-top:12px">{{ $siteTexts['folio_desc']->value ?? 'روی هر مورد کلیک کنید تا جزئیات پروژه را ببینید.' }}</p>
+</div>
+</div>
+<div class="folio-shell reveal">
+<div class="folio-tabs" id="folioTabs">
+@foreach($projects as $index=>$project)
+<div class="folio-tab {{ $index===0?'active':'' }}" data-index="{{ $index }}" data-project="{{ $project->id }}" data-description="{{ $project->description }}" data-from="{{ $project->from ?? '#1d2a6b' }}" data-to="{{ $project->to ?? '#0b1030' }}" data-url="{{ route('projects.show',$project->id) }}">
+<div class="ft-ic"><i class="{{ $project->icon ?? 'fa-solid fa-briefcase' }}"></i></div>
+<div>
+<h5>{{ $project->title }}</h5>
+<span>{{ $project->category->name ?? 'پروژه' }}</span>
+</div>
+<div class="bar"></div>
+</div>
+@endforeach
+</div>
+<div class="folio-mobile-tabs" id="folioMobileTabs">
+@foreach($projects as $index=>$project)
+<div class="fmt-chip {{ $index===0?'active':'' }}" data-index="{{ $index }}">{{ $project->category->name ?? $project->title }}</div>
+@endforeach
+</div>
+<div class="folio-preview" id="folioPreview">
+<div class="fp-dots" id="fpDots">
+@foreach($projects as $index=>$project)
+<span class="{{ $index===0?'active':'' }}"></span>
+@endforeach
+</div>
+@php
+$firstProject=$projects->first();
+@endphp
+@if($firstProject)
+<div class="fp-bg" id="fpBg" style="background:linear-gradient(150deg,{{ $firstProject->from ?? '#1d2a6b' }},{{ $firstProject->to ?? '#0b1030' }})"></div>
+<div class="fp-content" id="fpContent">
+<span class="tag">{{ $firstProject->category->name ?? 'پروژه' }}</span>
+<h4>{{ $firstProject->title }}</h4>
+<p>{{ $firstProject->description }}</p>
+<a href="{{ route('projects.show',$firstProject->id) }}" class="pill">مشاهده جزئیات <i class="fa-solid fa-arrow-up-left"></i></a>
+</div>
+@else
+<div class="fp-bg" id="fpBg"></div>
+<div class="fp-content" id="fpContent"></div>
+@endif
+</div>
+</div>
+</div>
+</section>
+
+<section class="team" id="team">
+<div class="container-x">
+<div class="text-center mb-5 reveal">
+<span class="eyebrow"><i class="fa-solid fa-people-group"></i>{{ $siteTexts['team_badge']->value ?? 'تیم ما' }}</span>
+<h2 class="section-title">{{ $siteTexts['team_title']->value ?? 'متخصصانی که ایده شما را می‌سازند' }}</h2>
+</div>
+<div class="team-grid">
+@foreach($teams as $index=>$team)
+<div class="team-card reveal reveal-delay-{{ ($index%4)+1 }}">
+<div class="team-ring">
+<div class="team-avatar tc{{ ($index%5)+1 }}">
+<img src="{{ asset($team->image) }}" alt="{{ $team->name }}">
+<div class="ov">
+@if($team->linkedin)<a href="{{ $team->linkedin }}"><i class="fa-brands fa-linkedin-in"></i></a>@endif
+@if($team->instagram)<a href="{{ $team->instagram }}"><i class="fa-brands fa-instagram"></i></a>@endif
+</div>
+</div>
+</div>
+<h4>{{ $team->name }}</h4>
+<p>{{ $team->position }}</p>
+</div>
+@endforeach
+</div>
+</div>
+</section>
+
+{{-- <section class="testi">
+<div class="container-x">
+<div class="text-center mb-5 reveal">
+<span class="eyebrow"><i class="fa-solid fa-comment-dots"></i>{{ $siteTexts['comments_badge']->value ?? 'نظرات مشتریان' }}</span>
+<h2 class="section-title">{{ $siteTexts['comments_title']->value ?? 'آنچه مشتریان ما می‌گویند' }}</h2>
+</div>
+<div class="testi-track">
+@foreach($comments as $index=>$comment)
+<div class="testi-card reveal reveal-delay-{{ ($index%4)+1 }}">
+<i class="fa-solid fa-quote-right quote"></i>
+<p>{{ $comment->comment }}</p>
+<div class="testi-person">
+<div class="av">{{ mb_substr($comment->name,0,2) }}</div>
+<div>
+<h5>{{ $comment->name }}</h5>
+<span>{{ $comment->position }}</span>
+</div>
+</div>
+</div>
+@endforeach
+</div>
+</div>
+</section> --}}
+
+<section class="faqc" id="contact">
+<div class="container-x">
+<div class="row g-4">
+<div class="col-lg-6">
+<span class="eyebrow reveal"><i class="fa-solid fa-circle-question"></i>{{ $siteTexts['faq_badge']->value ?? 'سوالات متداول' }}</span>
+<h2 class="section-title reveal reveal-delay-1 mb-4">{{ $siteTexts['faq_title']->value ?? 'پاسخ سوالات رایج شما' }}</h2>
+<div class="acc-list">
+@foreach($questions as $index=>$question)
+<div class="acc-item {{ $index===0?'open':'' }} reveal reveal-delay-{{ ($index%4)+1 }}">
+<button class="acc-btn">{{ $question->question }} <i class="fa-solid fa-plus"></i></button>
+<div class="acc-panel"><p>{{ $question->answer }}</p></div>
+</div>
+@endforeach
+</div>
+</div>
+
+<div class="col-lg-6">
+<div class="contact-card reveal reveal-delay-2">
+<span class="eyebrow"><i class="fa-solid fa-paper-plane"></i>{{ $siteTexts['contact_badge']->value ?? 'تماس با ما' }}</span>
+<h3 style="font-weight:800;font-size:1.5rem;margin-bottom:6px">{{ $siteTexts['contact_title']->value ?? 'برای مشاوره رایگان با ما تماس بگیرید' }}</h3>
+<p class="section-sub" style="margin-bottom:26px">{{ $siteTexts['contact_desc']->value ?? 'فرم زیر را پر کنید تا در کمتر از ۲۴ ساعت با شما تماس بگیریم.' }}</p>
+<form onsubmit="return false;">
+<div class="row">
+<div class="col-sm-6"><input class="form-control-x" placeholder="{{ $siteTexts['contact_name_placeholder']->value ?? 'نام و نام‌خانوادگی' }}"></div>
+<div class="col-sm-6"><input class="form-control-x" placeholder="{{ $siteTexts['contact_phone_placeholder']->value ?? 'شماره تماس' }}"></div>
+</div>
+<input class="form-control-x" placeholder="{{ $siteTexts['contact_email_placeholder']->value ?? 'ایمیل' }}">
+<textarea class="form-control-x" placeholder="{{ $siteTexts['contact_message_placeholder']->value ?? 'شرح پروژه شما' }}"></textarea>
+<button class="btn-flow w-100 justify-content-center" style="border:none">{{ $siteTexts['contact_button']->value ?? 'ارسال پیام' }} <i class="fa-solid fa-paper-plane"></i></button>
+</form>
+</div>
+</div>
+</div>
+</div>
+</section>
+
 <section class="blog" id="blog">
-  <div class="container-x">
-    <div class="blog-shell">
-      <span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>
-      <div class="blog-top reveal">
-        <div class="blog-avatar"><i class="fa-solid fa-pen-nib"></i></div>
-        <div>
-          <h2 class="section-title" style="margin-bottom: 6px; color: #fff;">
-          @php
-            $fullTitle = \App\Models\SiteText::get('blog_title', 'مقالات و نکات دنیای دیجیتال');
-            $words = explode(' ', $fullTitle);
-            if (count($words) >= 2) {
-                $lastTwo = array_splice($words, -2);
-                $firstPart = implode(' ', $words);
-                $styledLastTwo = implode(' ', $lastTwo);
-            } else {
-                $firstPart = $fullTitle;
-                $styledLastTwo = '';
-            }
-          @endphp
+<div class="container-x">
+<div class="blog-shell">
+<span class="blob b1"></span>
+<span class="blob b2"></span>
+<span class="blob b3"></span>
 
-          {{ $firstPart }}
-          @if($styledLastTwo)
-            <span style="background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-              {{ $styledLastTwo }}
-            </span>
-          @endif
-        </h2>
-          <p class="section-sub" style="margin-bottom: 0">
-            {{ \App\Models\SiteText::get('blog_sub', 'آخرین یافته‌ها، راهنماها و تجربیات تیم فنی') }}
-          </p>
-        </div>
-      </div>
+<div class="blog-top reveal">
+<div class="blog-avatar"><i class="fa-solid fa-pen-nib"></i></div>
+<div>
+<h2 class="section-title" style="margin-bottom:6px">{{ $siteTexts['blog_title']->value ?? 'مقالات و نکات' }} <span class="grad-text">{{ $siteTexts['blog_title_highlight']->value ?? 'دنیای دیجیتال' }}</span></h2>
+<p class="section-sub" style="margin-bottom:0">{{ $siteTexts['blog_desc']->value ?? 'آخرین یافته‌ها، راهنماها و تجربیات تیم فنی نوین‌آی' }}</p>
+</div>
+</div>
 
-      <div class="blog-layout">
-        <div class="blog-list reveal">
-          @forelse($blogs->take(4) as $blog)
-            <a href="{{ route('blogs.singleBlog', $blog->id) }}" class="blog-list-item">
-              {{ Str::limit($blog->title, 50) }}
-              <span class="arr"><i class="fa-solid fa-arrow-up-left"></i></span>
-            </a>
-          @empty
-            <p style="color: var(--text-dim);">مقاله‌ای ثبت نشده</p>
-          @endforelse
-        </div>
+<div class="blog-layout">
+<div class="blog-list reveal">
+@foreach($blogs as $blog)
+<a href="/blog/{{ $blog->id }}" class="blog-list-item">{{ $blog->title }} <span class="arr"><i class="fa-solid fa-arrow-up-left"></i></span></a>
+@endforeach
+</div>
 
-        @php 
-          $featuredBlog = $blogs->skip(4)->first() ?? $blogs->first(); 
-        @endphp
-        @if($featuredBlog)
-          <div class="blog-feature reveal reveal-delay-1">
-            <div class="deco">
-              <img src="{{ $featuredBlog->image_url ? asset('storage/' . $featuredBlog->image_url) : asset('img/mana2.jpg') }}" alt="{{ $featuredBlog->title }}">
-            </div>
-            <div class="blog-feature-inner">
-              <div class="meta">
-                <i class="fa-regular fa-clock"></i> زمان مطالعه: {{ $featuredBlog->{'reading-time'} ?? 5 }} دقیقه
-              </div>
-              <h5>{{ Str::limit($featuredBlog->title, 60) }}</h5>
-              <a href="{{ route('blogs.singleBlog', $featuredBlog->id) }}" class="pill">
-                مطالعه مقاله <i class="fa-solid fa-arrow-up-left"></i>
-              </a>
-            </div>
-          </div>
-        @endif
+@php
+$featuredBlog=$blogs->first();
+@endphp
 
-        <div class="blog-side">
-          @php 
-            $sideBlogs = $blogs->count() > 5 ? $blogs->skip(5)->take(2) : $blogs->take(2); 
-          @endphp
+@if($featuredBlog)
+<div class="blog-feature reveal reveal-delay-1">
+<div class="deco"><img src="{{ asset('img/mana2.jpg') }}" alt="Blog"></div>
+<div class="blog-feature-inner">
+<div class="meta"><i class="fa-regular fa-clock"></i>{{ $featuredBlog->read_time ?? $siteTexts['blog_read_time']->value ?? 'زمان مطالعه: ۵ دقیقه' }}</div>
+<h5>{{ $featuredBlog->title }}</h5>
+<a href="{{ url('/singleblog/'.$featuredBlog->id) }}" class="pill">{{ $siteTexts['blog_read_more']->value ?? 'مطالعه مقاله' }} <i class="fa-solid fa-arrow-up-left"></i></a>
+</div>
+</div>
+@endif
 
-          @foreach($sideBlogs as $index => $blog)
-            <div class="blog-side-card reveal reveal-delay-{{ $index + 2 }}">
-              <div class="thumb {{ $loop->first ? 'a' : 'b' }}">
-                <i class="fa-solid {{ $loop->first ? 'fa-robot' : 'fa-mobile-screen' }}"></i>
-              </div>
-              <a href="{{ route('blogs.singleBlog', $blog->id) }}">
-                <div>
-                  <span class="tag">مقاله</span>
-                  <h6>{{ Str::limit($blog->title, 40) }}</h6>
-                  <span class="time">{{ $blog->{'reading-time'} ?? 5 }} دقیقه مطالعه</span>
-                </div>
-              </a>
-            </div>
-          @endforeach
-        </div>
-      </div>
+<div class="blog-side">
+@foreach($blogs->skip(1)->take(2) as $blog)
+<div class="blog-side-card reveal reveal-delay-{{ $loop->iteration+1 }}">
+<div class="thumb {{ $loop->first?'a':'b' }}"><i class="fa-solid {{ $loop->first?'fa-robot':'fa-mobile-screen' }}"></i></div>
+<a href="{{ url('/blog/'.$blog->id) }}">
+<div>
+<span class="tag">{{ $blog->category->name ?? 'مقاله' }}</span>
+<h6>{{ $blog->title }}</h6>
+<span class="time">{{ $blog->read_time ?? '۵ دقیقه مطالعه' }}</span>
+</div>
+</a>
+</div>
+@endforeach
+</div>
+</div>
 
-      <div class="blog-more reveal">
-        <a href="{{ route('blogs.all_blogs') }}" class="btn-ghost">
-          {{ \App\Models\SiteText::get('blog_more', 'مشاهده همه مقالات') }} <i class="fa-solid fa-arrow-left"></i>
-        </a>
-      </div>
-    </div>
-  </div>
+<div class="blog-more reveal">
+<a href="{{ url('/blog.html') }}" class="btn-ghost">{{ $siteTexts['blog_all']->value ?? 'مشاهده همه مقالات' }} <i class="fa-solid fa-arrow-left"></i></a>
+</div>
+</div>
+</div>
 </section>
 
-    <footer class="site-footer">
-      <div class="footer-inner">
-        <div class="container-x">
-          <div class="footer-island reveal">
-            <div class="dots"></div>
-            <div class="footer-newsletter">
-              <div class="fn-text">
-                <div class="fn-ic"><i class="fa-solid fa-envelope-open-text"></i></div>
-                <div><strong>{{ \App\Models\SiteText::get('newsletter_title') }}</strong><span class="sub">{{ \App\Models\SiteText::get('newsletter_sub') }}</span></div>
-              </div>
-              <form onsubmit="return false;"><input type="email" placeholder="آدرس ایمیل شما..." /><button type="submit">ارسال</button></form>
-            </div>
-            <div class="footer-3col">
-              <div class="footer-col"><h5>{{ \App\Models\SiteText::get('footer_links') }}</h5><ul><li><a href="#home"><i class="fa-solid fa-caret-left"></i> خانه</a></li><li><a href="#folio"><i class="fa-solid fa-caret-left"></i> نمونه‌کارها</a></li><li><a href="#team"><i class="fa-solid fa-caret-left"></i> تیم ما</a></li><li><a href="#contact"><i class="fa-solid fa-caret-left"></i> تماس با ما</a></li><li><a href="#blog"><i class="fa-solid fa-caret-left"></i> وبلاگ</a></li></ul></div>
-              <div class="footer-col footer-center"><a href="#home" class="footer-brand">{{ \App\Models\SiteText::get('footer_brand') }}</a><p class="footer-tag">{{ \App\Models\SiteText::get('footer_tag') }}</p><div class="footer-social"><a href="#"><i class="fa-brands fa-telegram"></i></a><a href="#"><i class="fa-brands fa-instagram"></i></a><a href="#"><i class="fa-brands fa-whatsapp"></i></a><a href="#"><i class="fa-brands fa-x-twitter"></i></a><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></div></div>
-              <div class="footer-col"><h5>{{ \App\Models\SiteText::get('footer_services') }}</h5><ul><li><a href="#services"><i class="fa-solid fa-caret-left"></i> هوش مصنوعی</a></li><li><a href="#services"><i class="fa-solid fa-caret-left"></i> طراحی وب‌سایت</a></li><li><a href="#services"><i class="fa-solid fa-caret-left"></i> اپلیکیشن موبایل</a></li><li><a href="#services"><i class="fa-solid fa-caret-left"></i> زیرساخت ابری</a></li><li><a href="tel:02117545678"><i class="fa-solid fa-phone"></i> ۰۲۱-۱۷۵۴۵۶۷۸</a></li></ul></div>
-            </div>
-            <div class="footer-badges"><div class="fb-item"><i class="fa-solid fa-shield-halved"></i> {{ \App\Models\SiteText::get('badge1') }}</div><div class="fb-item"><i class="fa-solid fa-headset"></i> {{ \App\Models\SiteText::get('badge2') }}</div><div class="fb-item"><i class="fa-solid fa-bolt"></i> {{ \App\Models\SiteText::get('badge3') }}</div><div class="fb-item"><i class="fa-solid fa-tags"></i> {{ \App\Models\SiteText::get('badge4') }}</div></div>
-          </div>
-          <div class="footer-bottom"><p>{{ \App\Models\SiteText::get('copyright') }}</p><div class="legal"><a href="#">حریم خصوصی</a><a href="#">شرایط استفاده</a></div></div>
-        </div>
-      </div>
-    </footer>
+@endsection
 
-    <button class="to-top" id="toTop"><i class="fa-solid fa-arrow-up"></i></button>
-    <a href="#contact" class="chat-fab" id="chatFab"><i class="fa-solid fa-comment-dots"></i></a>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('js/index.js') }}"></script>
-  </body>
-</html>
+@section('js')
+<script src="{{ asset('js/client/index.js') }}"></script>
+@endsection

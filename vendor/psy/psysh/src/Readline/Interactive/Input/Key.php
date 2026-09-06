@@ -21,7 +21,6 @@ class Key
     public const TYPE_ESCAPE = 'escape';
     public const TYPE_EOF = 'eof';
     public const TYPE_PASTE = 'paste';
-    public const TYPE_MOUSE = 'mouse';
 
     private string $value;
     private string $type;
@@ -86,14 +85,6 @@ class Key
     public function isPaste(): bool
     {
         return $this->type === self::TYPE_PASTE;
-    }
-
-    /**
-     * Check if this is a mouse event.
-     */
-    public function isMouse(): bool
-    {
-        return $this->type === self::TYPE_MOUSE;
     }
 
     /**

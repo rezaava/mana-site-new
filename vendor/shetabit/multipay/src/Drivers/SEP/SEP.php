@@ -136,7 +136,7 @@ class SEP extends Driver
             'TerminalNumber' => $this->settings->terminalId,
         ];
 
-        if ($this->invoice->getTransactionId() !== Request::input('Token')) {
+        if ($this->invoice->getTransactionId() !== Request::input('ResNum')) {
             $this->notVerified(-108);
         }
 

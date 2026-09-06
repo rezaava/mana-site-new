@@ -32,7 +32,7 @@
                 <tbody>
                     @forelse($services as $index => $service)
                         <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">{{ persianNum($services->firstItem() + $index) }}</td>
+                            <td style="padding: 12px;">{{ $services->firstItem() + $index }}</td>
                             <td style="padding: 12px;">
                                 @if($service->image_url)
                                     <img src="{{ asset('storage/') }}) }} . $service->image_url) }}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px;">
@@ -41,7 +41,7 @@
                                 @endif
                             </td>
                             <td style="padding: 12px;">{{ $service->title }}</td>
-                            <td style="padding: 12px;">{{ persianNum($service->number ?? '-') }}</td>
+                            <td style="padding: 12px;">{{ $service->number ?? '-' }}</td>
                             <td style="padding: 12px;">
                                 <a href="{{ route('pages.edit', $service->id) }}" class="btn btn-sm btn-warning" style="margin-left: 5px; display: inline-block; padding: 6px 10px; border-radius: 6px; text-decoration: none;">
                                     <i class="fa-solid fa-edit"></i>

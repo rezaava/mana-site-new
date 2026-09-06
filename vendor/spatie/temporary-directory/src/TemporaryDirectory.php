@@ -19,17 +19,17 @@ class TemporaryDirectory
 
     protected int $permission = 0777;
 
-    public final function __construct(string $location = '')
+    public function __construct(string $location = '')
     {
         $this->location = $this->sanitizePath($location);
     }
 
-    public static function make(string $location = ''): static
+    public static function make(string $location = ''): self
     {
-        return (new static($location))->create();
+        return (new self($location))->create();
     }
 
-    public function create(): static
+    public function create(): self
     {
         if (empty($this->location)) {
             $this->location = $this->getSystemTemporaryDirectory();
@@ -52,28 +52,28 @@ class TemporaryDirectory
         return $this;
     }
 
-    public function force(): static
+    public function force(): self
     {
         $this->forceCreate = true;
 
         return $this;
     }
 
-    public function permission(int $permission): static
+    public function permission(int $permission): self
     {
         $this->permission = $permission;
 
         return $this;
     }
 
-    public function name(string $name): static
+    public function name(string $name): self
     {
         $this->name = $this->sanitizeName($name);
 
         return $this;
     }
 
-    public function location(string $location): static
+    public function location(string $location): self
     {
         $this->location = $this->sanitizePath($location);
 
@@ -97,7 +97,7 @@ class TemporaryDirectory
         return $path;
     }
 
-    public function empty(): static
+    public function empty(): self
     {
         $this->deleteDirectory($this->getFullPath());
 
@@ -199,7 +199,7 @@ class TemporaryDirectory
         }
     }
 
-    public function deleteWhenDestroyed(bool $deleteWhenDestroyed = true): static
+    public function deleteWhenDestroyed(bool $deleteWhenDestroyed = true): self
     {
         $this->deleteWhenDestroyed = $deleteWhenDestroyed;
 

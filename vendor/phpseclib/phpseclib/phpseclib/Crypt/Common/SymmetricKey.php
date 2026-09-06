@@ -1270,7 +1270,7 @@ abstract class SymmetricKey
                     if ($this->continuousBuffer) {
                         $this->encryptIV = $iv;
                     }
-                    return $ciphertext;
+                    break;
                 case self::MODE_OFB:
                     return $this->openssl_ofb_process($plaintext, $this->encryptIV, $this->enbuffer);
             }

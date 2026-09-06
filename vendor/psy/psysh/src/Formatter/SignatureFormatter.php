@@ -408,8 +408,7 @@ class SignatureFormatter implements ReflectorFormatter
                 // @codeCoverageIgnoreEnd
             }
 
-            $isVariadic = $param->isVariadic();
-            if ($param->isOptional() && !$isVariadic) {
+            if ($param->isOptional()) {
                 if (!$param->isDefaultValueAvailable()) {
                     $value = 'unknown';
                     $typeStyle = 'urgent';
@@ -424,9 +423,8 @@ class SignatureFormatter implements ReflectorFormatter
             }
 
             $params[] = \sprintf(
-                '%s%s%s%s<strong>$%s</strong>%s',
+                '%s%s%s<strong>$%s</strong>%s',
                 $param->isPassedByReference() ? '&' : '',
-                $isVariadic ? '...' : '',
                 $hint,
                 $hint !== '' ? ' ' : '',
                 $param->getName(),

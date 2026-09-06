@@ -68,15 +68,28 @@ class SiteTextController extends Controller
             'copyright' => ['label' => 'کپی‌رایت', 'value' => '© ۲۰۲۶ مانا. تمامی حقوق محفوظ است.'],
         ];
 
+        $savedTexts = SiteText::all()->keyBy('key');
+
+        foreach ($texts as $key => $item) {
+            $texts[$key]['value'] = $savedTexts->has($key)
+                ? $savedTexts[$key]->value
+                : $item['value'];
+        }
+
         return view('admin.site-texts.index', compact('texts'));
     }
 
     public function update(Request $request)
     {
         foreach ($request->except('_token', '_method') as $key => $value) {
-            SiteText::updateOrCreate(['key' => $key], ['value' => $value]);
+            SiteText::updateOrCreate(
+                ['key' => $key],
+                ['value' => $value]
+            );
         }
 
-        return redirect()->route('site-texts.index')->with('success', 'متن‌ها با موفقیت ذخیره شدند.');
+        return redirect()
+            ->route('site-texts.index')
+            ->with('success', 'متن‌ها با موفقیت ذخیره شدند.');
     }
 }

@@ -10,19 +10,42 @@ use App\Models\Images;
 class Projects extends Model
 {
     use HasFactory;
+
     public $table = 'projects';
+
     public $fillable = [
-        'title', 'subtitle', 'brief', 'desc', 'project_goal', 'cat_id', 'image_url', 'number',
-        'challenge', 'solution', 'client_name', 'client_role', 'launch_year', 'duration', 
-        'project_link', 'testimonial'
+        'title',
+        'subtitle',
+        'brief',
+        'desc',
+        'project_goal',
+        'cat_id',
+        'image_url',
+        'number',
+        'challenge',
+        'solution',
+        'client_name',
+        'client_role',
+        'launch_year',
+        'duration',
+        'project_link',
+        'testimonial'
     ];
+
     public $casts = [
         'cat_id' => 'integer',
         'number' => 'integer'
     ];
 
-    // رابطه با تصاویر (قدیمی)
-    public function Images(){
+    // دسته‌بندی پروژه
+    public function category()
+    {
+        return $this->belongsTo(Categories::class, 'cat_id', 'id');
+    }
+
+    // رابطه با تصاویر
+    public function Images()
+    {
         return $this->hasMany(Images::class);
     }
 
@@ -38,20 +61,18 @@ class Projects extends Model
         return $this->hasMany(ProjectGallery::class, 'project_id');
     }
 
-    // رابطه با تکنولوژی‌ها (جدید)
+    // رابطه با تکنولوژی‌ها
     public function technologies()
     {
         return $this->hasMany(ProjectTechnology::class, 'project_id')->orderBy('order');
     }
-
-    // رابطه با ویژگی‌های کلیدی (Features)
-    public function features()
-    {
-        return $this->hasMany(Features::class, 'sub-id', 'id')->where('type', 1);
-    }
-
+    // رابطه با سرویس‌ها
     public function services()
     {
         return $this->hasMany(ProjectService::class, 'project_id')->orderBy('order');
+    }
+    public function features()
+    {
+        return $this->hasMany(ProjectFeature::class, 'project_id', 'id');
     }
 }

@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('blogs', function (Blueprint $table) {
@@ -18,13 +15,11 @@ return new class extends Migration
             $table->string('image_url')->nullable();
             $table->tinyInteger('reading-time')->nullable();
             $table->tinyInteger('number')->comment('برای مرتب سازی');
+            $table->foreignId('cat_id')->constrained('categories')->onDelete('cascade');
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('blogs');

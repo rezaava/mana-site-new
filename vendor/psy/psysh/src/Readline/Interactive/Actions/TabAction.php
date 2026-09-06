@@ -14,21 +14,18 @@ namespace Psy\Readline\Interactive\Actions;
 use Psy\Completion\CompletionEngine;
 use Psy\Completion\CompletionRequest;
 use Psy\Completion\FuzzyMatcher;
+use Psy\Readline\Interactive\Helper\CompletionRenderer;
 use Psy\Readline\Interactive\Helper\CurrentWord;
 use Psy\Readline\Interactive\Input\Buffer;
-use Psy\Readline\Interactive\Input\Key;
 use Psy\Readline\Interactive\Readline;
-use Psy\Readline\Interactive\ReadlineMode;
-use Psy\Readline\Interactive\Renderer\CompletionMenuWidget;
 use Psy\Readline\Interactive\Terminal;
-use Psy\Util\Tty;
 
 /**
  * Tab completion action.
  *
  * Triggers context-aware tab completion when the Tab key is pressed.
  */
-class TabAction implements ActionInterface, ReadlineMode
+class TabAction implements ActionInterface
 {
     private ?CompletionEngine $completer = null;
     private bool $smartBrackets = false;
@@ -39,6 +36,7 @@ class TabAction implements ActionInterface, ReadlineMode
     private array $filteredMatches = [];
     private int $selectedIndex = 0;
     private string $filterText = '';
+    private bool $inInteractiveMode = false;
     private ?bool $interactiveSelectionEnabled = null;
 
     /** @var int Viewport: first visible row when scrolling. */
@@ -47,10 +45,6 @@ class TabAction implements ActionInterface, ReadlineMode
     private bool $expanded = false;
     private int $totalRows = 0;
     private int $totalColumns = 0;
-
-    // Per-activation refs, set in execute() and used while this is the active mode.
-    private ?Terminal $terminal = null;
-    private ?Readline $readline = null;
 
     public function __construct(?CompletionEngine $completer = null, bool $smartBrackets = false)
     {
@@ -112,32 +106,22 @@ class TabAction implements ActionInterface, ReadlineMode
             $currentWord = $commonPrefix;
         }
 
-        if ($this->interactiveSelectionEnabled !== null) {
-            $isTTY = $this->interactiveSelectionEnabled;
-        } else {
-            $isTTY = Tty::isatty(\STDIN);
-        }
-
-        if (!$isTTY) {
-            // No interactive menu without a TTY; the common-prefix insertion
-            // above is the best we can do.
-            return true;
-        }
-
         $this->currentMatches = \array_values($matches);
         $this->filterText = $currentWord;
         $this->filteredMatches = $this->currentMatches;
         $this->selectedIndex = 0;
         $this->scrollOffset = 0;
         $this->expanded = false;
+        $this->inInteractiveMode = true;
 
-        $this->terminal = $terminal;
-        $this->readline = $readline;
-        $this->updateLayout($terminal);
+        $readline->enterMenuMode();
+        try {
+            $this->updateOverlay($buffer, $terminal, $readline);
 
-        $readline->pushMode($this);
-
-        return true;
+            return $this->handleInteractiveSelection($buffer, $terminal, $readline);
+        } finally {
+            $readline->exitMenuMode();
+        }
     }
 
     /**
@@ -237,117 +221,91 @@ class TabAction implements ActionInterface, ReadlineMode
     }
 
     /**
-     * {@inheritdoc}
-     *
-     * One iteration of the menu loop: update selection / filter / scroll
-     * for the key, or return false/null to leave the menu.
+     * Handle interactive selection with arrow keys and filtering.
      */
-    public function handleKey(Key $key, Buffer $buffer): ?bool
+    private function handleInteractiveSelection(Buffer $buffer, Terminal $terminal, Readline $readline): bool
     {
-        $keyStr = (string) $key;
-        $keyValue = $key->getValue();
+        if ($this->interactiveSelectionEnabled !== null) {
+            $isTTY = $this->interactiveSelectionEnabled;
+        } else {
+            $isTTY = @\stream_isatty(\STDIN);
+        }
 
-        if ($keyStr === 'escape:[A' || $keyValue === "\x10") { // Up or Ctrl-P
-            $this->moveSelection(-1, $this->readline);
+        if (!$isTTY) {
+            $this->inInteractiveMode = false;
 
             return true;
         }
 
-        if ($keyStr === 'escape:[B' || $keyValue === "\x0e") { // Down or Ctrl-N
-            $this->moveSelection(1, $this->readline);
+        while ($this->inInteractiveMode) {
+            $key = $readline->readNextKey();
+            $keyStr = (string) $key;
+            $keyValue = $key->getValue();
 
-            return true;
-        }
+            if ($keyStr === 'escape:[A' || $keyValue === "\x10") { // Up or Ctrl-P
+                $this->moveSelection(-1, $readline);
+                $this->updateOverlay($buffer, $terminal, $readline);
+            } elseif ($keyStr === 'escape:[B' || $keyValue === "\x0e") { // Down or Ctrl-N
+                $this->moveSelection(1, $readline);
+                $this->updateOverlay($buffer, $terminal, $readline);
+            } elseif ($keyStr === 'escape:[C' || $keyValue === "\x06") { // Right or Ctrl-F
+                $this->moveSelectionHorizontal(1, $readline);
+                $this->updateOverlay($buffer, $terminal, $readline);
+            } elseif ($keyStr === 'escape:[D' || $keyValue === "\x02") { // Left or Ctrl-B
+                $this->moveSelectionHorizontal(-1, $readline);
+                $this->updateOverlay($buffer, $terminal, $readline);
+            } elseif ($keyValue === "\t") {
+                // Tab cycles to the next match
+                $this->moveSelection(1, $readline);
+                $this->updateOverlay($buffer, $terminal, $readline);
+            } elseif ($keyValue === "\r" || $keyValue === "\n") {
+                $this->inInteractiveMode = false;
+                if (!empty($this->filteredMatches)) {
+                    $selected = $this->filteredMatches[$this->selectedIndex];
+                    $this->insertMatch($buffer, $selected);
+                }
+                $readline->clearOverlay($buffer);
+                break;
+            } elseif ($keyValue === "\e" || $keyValue === "\x03") { // Escape or Ctrl-C
+                $this->inInteractiveMode = false;
+                $readline->clearOverlay($buffer);
+                break;
+            } elseif ($keyValue === "\x7f" || $keyValue === "\x08") { // Backspace
+                if ($buffer->getCursor() > 0) {
+                    $buffer->deleteBackward();
 
-        if ($keyStr === 'escape:[C' || $keyValue === "\x06") { // Right or Ctrl-F
-            $this->moveSelectionHorizontal(1, $this->readline);
+                    $this->filterText = CurrentWord::extract($buffer->getText(), $buffer->getCursor());
 
-            return true;
-        }
+                    if ($this->filterText === '') {
+                        $this->inInteractiveMode = false;
+                        $readline->clearOverlay($buffer);
+                        break;
+                    }
 
-        if ($keyStr === 'escape:[D' || $keyValue === "\x02") { // Left or Ctrl-B
-            $this->moveSelectionHorizontal(-1, $this->readline);
+                    $this->updateFilter($terminal);
+                    $this->updateOverlay($buffer, $terminal, $readline);
+                }
+            } elseif ($key->isChar() && \strlen($keyValue) === 1 && $keyValue >= ' ' && $keyValue <= '~') {
+                $buffer->insert($keyValue);
 
-            return true;
-        }
+                if ($keyValue === ' ') {
+                    $this->inInteractiveMode = false;
+                    $readline->clearOverlay($buffer);
+                    break;
+                }
 
-        if ($keyValue === "\t") {
-            // Tab cycles to the next match
-            $this->moveSelection(1, $this->readline);
-
-            return true;
-        }
-
-        if ($keyValue === "\r" || $keyValue === "\n") {
-            if (!empty($this->filteredMatches)) {
-                $selected = $this->filteredMatches[$this->selectedIndex];
-                $this->insertMatch($buffer, $selected);
+                $this->filterText = CurrentWord::extract($buffer->getText(), $buffer->getCursor());
+                $this->updateFilter($terminal);
+                $this->updateOverlay($buffer, $terminal, $readline);
+            } else {
+                $this->inInteractiveMode = false;
+                $readline->clearOverlay($buffer);
+                $readline->replayKey($key);
+                break;
             }
-
-            return false;
         }
 
-        if ($keyValue === "\e" || $keyValue === "\x03") { // Escape or Ctrl-C
-            return false;
-        }
-
-        if ($keyValue === "\x7f" || $keyValue === "\x08") { // Backspace
-            if ($buffer->getCursor() === 0) {
-                return null;
-            }
-
-            $buffer->deleteBackward();
-            $this->filterText = CurrentWord::extract($buffer->getText(), $buffer->getCursor());
-
-            if ($this->filterText === '') {
-                return false;
-            }
-
-            $this->updateFilter($this->terminal);
-
-            return true;
-        }
-
-        if ($key->isChar() && $keyValue !== '') {
-            $buffer->insert($keyValue);
-
-            if ($keyValue === ' ') {
-                return false;
-            }
-
-            $this->filterText = CurrentWord::extract($buffer->getText(), $buffer->getCursor());
-            $this->updateFilter($this->terminal);
-
-            return true;
-        }
-
-        // Unknown key: leave the menu and let the outer loop reprocess it.
-        return null;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function display(Buffer $buffer): void
-    {
-        $this->updateOverlay($buffer, $this->terminal, $this->readline);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function onExit(): void
-    {
-        $this->currentMatches = [];
-        $this->filteredMatches = [];
-        $this->filterText = '';
-        $this->selectedIndex = 0;
-        $this->scrollOffset = 0;
-        $this->expanded = false;
-        $this->totalRows = 0;
-        $this->totalColumns = 0;
-        $this->terminal = null;
-        $this->readline = null;
+        return true;
     }
 
     /**
@@ -366,13 +324,11 @@ class TabAction implements ActionInterface, ReadlineMode
             $this->scrollOffset = \max(0, \min($this->scrollOffset, $maxOffset));
         }
 
-        $readline->setOverlay($buffer, new CompletionMenuWidget(
-            $terminal,
-            $this->filteredMatches,
-            $this->selectedIndex,
-            $this->scrollOffset,
-            $this->expanded,
-        ));
+        $renderer = new CompletionRenderer($terminal);
+        $lines = $renderer->render($this->filteredMatches, $this->selectedIndex, $maxRows, $this->scrollOffset, !$this->expanded);
+
+        // Prepend a blank separator line above the menu
+        $readline->renderOverlay($buffer, \array_merge([''], $lines));
     }
 
     /**
@@ -414,7 +370,8 @@ class TabAction implements ActionInterface, ReadlineMode
             return;
         }
 
-        $layout = CompletionMenuWidget::calculateLayout($terminal, $this->filteredMatches);
+        $renderer = new CompletionRenderer($terminal);
+        $layout = $renderer->calculateLayout($this->filteredMatches);
         $this->totalRows = $layout['rows'];
         $this->totalColumns = $layout['columns'];
     }
@@ -561,6 +518,8 @@ class TabAction implements ActionInterface, ReadlineMode
     /**
      * Get the common prefix of all matches.
      *
+     * @todo Should this be grapheme cluster aware?
+     *
      * @param string[] $matches
      */
     private function getCommonPrefix(array $matches): string
@@ -572,10 +531,10 @@ class TabAction implements ActionInterface, ReadlineMode
         $first = \array_shift($matches);
         $prefix = '';
 
-        for ($i = 0; $i < \mb_strlen($first, 'UTF-8'); $i++) {
-            $char = \mb_substr($first, $i, 1, 'UTF-8');
+        for ($i = 0; $i < \strlen($first); $i++) {
+            $char = $first[$i];
             foreach ($matches as $match) {
-                if (\mb_substr($match, $i, 1, 'UTF-8') !== $char) {
+                if (!isset($match[$i]) || $match[$i] !== $char) {
                     return $prefix;
                 }
             }

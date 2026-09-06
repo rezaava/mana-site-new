@@ -8,6 +8,28 @@ use Illuminate\Database\Eloquent\Model;
 class Categories extends Model
 {
     use HasFactory;
-    public $fillable = ['name'];
-    public $table = 'categories';
+
+    protected $fillable = [
+        'name'
+    ];
+
+    protected $table = 'categories';
+
+    public function projects()
+    {
+        return $this->hasMany(
+            Projects::class,
+            'cat_id',
+            'id'
+        );
+    }
+
+    public function blogs()
+    {
+        return $this->hasMany(
+            Blogs::class,
+            'cat_id',
+            'id'
+        );
+    }
 }

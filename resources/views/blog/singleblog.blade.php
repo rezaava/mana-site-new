@@ -1,189 +1,656 @@
-<!doctype html>
-<html lang="fa" dir="rtl" data-theme="dark">
-  <head>
-    <link rel="icon" type="image/x-icon" href="{{ asset('img/mana.png') }}">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $blog->title }} | {{ $siteTexts['footer_brand'] ?? 'مانا' }}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
-    <link rel="stylesheet" href="{{ asset('css/index.css') }}" />
-    {{ \Morilog\Jalali\Jalalian::fromDateTime($blog->created_at)->format('Y/m/d') }}
+@extends('layout.master')
 
-    <style>
-      .blog-single-hero {
-        padding-top: 140px;
-        padding-bottom: 80px;
-        min-height: 70vh;
-      }
-      .blog-single-card {
-        background: rgba(255, 255, 255, 0.03);
-        border: 1px solid rgba(255, 255, 255, 0.08);
-        border-radius: 24px;
-        padding: 2.5rem;
-        backdrop-filter: blur(12px);
-      }
-      .blog-cover-img {
-        width: 100%;
-        max-height: 450px;
-        object-fit: cover;
-        border-radius: 16px;
-        margin-bottom: 2rem;
-      }
-      .blog-meta-bar {
-        display: flex;
-        gap: 1.5rem;
-        flex-wrap: wrap;
-        color: #94a3b8;
-        font-size: 0.9rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        padding-bottom: 1.2rem;
-        margin-bottom: 2rem;
-      }
-      .blog-meta-bar i {
-        color: #00f2fe;
-        margin-left: 6px;
-      }
-      .blog-main-text {
-        color: #e2e8f0;
-        line-height: 2.2;
-        font-size: 1.1rem;
-      }
-      .blog-main-text p {
-        margin-bottom: 1.5rem;
-      }
-      .blog-main-text img {
-        max-width: 100%;
-        height: auto;
-        border-radius: 12px;
-        margin: 1.5rem 0;
-      }
-      .blog-main-text h1, .blog-main-text h2, .blog-main-text h3, .blog-main-text h4 {
-        color: #ffffff;
-        font-weight: 700;
-        margin-top: 2rem;
-        margin-bottom: 1rem;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="cur-dot" id="curDot"></div>
-    <div class="cur-ring" id="curRing"></div>
-    <div class="scroll-progress" id="scrollProgress"></div>
+@section('title')
+    {{ $blog->title }} | {{ $siteTexts['footer_brand']->value ?? 'مانا' }}
+@endsection
 
-    <header class="site-header" id="siteHeader">
-      <div class="container-x nav-wrap">
-        <a href="{{ route('home') }}" class="brand"><span class="mark"><img src="{{ asset('img/mana.png') }}" alt="logo"></span></a>
-        <nav class="main-nav">
-          <a href="{{ route('home') }}#home">{{ $siteTexts['nav_home'] ?? 'خانه' }}</a>
-          <a href="{{ route('home') }}#services">{{ $siteTexts['services_badge'] ?? 'خدمات' }}</a>
-          <a href="{{ route('home') }}#folio">{{ $siteTexts['folio_badge'] ?? 'نمونه‌کار' }}</a>
-          <a href="{{ route('home') }}#team">{{ $siteTexts['team_badge'] ?? 'تیم' }}</a>
-          <a href="{{ route('home') }}#contact">{{ $siteTexts['contact_badge'] ?? 'تماس' }}</a>
-          <a href="{{ route('home') }}#blog" class="active">{{ $siteTexts['blog_nav'] ?? 'وبلاگ' }}</a>
-        </nav>
-        <div class="header-cta">
-          <div class="theme-switch" id="themeSwitch"><div class="knob"><i class="fa-solid fa-moon" id="themeIcon"></i></div></div>
-          <a href="{{ route('home') }}#contact" class="btn-flow"><i class="fa-solid fa-arrow-left"></i> {{ $siteTexts['hero_cta'] ?? 'مشاوره رایگان' }}</a>
-          <button class="burger" id="burgerBtn"><i class="fa-solid fa-bars"></i></button>
-        </div>
-      </div>
-    </header>
+@section('head')
+    <link rel="stylesheet" href="{{ asset('css/singleblog.css') }}">
+@endsection
 
-    <div class="mnav-backdrop" id="mnavBackdrop"></div>
-    <div class="mnav-panel" id="mnavPanel">
-      <div class="mnav-handle"></div>
-      <div class="top"><h6>{{ $siteTexts['nav_quick'] ?? 'منوی سریع' }}</h6><button class="burger" id="closeDrawer"><i class="fa-solid fa-xmark"></i></button></div>
-      <nav>
-        <a href="{{ route('home') }}#home" data-close><i class="fa-solid fa-house"></i> {{ $siteTexts['nav_home'] ?? 'خانه' }}</a>
-        <a href="{{ route('home') }}#services" data-close><i class="fa-solid fa-layer-group"></i> {{ $siteTexts['services_badge'] ?? 'خدمات' }}</a>
-        <a href="{{ route('home') }}#folio" data-close><i class="fa-solid fa-briefcase"></i> {{ $siteTexts['folio_badge'] ?? 'نمونه‌کار' }}</a>
-        <a href="{{ route('home') }}#team" data-close><i class="fa-solid fa-people-group"></i> {{ $siteTexts['team_badge'] ?? 'تیم' }}</a>
-        <a href="{{ route('home') }}#blog" class="active" data-close><i class="fa-solid fa-pen-nib"></i> {{ $siteTexts['blog_nav'] ?? 'وبلاگ' }}</a>
-        <a href="{{ route('home') }}#contact" data-close><i class="fa-solid fa-phone"></i> {{ $siteTexts['contact_badge'] ?? 'تماس' }}</a>
-      </nav>
-      <div class="foot">
-        <div class="theme-switch" id="themeSwitchMobile"><div class="knob"><i class="fa-solid fa-moon"></i></div></div>
-        <a href="{{ route('home') }}#contact" class="btn-flow" data-close>{{ $siteTexts['hero_cta'] ?? 'مشاوره رایگان' }} <i class="fa-solid fa-arrow-left"></i></a>
-      </div>
-    </div>
+@section('main')
 
-    <!-- محتوای اصلی صفحه سینگل بلاگ -->
-    <main class="blog-single-hero">
-      <div class="container-x">
-        <div class="row justify-content-center">
-          <div class="col-lg-10">
-            
-            <article class="blog-single-card">
-              {{-- عکس مقاله --}}
-              @if($blog->image_url)
-                <img src="{{ asset('storage/' . $blog->image_url) }}" alt="{{ $blog->title }}" class="blog-cover-img">
-              @endif
-
-              {{-- عنوان مقاله --}}
-              <h1 class="text-white fw-bold mb-4" style="line-height: 1.4; font-size: 2.2rem;">
-                {{ $blog->title }}
-              </h1>
-
-              {{-- متاداده (زمان مطالعه و تاریخ) --}}
-              <div class="blog-meta-bar">
-                @if($blog->created_at)
-                  <span><i class="fa-regular fa-calendar"></i> {{ \Morilog\Jalali\Jalalian::fromDateTime($blog->created_at)->format('Y/m/d') }}</span>
-                @endif
-                
-                @if($blog->getAttribute('reading-time'))
-                  <span><i class="fa-regular fa-clock"></i> زمان مطالعه: {{ $blog->getAttribute('reading-time') }} دقیقه</span>
-                @endif
-              </div>
-
-              {{-- متن اصلی مقاله --}}
-              <div class="blog-main-text">
-                {!! $blog->text !!}
-              </div>
-
-              {{-- دکمه بازگشت --}}
-              <div class="mt-5 pt-4 border-top border-secondary border-opacity-25 d-flex justify-content-between align-items-center">
-                <a href="{{ route('home') }}#blog" class="btn-flow">
-                  <i class="fa-solid fa-arrow-right me-2"></i> بازگشت به وبلاگ
-                </a>
-              </div>
-            </article>
-
-          </div>
-        </div>
-      </div>
-    </main>
-
-    <footer class="site-footer">
-      <div class="footer-inner">
+    <!-- ============ HERO SINGLE POST ============ -->
+    <section class="single-hero">
         <div class="container-x">
-          <div class="footer-island reveal">
-            <div class="dots"></div>
-            <div class="footer-newsletter">
-              <div class="fn-text">
-                <div class="fn-ic"><i class="fa-solid fa-envelope-open-text"></i></div>
-                <div><strong>{{ $siteTexts['newsletter_title'] ?? '' }}</strong><span class="sub">{{ $siteTexts['newsletter_sub'] ?? '' }}</span></div>
-              </div>
-              <form onsubmit="return false;"><input type="email" placeholder="آدرس ایمیل شما..." /><button type="submit">ارسال</button></form>
+
+            <!-- Meta -->
+            <div class="post-meta-top reveal in">
+
+                @if($blog->category)
+                    <span class="cat-tag">
+                        {{ $blog->category->name }}
+                    </span>
+                @endif
+
+                <span>
+                    <i class="fa-regular fa-calendar"></i>
+
+                    {{ verta($blog->created_at)->format('d F Y') }}
+                </span>
+
+                @if($blog->{'reading-time'})
+                    <span>
+                        <i class="fa-regular fa-clock"></i>
+
+                        {{ $blog->{'reading-time'} }}
+                        دقیقه مطالعه
+                    </span>
+                @endif
+
+                <span>
+                    <i class="fa-regular fa-eye"></i>
+
+                    {{ number_format($blog->number ?? 0) }}
+                    بازدید
+                </span>
+
+                <span>
+                    <i
+                        class="fa-regular fa-heart"
+                        style="color: var(--accent); cursor: pointer"
+                        id="likeBtn"
+                    ></i>
+
+                    ۰
+                </span>
+
             </div>
-            <div class="footer-3col">
-              <div class="footer-col"><h5>{{ $siteTexts['footer_links'] ?? 'لینک‌های سریع' }}</h5><ul><li><a href="{{ route('home') }}#home"><i class="fa-solid fa-caret-left"></i> خانه</a></li><li><a href="{{ route('home') }}#folio"><i class="fa-solid fa-caret-left"></i> نمونه‌کارها</a></li><li><a href="{{ route('home') }}#team"><i class="fa-solid fa-caret-left"></i> تیم ما</a></li><li><a href="{{ route('home') }}#contact"><i class="fa-solid fa-caret-left"></i> تماس با ما</a></li><li><a href="{{ route('home') }}#blog"><i class="fa-solid fa-caret-left"></i> وبلاگ</a></li></ul></div>
-              <div class="footer-col footer-center"><a href="{{ route('home') }}" class="footer-brand">{{ $siteTexts['footer_brand'] ?? 'مانا' }}</a><p class="footer-tag">{{ $siteTexts['footer_tag'] ?? '' }}</p><div class="footer-social"><a href="#"><i class="fa-brands fa-telegram"></i></a><a href="#"><i class="fa-brands fa-instagram"></i></a><a href="#"><i class="fa-brands fa-whatsapp"></i></a><a href="#"><i class="fa-brands fa-x-twitter"></i></a><a href="#"><i class="fa-brands fa-linkedin-in"></i></a></div></div>
-              <div class="footer-col"><h5>{{ $siteTexts['footer_services'] ?? 'خدمات ما' }}</h5><ul><li><a href="{{ route('home') }}#services"><i class="fa-solid fa-caret-left"></i> هوش مصنوعی</a></li><li><a href="{{ route('home') }}#services"><i class="fa-solid fa-caret-left"></i> طراحی وب‌سایت</a></li><li><a href="{{ route('home') }}#services"><i class="fa-solid fa-caret-left"></i> اپلیکیشن موبایل</a></li><li><a href="{{ route('home') }}#services"><i class="fa-solid fa-caret-left"></i> زیرساخت ابری</a></li><li><a href="tel:02117545678"><i class="fa-solid fa-phone"></i> ۰۲۱-۱۷۵۴۵۶۷۸</a></li></ul></div>
+
+            <!-- Title -->
+            <h1 class="reveal in">
+                {{ $blog->title }}
+            </h1>
+
+            <!-- Description -->
+            <p
+                class="section-sub reveal in reveal-delay-1"
+                style="max-width: 700px"
+            >
+                {{ \Illuminate\Support\Str::limit(strip_tags($blog->text), 250) }}
+            </p>
+
+            <!-- Author -->
+            <div class="single-author-box reveal in reveal-delay-2">
+
+                <div class="avatar">
+                    <img
+                        src="{{ asset('img/contect3.jpg') }}"
+                        alt="مانا"
+                    >
+                </div>
+
+                <div class="info">
+                    <h5>
+                        تیم مانا
+                    </h5>
+
+                    <p>
+                        تیم مانا | ارائه‌دهنده خدمات طراحی و توسعه محصولات دیجیتال
+                    </p>
+                </div>
+
+                <div class="social-links">
+
+                    <a href="#">
+                        <i class="fa-brands fa-linkedin-in"></i>
+                    </a>
+
+                    <a href="#">
+                        <i class="fa-brands fa-twitter"></i>
+                    </a>
+
+                    <a href="#">
+                        <i class="fa-brands fa-telegram"></i>
+                    </a>
+
+                </div>
+
             </div>
-            <div class="footer-badges"><div class="fb-item"><i class="fa-solid fa-shield-halved"></i> {{ $siteTexts['badge1'] ?? '' }}</div><div class="fb-item"><i class="fa-solid fa-headset"></i> {{ $siteTexts['badge2'] ?? '' }}</div><div class="fb-item"><i class="fa-solid fa-bolt"></i> {{ $siteTexts['badge3'] ?? '' }}</div><div class="fb-item"><i class="fa-solid fa-tags"></i> {{ $siteTexts['badge4'] ?? '' }}</div></div>
-          </div>
-          <div class="footer-bottom"><p>{{ $siteTexts['copyright'] ?? '' }}</p><div class="legal"><a href="#">حریم خصوصی</a><a href="#">شرایط استفاده</a></div></div>
+
         </div>
-      </div>
-    </footer>
+    </section>
 
-    <button class="to-top" id="toTop"><i class="fa-solid fa-arrow-up"></i></button>
-    <a href="{{ route('home') }}#contact" class="chat-fab" id="chatFab"><i class="fa-solid fa-comment-dots"></i></a>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-    <script src="{{ asset('js/index.js') }}"></script>
-  </body>
-</html>
+    <!-- ============ CONTENT + SIDEBAR ============ -->
+    <section style="padding: 20px 0 60px">
+
+        <div class="container-x">
+
+            <div class="row g-5">
+
+                <!-- ===== MAIN CONTENT ===== -->
+                <div class="col-lg-8">
+
+                    <div class="post-body reveal">
+
+                        {{-- تصویر اصلی مقاله --}}
+                        @if($blog->image_url)
+
+                            <div class="post-img">
+
+                                <img
+                                    src="{{ asset('storage/' . $blog->image_url) }}"
+                                    alt="{{ $blog->title }}"
+                                >
+
+                                <div class="caption">
+                                    <i class="fa-regular fa-image"></i>
+
+                                    {{ $blog->title }}
+                                </div>
+
+                            </div>
+
+                        @endif
+
+
+                        {{-- متن کامل مقاله --}}
+                        {!! $blog->text !!}
+
+
+                        <!-- ===== تگ‌های مقاله ===== -->
+                        @if($blog->tags->count())
+
+                            <div class="post-tags">
+
+                                @foreach($blog->tags as $tag)
+
+                                    <a href="#">
+                                        {{ $tag->text }}
+                                    </a>
+
+                                @endforeach
+
+                            </div>
+
+                        @endif
+
+
+                        <!-- ===== اشتراک‌گذاری ===== -->
+                        <div class="share-bar">
+
+                            <span>
+                                <i class="fa-regular fa-share-from-square"></i>
+                                اشتراک‌گذاری:
+                            </span>
+
+                            <a
+                                href="https://t.me/share/url?url={{ urlencode(request()->url()) }}&text={{ urlencode($blog->title) }}"
+                                class="telegram"
+                                target="_blank"
+                            >
+                                <i class="fa-brands fa-telegram"></i>
+                            </a>
+
+                            <a
+                                href="https://twitter.com/intent/tweet?url={{ urlencode(request()->url()) }}&text={{ urlencode($blog->title) }}"
+                                class="twitter"
+                                target="_blank"
+                            >
+                                <i class="fa-brands fa-x-twitter"></i>
+                            </a>
+
+                            <a
+                                href="https://www.linkedin.com/sharing/share-offsite/?url={{ urlencode(request()->url()) }}"
+                                class="linkedin"
+                                target="_blank"
+                            >
+                                <i class="fa-brands fa-linkedin-in"></i>
+                            </a>
+
+                            <a
+                                href="https://wa.me/?text={{ urlencode($blog->title . ' ' . request()->url()) }}"
+                                class="whatsapp"
+                                target="_blank"
+                            >
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </a>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ===== نظرات ===== -->
+                    <div class="comments-section" id="comments">
+
+                        <div class="section-title-sm">
+
+                            <i class="fa-regular fa-comment-dots"></i>
+
+                            نظرات
+
+                            (<span id="commentCount">۰</span>)
+
+                        </div>
+
+
+                        <div id="commentList">
+
+                            <div class="comment-item">
+
+                                <div
+                                    class="cav"
+                                    style="
+                                        background: linear-gradient(
+                                            135deg,
+                                            var(--brand),
+                                            var(--accent-2)
+                                        );
+                                    "
+                                >
+                                    م
+                                </div>
+
+                                <div class="cbody">
+
+                                    <h6>
+                                        هنوز نظری ثبت نشده است
+                                    </h6>
+
+                                    <p>
+                                        اولین نفری باشید که درباره این مقاله نظر می‌دهد.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ===== فرم نظر ===== -->
+                        <div class="comment-form" id="commentForm">
+
+                            <h5 style="font-weight: 700; margin-bottom: 20px">
+
+                                <i
+                                    class="fa-regular fa-pen-to-square"
+                                    style="color: var(--accent-2)"
+                                ></i>
+
+                                نظر خود را بنویسید
+
+                            </h5>
+
+
+                            <form onsubmit="return false;">
+
+                                <div class="row">
+
+                                    <div class="col-sm-6">
+
+                                        <input
+                                            type="text"
+                                            id="commentName"
+                                            placeholder="نام و نام‌خانوادگی"
+                                            required
+                                        >
+
+                                    </div>
+
+
+                                    <div class="col-sm-6">
+
+                                        <input
+                                            type="email"
+                                            id="commentEmail"
+                                            placeholder="ایمیل"
+                                            required
+                                        >
+
+                                    </div>
+
+                                </div>
+
+
+                                <textarea
+                                    id="commentText"
+                                    placeholder="متن نظر شما..."
+                                    required
+                                ></textarea>
+
+
+                                <button
+                                    class="btn-flow mt-3"
+                                    id="submitComment"
+                                    style="border: none"
+                                >
+                                    ارسال نظر
+
+                                    <i class="fa-solid fa-arrow-left"></i>
+
+                                </button>
+
+                            </form>
+
+
+                            <div
+                                id="commentSuccess"
+                                style="
+                                    display: none;
+                                    margin-top: 16px;
+                                    color: var(--accent-2);
+                                    font-weight: 600;
+                                "
+                            >
+
+                                <i class="fa-regular fa-circle-check"></i>
+
+                                نظر شما با موفقیت ثبت شد!
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ===== SIDEBAR ===== -->
+                <div class="col-lg-4">
+
+
+                    <!-- ===== مقالات مرتبط ===== -->
+                    <div class="sidebar-card reveal">
+
+                        <h5>
+                            <i class="fa-solid fa-link"></i>
+                            مقالات مرتبط
+                        </h5>
+
+
+                        @php
+
+                            $relatedBlogs = \App\Models\Blogs::with('category')
+                                ->where('id', '!=', $blog->id)
+                                ->when(
+                                    $blog->cat_id,
+                                    function ($query) use ($blog) {
+                                        $query->where('cat_id', $blog->cat_id);
+                                    }
+                                )
+                                ->latest()
+                                ->limit(3)
+                                ->get();
+
+                        @endphp
+
+
+                        @forelse($relatedBlogs as $relatedBlog)
+
+                            <a
+                                href="{{ route('singleBlog', $relatedBlog->id) }}"
+                                style="text-decoration: none; color: inherit"
+                            >
+
+                                <div class="related-item mb-3">
+
+                                    <div class="thumb t1">
+
+                                        @if($relatedBlog->image_url)
+
+                                            <img
+                                                src="{{ asset('storage/' . $relatedBlog->image_url) }}"
+                                                alt="{{ $relatedBlog->title }}"
+                                            >
+
+                                        @else
+
+                                            <img
+                                                src="{{ asset('img/blog1.jpg') }}"
+                                                alt="{{ $relatedBlog->title }}"
+                                            >
+
+                                        @endif
+
+                                    </div>
+
+
+                                    <div class="rinfo">
+
+                                        <h6>
+                                            {{ $relatedBlog->title }}
+                                        </h6>
+
+                                        @if($relatedBlog->{'reading-time'})
+
+                                            <span>
+                                                {{ $relatedBlog->{'reading-time'} }}
+                                                دقیقه مطالعه
+                                            </span>
+
+                                        @endif
+
+                                    </div>
+
+                                </div>
+
+                            </a>
+
+                        @empty
+
+                            <p style="color: var(--text-dim)">
+                                مقاله مرتبطی وجود ندارد.
+                            </p>
+
+                        @endforelse
+
+                    </div>
+
+
+                    <!-- ===== دسته‌بندی‌ها ===== -->
+                    <div class="sidebar-card reveal reveal-delay-1">
+
+                        <h5>
+                            <i class="fa-solid fa-layer-group"></i>
+                            دسته‌بندی‌ها
+                        </h5>
+
+
+                        <div class="sidebar-cat-list">
+
+                            @php
+
+                                $categories = \App\Models\Categories::withCount('blogs')
+                                    ->get();
+
+                            @endphp
+
+
+                            @foreach($categories as $category)
+
+                                <a href="#">
+
+                                    {{ $category->name }}
+
+                                    <span>
+                                        {{ $category->blogs_count }}
+                                    </span>
+
+                                </a>
+
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ===== برچسب‌ها ===== -->
+                    <div class="sidebar-card reveal reveal-delay-2">
+
+                        <h5>
+                            <i class="fa-solid fa-tags"></i>
+                            برچسب‌ها
+                        </h5>
+
+
+                        <div
+                            class="tag-cloud"
+                            style="
+                                display: flex;
+                                flex-wrap: wrap;
+                                gap: 8px;
+                            "
+                        >
+
+                            @forelse($blog->tags as $tag)
+
+                                <a
+                                    href="#"
+                                    style="
+                                        padding: 8px 15px;
+                                        border-radius: 99px;
+                                        background: var(--surface-2);
+                                        border: 1px solid var(--line);
+                                        font-size: 0.78rem;
+                                        color: var(--text-dim);
+                                        text-decoration: none;
+                                        transition: 0.3s;
+                                    "
+                                >
+                                    {{ $tag->text }}
+                                </a>
+
+                            @empty
+
+                                <span style="color: var(--text-dim)">
+                                    برچسبی برای این مقاله ثبت نشده است.
+                                </span>
+
+                            @endforelse
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ===== خبرنامه ===== -->
+                    <div
+                        class="sidebar-card reveal reveal-delay-3"
+                        style="
+                            background: linear-gradient(
+                                135deg,
+                                color-mix(in srgb, var(--brand) 15%, transparent),
+                                color-mix(in srgb, var(--accent-2) 10%, transparent)
+                            );
+
+                            border-color: color-mix(
+                                in srgb,
+                                var(--accent-2) 30%,
+                                transparent
+                            );
+                        "
+                    >
+
+                        <h5>
+
+                            <i class="fa-solid fa-envelope"></i>
+
+                            خبرنامه
+
+                        </h5>
+
+
+                        <p
+                            style="
+                                font-size: 0.85rem;
+                                color: var(--text-dim);
+                                margin-bottom: 16px;
+                            "
+                        >
+                            جدیدترین مقالات رو یک‌بار در هفته دریافت کن.
+                        </p>
+
+
+                        <form
+                            onsubmit="return false;"
+                            style="display: flex; gap: 8px"
+                        >
+
+                            <input
+                                type="email"
+                                placeholder="ایمیل شما"
+                                style="
+                                    flex: 1;
+                                    background: var(--bg);
+                                    border: 1px solid var(--line);
+                                    border-radius: 99px;
+                                    padding: 10px 16px;
+                                    color: var(--text);
+                                    font-family: inherit;
+                                    font-size: 0.82rem;
+                                "
+                            >
+
+
+                            <button
+                                style="
+                                    background: var(--accent-2);
+                                    color: var(--oncta);
+                                    border: none;
+                                    border-radius: 99px;
+                                    padding: 10px 16px;
+                                    font-weight: 700;
+                                    font-size: 0.82rem;
+                                    white-space: nowrap;
+                                "
+                            >
+                                عضویت
+                            </button>
+
+                        </form>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============ FINAL CTA ============ -->
+    <section class="final-cta">
+
+        <div class="container-x">
+
+            <div class="cta-banner reveal">
+
+                <h2>
+                    ایده‌ای برای پروژه‌ی بعدی‌تان دارید؟
+                </h2>
+
+                <p>
+                    تیم مانا آماده است تا در کنار شما، ایده را به یک محصول دیجیتال واقعی
+                    تبدیل کند.
+                </p>
+
+                <a
+                    href="{{ url('/#contact') }}"
+                    class="btn-flow"
+                >
+                    شروع گفتگو
+
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+@endsection
+
+
+@section('js')
+
+<script src="{{ asset('js/client/singleblog.js') }}"></script>
+
+@endsection

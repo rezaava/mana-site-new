@@ -322,7 +322,6 @@ class BigInteger implements \JsonSerializable
      *
      * @param BigInteger $n
      * @return BigInteger
-     * @changed in phpseclib 4.0.0
      */
     public function modInverse(BigInteger $n)
     {

@@ -26,21 +26,6 @@
                 {{-- دکمه ارسال --}}
                 <input type="submit" value="ورود">
 
-                {{-- لینک‌های فراموشی رمز و ثبت‌نام --}}
-                <div class="group">
-                    @if (Route::has('password.request'))
-                        <a href="{{ route('password.request') }}">فراموشی رمز؟</a>
-                    @else
-                        <a href="#">فراموشی رمز؟</a>
-                    @endif
-
-                    @if (Route::has('register'))
-                        <a href="{{ route('register') }}">ثبت‌نام</a>
-                    @else
-                        <a href="#">ثبت‌نام</a>
-                    @endif
-                </div>
-
             </form>
         </div>
     </div>

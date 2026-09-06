@@ -63,7 +63,7 @@
             <a href="{{ url('/admin/blogs') }}" class="nav-item">مقالات</a>
             <a href="{{ url('/admin/pages') }}" class="nav-item">خدمات</a>
             <a href="{{ url('/admin/comments') }}" class="nav-item">نظرات
-                <span class="badge-num">{{ persianNum(\App\Models\Comments::where('is_approved', true)->count()) }}</span>
+                <span class="badge-num">{{ \App\Models\Comments::where('is_approved', true)->count() }}</span>
             </a>
         </div>
 
@@ -118,7 +118,7 @@
         <a href="{{ url('/admin/support') }}" class="nav-item">
             <i class="fa-solid fa-headset"></i>
             پشتیبانی
-            <span class="badge-num">{{ persianNum(\App\Models\Ticket::where('status', 'open')->count()) }}</span>
+            <span class="badge-num">{{ \App\Models\Ticket::where('status', 'open')->count() }}</span>
         </a>
 
         <!-- کارت کاربر -->

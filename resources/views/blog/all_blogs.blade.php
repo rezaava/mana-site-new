@@ -1,214 +1,738 @@
-<!doctype html>
-<html lang="fa" dir="rtl" data-theme="dark">
-<head>
-    <link rel="icon" type="image/x-icon" href="/img/mana.png">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>وبلاگ | مانا</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/rastikerdar/estedad-font@v7.0.0/dist/font-face.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-    <link rel="stylesheet" href="/css/blog.css">
-</head>
-<body>
-    <div class="cur-dot" id="curDot"></div>
-    <div class="cur-ring" id="curRing"></div>
-    <div class="scroll-progress" id="scrollProgress"></div>
+@extends('layout.master')
 
-    <!-- ============ HEADER ============ -->
-    <header class="site-header" id="siteHeader">
-        <div class="container-x nav-wrap">
-            <a href="{{ url('/') }}" class="brand">
-                <span class="mark">
-                    <img src="/img/mana.png" alt="mana">
-                </span>
-            </a>
-            <nav class="main-nav">
-                <a href="{{ url('/') }}">خانه</a>
-                <a href="{{ url('/#services') }}">خدمات</a>
-                <a href="{{ url('/#folio') }}">نمونه‌کار</a>
-                <a href="{{ url('/#team') }}">تیم</a>
-                <a href="{{ url('/#contact') }}">تماس</a>
-                <a href="{{ route('blogs.index') }}" class="active">وبلاگ</a>
-            </nav>
-            <div class="header-cta">
-                <div class="theme-switch" id="themeSwitch">
-                    <div class="knob">
-                        <i class="fa-solid fa-moon" id="themeIcon"></i>
-                    </div>
-                </div>
-                <a href="{{ url('/#contact') }}" class="btn-flow">
-                    <i class="fa-solid fa-arrow-left"></i> مشاوره رایگان
-                </a>
-                <button class="burger" id="burgerBtn">
-                    <i class="fa-solid fa-bars"></i>
-                </button>
-            </div>
-        </div>
-    </header>
+@section('title')
+    وبلاگ | {{ $siteTexts['footer_brand']->value ?? 'مانا' }}
+@endsection
 
-    <div class="mnav-backdrop" id="mnavBackdrop"></div>
-    <div class="mnav-panel" id="mnavPanel">
-        <div class="mnav-handle"></div>
-        <div class="top">
-            <h6>منوی سریع</h6>
-            <button class="burger" id="closeDrawer">
-                <i class="fa-solid fa-xmark"></i>
-            </button>
-        </div>
-        <nav>
-            <a href="{{ url('/') }}" data-close><i class="fa-solid fa-house"></i> خانه</a>
-            <a href="{{ url('/#services') }}" data-close><i class="fa-solid fa-layer-group"></i> خدمات</a>
-            <a href="{{ url('/#folio') }}" data-close><i class="fa-solid fa-briefcase"></i> نمونه‌کار</a>
-            <a href="{{ url('/#team') }}" data-close><i class="fa-solid fa-people-group"></i> تیم</a>
-            <a href="{{ route('blogs.index') }}" class="active" data-close><i class="fa-solid fa-pen-nib"></i> وبلاگ</a>
-            <a href="{{ url('/#contact') }}" data-close><i class="fa-solid fa-phone"></i> تماس</a>
-        </nav>
-        <div class="foot">
-            <div class="theme-switch" id="themeSwitchMobile">
-                <div class="knob">
-                    <i class="fa-solid fa-moon"></i>
-                </div>
-            </div>
-            <a href="{{ url('/#contact') }}" class="btn-flow" data-close>
-                مشاوره رایگان <i class="fa-solid fa-arrow-left"></i>
-            </a>
-        </div>
-    </div>
+@section('head')
+    <link rel="stylesheet" href="{{ asset('css/blog.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/singleblog.css') }}">
+@endsection
+
+@section('main')
 
     <!-- ============ BLOG HERO ============ -->
+
     <section class="blog-hero">
+
         <div class="container-x">
+
             <div class="breadcrumb-x reveal in">
-                <a href="{{ url('/') }}">خانه</a>
+
+                <a href="{{ url('/') }}">
+                    خانه
+                </a>
+
                 <i class="fa-solid fa-chevron-left"></i>
-                <span class="cur">وبلاگ</span>
+
+                <span class="cur">
+                    وبلاگ
+                </span>
+
             </div>
+
+
             <span class="eyebrow reveal in">
-                <i class="fa-solid fa-pen-nib"></i> وبلاگ مانا
+
+                <i class="fa-solid fa-pen-nib"></i>
+
+                {{ $siteTexts['blog_badge']->value ?? 'وبلاگ مانا' }}
+
             </span>
+
+
             <h1 class="reveal in">
-                مقالات، راهنماها و
-                <span class="grad-text">تجربه‌های فنی تیم ما</span>
+
+                {{ $siteTexts['blog_title']->value ?? 'مقالات، راهنماها و' }}
+
+                <span class="grad-text">
+
+                    {{ $siteTexts['blog_title_highlight']->value ?? 'تجربه‌های فنی تیم ما' }}
+
+                </span>
+
             </h1>
+
+
             <p class="section-sub reveal in reveal-delay-1">
-                آخرین یافته‌ها درباره‌ی هوش مصنوعی، طراحی محصول، توسعه‌ی نرم‌افزار و رشد دیجیتال کسب‌وکارها را اینجا بخوانید.
+
+                {{ $siteTexts['blog_description']->value ?? 'آخرین یافته‌ها درباره‌ی هوش مصنوعی، طراحی محصول، توسعه‌ی نرم‌افزار و رشد دیجیتال کسب‌وکارها را اینجا بخوانید.' }}
+
             </p>
+
+
             <div class="blog-search reveal in reveal-delay-2">
-                <input type="text" id="searchInput" placeholder="جست‌وجو در مقالات...">
+
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="جست‌وجو در مقالات..."
+                >
+
                 <i class="fa-solid fa-magnifying-glass"></i>
+
             </div>
+
         </div>
+
     </section>
+
 
     <!-- ============ FEATURED POST ============ -->
-    @if(isset($blogs) && $blogs->count() > 0)
-        @php $featured = $blogs->first(); @endphp
+
+    @if($blogs->count() > 0)
+
+        @php
+            $featured = $blogs->first();
+        @endphp
+
         <section class="featured-wrap">
+
             <div class="container-x">
+
                 <div class="featured-card reveal">
+
+
+                    <!-- تصویر -->
+
                     <div class="featured-visual">
+
                         <div class="deco"></div>
-                        <span class="fbadge">مقاله ویژه</span>
-                        <img src="{{ asset($featured->image ?? '/img/blog8.jpg') }}" alt="{{ $featured->title }}">
+
+                        <span class="fbadge">
+                            مقاله ویژه
+                        </span>
+
+
+                        @if($featured->image_url)
+
+                            <img
+                                src="{{ asset('storage/' . $featured->image_url) }}"
+                                alt="{{ $featured->title }}"
+                            >
+
+                        @else
+
+                            <img
+                                src="{{ asset('img/blog8.jpg') }}"
+                                alt="{{ $featured->title }}"
+                            >
+
+                        @endif
+
                     </div>
+
+
+                    <!-- محتوا -->
+
                     <div class="featured-body">
-                        <span class="tag">{{ $featured->category ?? 'عمومی' }}</span>
-                        <h2>{{ $featured->title }}</h2>
-                        <p>{{ Str::limit(strip_tags($featured->content), 160) }}</p>
+
+
+                        <!-- دسته‌بندی -->
+
+                        <span class="tag">
+
+                            @if($featured->category)
+
+                                {{ $featured->category->name }}
+
+                            @else
+
+                                عمومی
+
+                            @endif
+
+                        </span>
+
+
+                        <!-- عنوان -->
+
+                        <h2>
+                            {{ $featured->title }}
+                        </h2>
+
+
+                        <!-- خلاصه -->
+
+                        <p>
+
+                            {{ Str::limit(
+                                strip_tags($featured->text),
+                                160
+                            ) }}
+
+                        </p>
+
+
+                        <!-- اطلاعات -->
+
                         <div class="featured-meta">
+
                             <span>
+
                                 <i class="fa-regular fa-calendar"></i>
-                                {{ \Morilog\Jalali\Jalalian::fromDateTime($featured->created_at)->format('d F Y') }}
+
+                                {{ verta($featured->created_at)->format('d F Y') }}
+
                             </span>
-                            <span>
-                                <i class="fa-regular fa-clock"></i>
-                                {{ $featured->{'reading-time'} ?? 5 }} دقیقه مطالعه
-                            </span>
+
+
+                            @if($featured->{'reading-time'})
+
+                                <span>
+
+                                    <i class="fa-regular fa-clock"></i>
+
+                                    {{ $featured->{'reading-time'} }}
+
+                                    دقیقه مطالعه
+
+                                </span>
+
+                            @endif
+
                         </div>
-                        <a href="{{ route('blogs.singleBlog', $featured->id) }}" class="btn-flow">
-                            مطالعه مقاله <i class="fa-solid fa-arrow-left"></i>
+
+
+                        <!-- مشاهده -->
+
+                        <a
+                            href="{{ route('blogs.singleBlog', $featured->id) }}"
+                            class="btn-flow"
+                        >
+
+                            مطالعه مقاله
+
+                            <i class="fa-solid fa-arrow-left"></i>
+
                         </a>
+
                     </div>
+
                 </div>
+
             </div>
+
         </section>
+
     @endif
 
-    <!-- ============ ARTICLES GRID ============ -->
-    <section class="articles">
+
+    <!-- ============ FILTER BAR ============ -->
+
+    <section class="filter-bar">
+
         <div class="container-x">
-            <div class="art-grid" id="artGrid">
-                @php $gradients = ['g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8', 'g9']; @endphp
-                @foreach($blogs as $index => $blog)
-                    <a href="{{ route('blogs.singleBlog', $blog->id) }}"
-                       class="art-card"
-                       data-cat="all"
-                       data-title="{{ $blog->title }}">
-                        <div class="art-thumb {{ $gradients[$index % count($gradients)] }}">
-                            <span class="cat">{{ $blog->category ?? 'مقاله' }}</span>
-                            <img src="{{ asset($blog->image ?? '/img/blog1.jpg') }}" alt="{{ $blog->title }}">
-                        </div>
-                        <div class="art-body">
-                            <div class="art-meta">
-                                <span>
-                                    <i class="fa-regular fa-calendar"></i>
-                                    {{ \Morilog\Jalali\Jalalian::fromDateTime($blog->created_at)->format('d F Y') }}
-                                </span>
-                                <span>
-                                    <i class="fa-regular fa-clock"></i>
-                                    {{ $blog->{'reading-time'} ?? 5 }} دقیقه
-                                </span>
-                            </div>
-                            <h4>{{ Str::limit($blog->title, 45) }}</h4>
-                            <p>{{ Str::limit(strip_tags($blog->content), 90) }}</p>
-                            <span class="art-link">
-                                مطالعه مقاله <i class="fa-solid fa-arrow-up-left"></i>
-                            </span>
-                        </div>
-                    </a>
-                @endforeach
+
+            <div class="filter-row reveal">
+
+                <div
+                    class="filter-tabs"
+                    id="filterTabs"
+                >
+
+                    <!-- همه مقالات -->
+
+                    <button
+                        class="filter-tab active"
+                        data-cat="all"
+                        type="button"
+                    >
+                        همه مقالات
+                    </button>
+
+
+                    <!-- دسته‌بندی‌ها -->
+
+                    @php
+                        $categories = \App\Models\Categories::withCount('blogs')
+                            ->orderBy('name')
+                            ->get();
+                    @endphp
+
+
+                    @foreach($categories as $category)
+
+                        <button
+                            class="filter-tab"
+                            data-cat="{{ $category->id }}"
+                            type="button"
+                        >
+                            {{ $category->name }}
+                        </button>
+
+                    @endforeach
+
+                </div>
+
+
+                <!-- تعداد مقالات -->
+
+                <span
+                    class="filter-count"
+                    id="filterCount"
+                >
+                    {{ $blogs->count() }} مقاله
+                </span>
+
             </div>
+
         </div>
+
     </section>
+
+
+    <!-- ============ ARTICLES GRID ============ -->
+
+    <section class="articles">
+
+        <div class="container-x">
+
+            <div
+                class="art-grid"
+                id="artGrid"
+            >
+
+                @php
+
+                    $gradients = [
+                        'g1',
+                        'g2',
+                        'g3',
+                        'g4',
+                        'g5',
+                        'g6',
+                        'g7',
+                        'g8',
+                        'g9'
+                    ];
+
+                @endphp
+
+
+                @forelse($blogs as $index => $blog)
+
+                    <a
+                        href="{{ route('blogs.singleBlog', $blog->id) }}"
+                        class="art-card"
+                        data-cat="{{ $blog->category?->id ?? 'all' }}"
+                        data-title="{{ $blog->title }}"
+                    >
+
+
+                        <!-- تصویر مقاله -->
+
+                        <div
+                            class="art-thumb {{ $gradients[$index % count($gradients)] }}"
+                        >
+
+                            <!-- دسته‌بندی -->
+
+                            <span class="cat">
+
+                                @if($blog->category)
+
+                                    {{ $blog->category->name }}
+
+                                @else
+
+                                    مقاله
+
+                                @endif
+
+                            </span>
+
+
+                            @if($blog->image_url)
+
+                                <img
+                                    src="{{ asset('storage/' . $blog->image_url) }}"
+                                    alt="{{ $blog->title }}"
+                                >
+
+                            @else
+
+                                <img
+                                    src="{{ asset('img/blog1.jpg') }}"
+                                    alt="{{ $blog->title }}"
+                                >
+
+                            @endif
+
+                        </div>
+
+
+                        <!-- محتوای کارت -->
+
+                        <div class="art-body">
+
+
+                            <!-- تاریخ و زمان -->
+
+                            <div class="art-meta">
+
+                                <span>
+
+                                    <i class="fa-regular fa-calendar"></i>
+
+                                    {{ verta($blog->created_at)->format('d F Y') }}
+
+                                </span>
+
+
+                                @if($blog->{'reading-time'})
+
+                                    <span>
+
+                                        <i class="fa-regular fa-clock"></i>
+
+                                        {{ $blog->{'reading-time'} }}
+
+                                        دقیقه
+
+                                    </span>
+
+                                @endif
+
+                            </div>
+
+
+                            <!-- عنوان -->
+
+                            <h4>
+
+                                {{ Str::limit(
+                                    $blog->title,
+                                    45
+                                ) }}
+
+                            </h4>
+
+
+                            <!-- خلاصه -->
+
+                            <p>
+
+                                {{ Str::limit(
+                                    strip_tags($blog->text),
+                                    90
+                                ) }}
+
+                            </p>
+
+
+                            <!-- تگ‌ها -->
+
+                            @if($blog->tags->count() > 0)
+
+                                <div
+                                    class="article-tags"
+                                    style="
+                                        display:flex;
+                                        flex-wrap:wrap;
+                                        gap:5px;
+                                        margin-top:10px;
+                                    "
+                                >
+
+                                    @foreach($blog->tags->take(3) as $tag)
+
+                                        <span
+                                            style="
+                                                font-size:.72rem;
+                                                padding:4px 9px;
+                                                border-radius:20px;
+                                                background:var(--surface-2);
+                                                color:var(--text-dim);
+                                            "
+                                        >
+
+                                            #{{ $tag->text }}
+
+                                        </span>
+
+                                    @endforeach
+
+                                </div>
+
+                            @endif
+
+
+                            <!-- لینک -->
+
+                            <span class="art-link">
+
+                                مطالعه مقاله
+
+                                <i class="fa-solid fa-arrow-up-left"></i>
+
+                            </span>
+
+                        </div>
+
+                    </a>
+
+                @empty
+
+                    <div
+                        style="
+                            width:100%;
+                            text-align:center;
+                            padding:80px 20px;
+                        "
+                    >
+
+                        <i
+                            class="fa-regular fa-newspaper"
+                            style="
+                                font-size:50px;
+                                margin-bottom:20px;
+                                color:var(--accent);
+                            "
+                        ></i>
+
+
+                        <h4>
+                            هنوز مقاله‌ای منتشر نشده است
+                        </h4>
+
+
+                        <p style="color:var(--text-dim);">
+
+                            به‌زودی مقالات جدید در وبلاگ مانا منتشر می‌شوند.
+
+                        </p>
+
+                    </div>
+
+                @endforelse
+
+            </div>
+
+
+            <!-- ============ LOAD MORE ============ -->
+
+            <div
+                class="load-more-wrap reveal"
+                id="loadMoreWrap"
+            >
+
+                <a
+                    href="#"
+                    class="btn-ghost"
+                    id="loadMoreBtn"
+                >
+
+                    <i class="fa-solid fa-rotate"></i>
+
+                    نمایش مقالات بیشتر
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ============ SIDEBAR EXTRAS ============ -->
+
+    <section class="blog-extra">
+
+        <div class="container-x">
+
+            <div class="row g-4">
+
+
+                <!-- محبوب‌ترین مقالات -->
+
+                <div class="col-lg-4">
+
+                    <div class="extra-card reveal">
+
+                        <h5>
+
+                            <i class="fa-solid fa-fire"></i>
+
+                            محبوب‌ترین مقالات
+
+                        </h5>
+
+
+                        @foreach($blogs->take(3) as $index => $popular)
+
+                            <div class="pop-item">
+
+                                <div class="pn">
+
+                                    {{ sprintf('%02d', $index + 1) }}
+
+                                </div>
+
+                                <a
+                                    href="{{ route('blogs.singleBlog', $popular->id) }}"
+                                >
+
+                                    <div>
+
+                                        <h6>
+                                            {{ $popular->title }}
+                                        </h6>
+
+                                        @if($popular->{'reading-time'})
+
+                                            <span>
+                                                {{ $popular->{'reading-time'} }}
+                                                دقیقه مطالعه
+                                            </span>
+
+                                        @endif
+
+                                    </div>
+
+                                </a>
+
+                            </div>
+
+                        @endforeach
+
+                    </div>
+
+                </div>
+
+
+                <!-- دسته‌بندی‌ها -->
+
+                <div class="col-lg-4">
+
+                    <div class="extra-card reveal reveal-delay-1">
+
+                        <h5>
+
+                            <i class="fa-solid fa-layer-group"></i>
+
+                            دسته‌بندی‌ها
+
+                        </h5>
+
+
+                        <div class="cat-list">
+
+                            @foreach($categories as $category)
+
+                                <a href="#">
+
+                                    {{ $category->name }}
+
+                                    <span class="cnt">
+                                        {{ $category->blogs_count }}
+                                    </span>
+
+                                </a>
+
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- برچسب‌ها -->
+
+                <div class="col-lg-4">
+
+                    <div class="extra-card reveal reveal-delay-2">
+
+                        <h5>
+
+                            <i class="fa-solid fa-tags"></i>
+
+                            برچسب‌های پرطرفدار
+
+                        </h5>
+
+
+                        <div class="tag-cloud">
+
+                            @php
+                                $popularTags = \App\Models\BlogTag::query()
+                                    ->select('text')
+                                    ->distinct()
+                                    ->limit(12)
+                                    ->get();
+                            @endphp
+
+
+                            @foreach($popularTags as $tag)
+
+                                <a href="#">
+
+                                    {{ $tag->text }}
+
+                                </a>
+
+                            @endforeach
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
 
     <!-- ============ FINAL CTA ============ -->
+
     <section class="final-cta">
+
         <div class="container-x">
+
             <div class="cta-banner reveal">
-                <h2>ایده‌ای برای پروژه‌ی بعدی‌تان دارید؟</h2>
-                <p>تیم مانا آماده است تا در کنار شما، ایده را به یک محصول دیجیتال واقعی تبدیل کند.</p>
-                <a href="{{ url('/#contact') }}" class="btn-flow">
-                    شروع گفتگو <i class="fa-solid fa-arrow-left"></i>
+
+                <h2>
+
+                    {{ $siteTexts['blog_cta_title']->value ?? 'ایده‌ای برای پروژه‌ی بعدی‌تان دارید؟' }}
+
+                </h2>
+
+
+                <p>
+
+                    {{ $siteTexts['blog_cta_description']->value ?? 'تیم مانا آماده است تا در کنار شما، ایده را به یک محصول دیجیتال واقعی تبدیل کند.' }}
+
+                </p>
+
+
+                <a
+                    href="{{ url('/#contact') }}"
+                    class="btn-flow"
+                >
+
+                    شروع گفتگو
+
+                    <i class="fa-solid fa-arrow-left"></i>
+
                 </a>
+
             </div>
+
         </div>
+
     </section>
 
-    <!-- ============ FOOTER ============ -->
-    <footer class="site-footer">
-        <div class="footer-inner">
-            <div class="container-x">
-                <div class="footer-island reveal">
-                    <div class="dots"></div>
-                    <div class="footer-bottom">
-                        <p>© ۲۰۲۶ مانا. تمامی حقوق محفوظ است.</p>
-                        <div class="legal">
-                            <a href="#">حریم خصوصی</a>
-                            <a href="#">شرایط استفاده</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+@endsection
 
-    <button class="to-top" id="toTop">
-        <i class="fa-solid fa-arrow-up"></i>
-    </button>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/blog.js"></script>
-</body>
-</html>
+@section('js')
+
+<script src="{{ asset('js/client/blog.js') }}"></script>
+
+@endsection

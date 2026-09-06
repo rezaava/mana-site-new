@@ -12,12 +12,12 @@
 namespace Psy\Readline\Interactive;
 
 use Psy\Output\Theme;
+use Psy\Readline\Interactive\Helper\HistorySearchRenderer;
 use Psy\Readline\Interactive\Input\Buffer;
 use Psy\Readline\Interactive\Input\History;
 use Psy\Readline\Interactive\Input\Key;
 use Psy\Readline\Interactive\Input\WordNavigationPolicy;
 use Psy\Readline\Interactive\Renderer\FrameRenderer;
-use Psy\Readline\Interactive\Renderer\HistorySearchOverlayWidget;
 use Psy\Readline\Interactive\Renderer\OverlayViewport;
 
 /**
@@ -26,7 +26,7 @@ use Psy\Readline\Interactive\Renderer\OverlayViewport;
  * Manages the search query, match list, selection, viewport scrolling,
  * and rendering for reverse history search (Ctrl-R).
  */
-class HistorySearch implements ReadlineMode
+class HistorySearch
 {
     private Terminal $terminal;
     private History $history;
@@ -43,6 +43,7 @@ class HistorySearch implements ReadlineMode
     private bool $searchExpanded = false;
     private ?string $savedBufferText = null;
     private int $savedCursorPosition = 0;
+    private ?HistorySearchRenderer $renderer = null;
 
     public function __construct(
         Terminal $terminal,
@@ -64,6 +65,7 @@ class HistorySearch implements ReadlineMode
     public function setTheme(Theme $theme): void
     {
         $this->theme = $theme;
+        $this->renderer = null;
     }
 
     /**
@@ -92,15 +94,7 @@ class HistorySearch implements ReadlineMode
         $this->resetState();
         $this->savedBufferText = null;
         $this->savedCursorPosition = 0;
-        $this->frameRenderer->setOverlay(null);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function onExit(): void
-    {
-        $this->exit();
+        $this->frameRenderer->setOverlayLines([]);
     }
 
     /**
@@ -113,9 +107,11 @@ class HistorySearch implements ReadlineMode
     }
 
     /**
-     * {@inheritdoc}
+     * Handle input while in search mode.
+     *
+     * @return bool|null True to stay in search, false if exited (key consumed), null if exited (replay key)
      */
-    public function handleKey(Key $key, Buffer $buffer): ?bool
+    public function handleInput(Key $key, Buffer $buffer)
     {
         $value = $key->getValue();
         $keyStr = (string) $key;
@@ -167,7 +163,7 @@ class HistorySearch implements ReadlineMode
     /**
      * Render the search UI with overlay.
      */
-    public function display(Buffer $buffer): void
+    public function display(): void
     {
         $preview = $this->getSelectedMatch() ?? '';
         $searchPrompt = $this->terminal->format('<whisper>search:</whisper>').' '.$this->searchQuery;
@@ -346,21 +342,31 @@ class HistorySearch implements ReadlineMode
      */
     private function updateOverlay(): void
     {
-        if (empty($this->searchMatches) && $this->searchQuery === '') {
-            $this->frameRenderer->setOverlay(null);
+        if (empty($this->searchMatches)) {
+            if ($this->searchQuery !== '') {
+                $noMatch = $this->terminal->format('   <whisper>(no matches)</whisper>');
+                $this->frameRenderer->setOverlayLines([$noMatch]);
+            } else {
+                $this->frameRenderer->setOverlayLines([]);
+            }
 
             return;
         }
 
-        $this->frameRenderer->setOverlay(new HistorySearchOverlayWidget(
-            $this->terminal,
-            $this->theme->replayPrompt(),
+        if ($this->renderer === null) {
+            $this->renderer = new HistorySearchRenderer($this->terminal, $this->theme->replayPrompt());
+        }
+        $this->renderer->setQuery($this->searchQuery);
+        $maxRows = $this->getMaxRows();
+        $lines = $this->renderer->render(
             $this->searchMatches,
             $this->currentMatchIndex,
+            $maxRows,
             $this->searchScrollOffset,
-            $this->searchQuery,
-            $this->searchExpanded,
-        ));
+            \count($this->searchMatches),
+        );
+
+        $this->frameRenderer->setOverlayLines($lines);
     }
 
     /**

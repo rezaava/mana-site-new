@@ -14,14 +14,10 @@ declare(strict_types=1);
 
 namespace PhpCsFixer;
 
-use App\BladeFormatter;
-use App\Fixers\LaravelBlade\Fixer as LaravelBladeFixer;
-use App\Fixers\LaravelBlade\NoUnusedImportsFixer as BladeAwareNoUnusedImportsFixer;
 use App\Fixers\TypeAnnotationsOnlyFixer;
 use PhpCsFixer\ConfigurationException\InvalidFixerConfigurationException;
 use PhpCsFixer\Fixer\ConfigurableFixerInterface;
 use PhpCsFixer\Fixer\FixerInterface;
-use PhpCsFixer\Fixer\Import\NoUnusedImportsFixer;
 use PhpCsFixer\Fixer\WhitespacesAwareFixerInterface;
 use PhpCsFixer\RuleSet\RuleSetInterface;
 use Symfony\Component\Finder\Finder as SymfonyFinder;
@@ -102,17 +98,11 @@ final class FixerFactory
         foreach ($builtInFixers as $class) {
             /** @var FixerInterface */
             $fixer = new $class;
-
-            if ($fixer instanceof NoUnusedImportsFixer) {
-                $fixer = new BladeAwareNoUnusedImportsFixer($fixer);
-            }
-
             $this->registerFixer($fixer, false);
         }
 
         $this->registerCustomFixers([
             new TypeAnnotationsOnlyFixer,
-            new LaravelBladeFixer(resolve(BladeFormatter::class)),
         ]);
 
         return $this;
@@ -125,10 +115,6 @@ final class FixerFactory
     public function registerCustomFixers(iterable $fixers): self
     {
         foreach ($fixers as $fixer) {
-            if (isset($this->fixersByName[$fixer->getName()])) {
-                continue;
-            }
-
             $this->registerFixer($fixer, true);
         }
 
