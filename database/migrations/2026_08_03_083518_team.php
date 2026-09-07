@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up()
     {
         Schema::create('team', function (Blueprint $table) {
@@ -20,6 +19,7 @@ return new class extends Migration
             $table->string('telegram')->nullable();
             $table->string('whatsapp')->nullable();
             $table->string('linkedin')->nullable();
+            $table->tinyInteger('owner')->default(0);
             $table->timestamps();
         });
     }

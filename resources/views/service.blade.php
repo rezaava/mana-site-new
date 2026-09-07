@@ -781,7 +781,7 @@
                         </h4>
 
 
-                        <a href="{{ route('servise', $related->id) }}">
+                        <a href="{{ route('servise', ['id' => $related->id, 'slug' => $related->slug]) }}">
 
                             مشاهده جزئیات
 

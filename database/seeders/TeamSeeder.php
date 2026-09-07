@@ -12,8 +12,8 @@ class TeamSeeder extends Seeder
         $members = [
             ['name' => 'فاطمه', 'title' => 'مدیر محصول', 'number' => 1],
             ['name' => 'عرشیا', 'title' => 'Web Developer', 'number' => 2],
-            ['name' => 'رضا آواره', 'title' => 'مدیر عامل', 'number' => 3],
-            ['name' => 'مزمز', 'title' => 'توسعه‌دهنده C#', 'number' => 4],
+            ['name' => 'رضا آواره', 'title' => 'مدیر عامل', 'number' => 3, 'owner' => 1],
+            ['name' => 'علی پارساییان', 'title' => 'Web Developer', 'number' => 4],
             ['name' => 'خواجه‌ها', 'title' => 'Web Developer', 'number' => 5],
         ];
 

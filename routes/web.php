@@ -26,7 +26,7 @@ use App\Http\Controllers\UploadController;
 
 
 Route::get('/', [SiteController::class, 'index'])->name('home');
-Route::get('/servise/{id}', [SiteController::class, 'servise'])->name('servise');
+Route::get('/servise/{id}/{slug}', [SiteController::class, 'servise'])->name('servise');
 
 Route::post('/upload/video', [UploadController::class, 'uploadVideo'])->name('upload.video');
 Route::post('/upload/image', [UploadController::class, 'uploadImage'])->name('upload.image');
@@ -36,7 +36,7 @@ Route::post('/login', [AuthController::class, 'loginPost'])->name('loginPost');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/blog', [BlogsController::class, 'blog'])->name('blog');
-Route::get('/blog/{id}', [BlogsController::class, 'singleBlog'])->name('singleBlog');
+Route::get('/blog/{id}/{slug}', [BlogsController::class, 'singleBlog'])->name('singleBlog');
 
 
 Route::get('/role', [AuthController::class, 'roleFun']);
@@ -196,5 +196,5 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
 });
 
 Route::prefix('projects')->group(function(){
-        Route::get('/{id}', [ProjectController::class, 'show'])->name('projects.show');
+        Route::get('/{id}/{slug}', [ProjectController::class, 'show'])->name('projects.show');
     });

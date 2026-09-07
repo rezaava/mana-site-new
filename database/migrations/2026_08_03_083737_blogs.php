@@ -16,6 +16,7 @@ return new class extends Migration
             $table->tinyInteger('reading-time')->nullable();
             $table->tinyInteger('number')->comment('برای مرتب سازی');
             $table->foreignId('cat_id')->constrained('categories')->onDelete('cascade');
+            $table->text('slug')->unique();
             $table->timestamps();
         });
     }

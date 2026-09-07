@@ -54,6 +54,7 @@ class ProjectSeeder extends Seeder
                 'number' => 1,
                 'cat_id' => $categories['سلامت دیجیتال']->id ?? null,
                 'image_url' => 'projects/project1.jpg',
+                'slug'=>'سامانه نوبت‌دهی پزشکی',
             ],
 
             // =========================================================
@@ -77,6 +78,7 @@ class ProjectSeeder extends Seeder
                 'number' => 2,
                 'cat_id' => $categories['فروشگاه آنلاین']->id ?? null,
                 'image_url' => 'projects/project2.jpg',
+                'slug'=>'پلتفرم تجارت الکترونیک',
             ],
 
             // =========================================================
@@ -100,6 +102,7 @@ class ProjectSeeder extends Seeder
                 'number' => 3,
                 'cat_id' => $categories['پنل مدیریت']->id ?? null,
                 'image_url' => 'projects/project3.jpg',
+                'slug'=>'داشبورد هوشمند فروش'
             ],
 
             // =========================================================
@@ -123,6 +126,7 @@ class ProjectSeeder extends Seeder
                 'number' => 4,
                 'cat_id' => $categories['اپلیکیشن بانکی']->id ?? null,
                 'image_url' => 'projects/project4.jpg',
+                'slug'=>'اپلیکیشن موبایل بانکداری نوین',
             ],
 
             // =========================================================
@@ -146,6 +150,7 @@ class ProjectSeeder extends Seeder
                 'number' => 5,
                 'cat_id' => $categories['آموزش آنلاین']->id ?? null,
                 'image_url' => 'projects/project5.jpg',
+                'slug'=>'پلتفرم یادگیری هوشمند',
             ],
         ];
 

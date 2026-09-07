@@ -16,6 +16,7 @@ class BlogSeeder extends Seeder
                 'reading-time' => 6,
                 'cat_id' => 2,
                 'number' => 1,
+                'slug'=>'راهنمای انتخاب استک فنی مناسب استارتاپ'
             ],
             [
                 'title' => '۷ اشتباه رایج در طراحی UX اپلیکیشن',
@@ -23,6 +24,7 @@ class BlogSeeder extends Seeder
                 'reading-time' => 4,
                 'cat_id' => 2,
                 'number' => 2,
+                'slug'=>'۷ اشتباه رایج در طراحی UX اپلیکیشن',
             ],
             [
                 'title' => 'چگونه هوش مصنوعی فروش را متحول می‌کند؟',
@@ -30,6 +32,7 @@ class BlogSeeder extends Seeder
                 'reading-time' => 7,
                 'cat_id' => 2,
                 'number' => 3,
+                'slug'=>'چگونه هوش مصنوعی فروش را متحول می‌کند؟',
             ],
             [
                 'title' => 'امنیت داده در معماری ابری چند-مستاجری',
@@ -37,6 +40,7 @@ class BlogSeeder extends Seeder
                 'reading-time' => 8,
                 'cat_id' => 2,
                 'number' => 4,
+                'slug'=>'امنیت داده در معماری ابری چند-مستاجری',
             ],
             [
                 'title' => 'مقایسه‌ی معماری میکروسرویس و مونولیت',
@@ -44,6 +48,7 @@ class BlogSeeder extends Seeder
                 'reading-time' => 9,
                 'cat_id' => 2,
                 'number' => 5,
+                'slug' => 'مقایسه‌ی معماری میکروسرویس و مونولیت' ,
             ],
         ];
 
