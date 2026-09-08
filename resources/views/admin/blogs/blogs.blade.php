@@ -3,7 +3,7 @@
 @section('content')
     <div style="padding: 20px;">
         <style>
-            /* استایل‌های مربوط به جدول مقالات - هماهنگ با تم */
+            /* استایل‌های جدول مقالات - هماهنگ با تم و ریسپانسیو */
             .blog-manage-card {
                 background: var(--surface);
                 border: 1px solid var(--line);
@@ -208,6 +208,88 @@
                 opacity: 0.5;
                 pointer-events: none;
             }
+
+            /* ===== ریسپانسیو موبایل: تبدیل جدول به کارت ===== */
+            @media (max-width: 768px) {
+                .blog-table-wrapper {
+                    overflow-x: visible;
+                    border: none;
+                    background: transparent;
+                }
+
+                .blog-table {
+                    min-width: 0;
+                    display: block;
+                }
+
+                .blog-table thead {
+                    display: none;
+                }
+
+                .blog-table tbody {
+                    display: block;
+                }
+
+                .blog-table tr {
+                    display: block;
+                    background: var(--surface);
+                    border: 1px solid var(--line);
+                    border-radius: 12px;
+                    margin-bottom: 15px;
+                    padding: 10px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                }
+
+                .blog-table td {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    gap: 10px;
+                    border: none;
+                    border-bottom: 1px solid var(--line);
+                    padding: 10px 5px;
+                    font-size: 0.85rem;
+                    text-align: left;
+                }
+
+                .blog-table td:last-child {
+                    border-bottom: none;
+                }
+
+                .blog-table td::before {
+                    content: attr(data-label);
+                    font-weight: 700;
+                    color: var(--text-dim);
+                    margin-left: auto;
+                    white-space: nowrap;
+                }
+
+                .blog-table td[data-label="تصویر"] {
+                    justify-content: flex-start;
+                }
+
+                .blog-table td[data-label="تصویر"]::before {
+                    margin-left: 0;
+                    margin-right: auto;
+                }
+
+                .blog-table .blog-actions {
+                    justify-content: flex-start;
+                }
+
+                .blog-table .blog-actions::before {
+                    display: none;
+                }
+
+                .blog-thumb {
+                    width: 50px;
+                    height: 50px;
+                }
+
+                .empty-state {
+                    padding: 20px;
+                }
+            }
         </style>
 
         <div class="blog-manage-card">
@@ -227,7 +309,7 @@
             @endif
 
             <div class="blog-table-wrapper">
-                <table class="blog-table">
+                <table class="blog-table" id="blogTable">
                     <thead>
                         <tr>
                             <th>#</th>
@@ -244,7 +326,7 @@
                                 <td>{{ $blogs->firstItem() + $index }}</td>
                                 <td>
                                     @if($blog->image_url)
-                                        <img src="{{ asset('storage/') }}) }} . $blog->image_url) }}" alt="{{ $blog->title }}"
+                                        <img src="{{ asset('storage/' . $blog->image_url) }}" alt="{{ $blog->title }}"
                                             class="blog-thumb">
                                     @else
                                         <span style="color: var(--text-dimmer);">بدون تصویر</span>
@@ -287,4 +369,24 @@
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const table = document.getElementById('blogTable');
+            if (!table) return;
+
+            // استخراج متن هدرها
+            const headers = [];
+            table.querySelectorAll('thead th').forEach(th => headers.push(th.textContent.trim()));
+
+            // افزودن data-label به هر td بر اساس ایندکس ستون
+            table.querySelectorAll('tbody tr').forEach(row => {
+                row.querySelectorAll('td').forEach((td, index) => {
+                    if (headers[index]) {
+                        td.setAttribute('data-label', headers[index]);
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

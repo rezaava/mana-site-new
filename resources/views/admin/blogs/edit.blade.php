@@ -142,8 +142,8 @@
             background: #dc2626;
         }
         .blog-tag-add {
-            width: 8%;
-            padding: 9px 15px;
+            width: 10%;
+            padding: 7px 10px;
             border: none;
             border-radius: 8px;
             background: var(--brand);
