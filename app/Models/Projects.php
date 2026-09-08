@@ -29,7 +29,8 @@ class Projects extends Model
         'launch_year',
         'duration',
         'project_link',
-        'testimonial'
+        'testimonial',
+        'slug',
     ];
 
     public $casts = [

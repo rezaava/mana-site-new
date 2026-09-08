@@ -66,6 +66,9 @@ class ServiceController extends Controller
             'suitable_for' => 'nullable|string',
             'contract' => 'nullable|string',
 
+            'slug' => 'required',
+            'mata' => 'required',
+
             /*
             | فقط یک فیلد برای معرفی
             */
@@ -178,6 +181,11 @@ class ServiceController extends Controller
 
             $service->suitable_for = $validated['suitable_for'] ?? null;
             $service->contract = $validated['contract'] ?? null;
+
+            $service->slug = $validated['slug'];
+
+            $service->meta = $validated['meta'];
+
 
             /*
             | معرفی خدمت
@@ -371,16 +379,16 @@ class ServiceController extends Controller
             ->first();
 
         $whatReceives = ServiceWhatReceive::where(
-                'service_id',
-                $service->id
-            )
+            'service_id',
+            $service->id
+        )
             ->orderBy('number', 'asc')
             ->get();
 
         $techs = ServiceTech::where(
-                'service_id',
-                $service->id
-            )
+            'service_id',
+            $service->id
+        )
             ->orderBy('number', 'asc')
             ->get();
 
@@ -419,6 +427,9 @@ class ServiceController extends Controller
 
             'suitable_for' => 'nullable|string',
             'contract' => 'nullable|string',
+
+            'slug' => 'required',
+            'meta' => 'required',
 
             /*
             | فقط overview
@@ -553,6 +564,13 @@ class ServiceController extends Controller
 
             $service->delivery_time =
                 $validated['delivery_time'] ?? null;
+
+            $service->slug =
+                $validated['slug'];
+
+            $service->meta =
+                $validated['meta'];
+
 
             $service->price_text =
                 $validated['price_text'] ?? null;

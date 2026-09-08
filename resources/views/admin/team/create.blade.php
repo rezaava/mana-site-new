@@ -32,32 +32,32 @@
             <div id="socialFields">
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 8px;">اینستاگرام</label>
-                    <input type="url" name="instagram" class="social-input" placeholder="https://instagram.com/..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                    <input type="text" name="instagram" class="social-input" placeholder="https://instagram.com/..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
                 </div>
 
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 8px;">توییتر</label>
-                    <input type="url" name="twitter" class="social-input" placeholder="https://twitter.com/..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                    <input type="text" name="twitter" class="social-input" placeholder="https://twitter.com/..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
                 </div>
 
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 8px;">گیت‌هاب</label>
-                    <input type="url" name="github" class="social-input" placeholder="https://github.com/..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                    <input type="text" name="github" class="social-input" placeholder="https://github.com/..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
                 </div>
 
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 8px;">تلگرام</label>
-                    <input type="url" name="telegram" class="social-input" placeholder="https://t.me/..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                    <input type="text" name="telegram" class="social-input" placeholder="https://t.me/..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
                 </div>
 
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 8px;">واتساپ</label>
-                    <input type="url" name="whatsapp" class="social-input" placeholder="https://wa.me/..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                    <input type="text" name="whatsapp" class="social-input" placeholder="https://wa.me/..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
                 </div>
 
                 <div style="margin-bottom: 15px;">
                     <label style="display: block; margin-bottom: 8px;">لینکدین</label>
-                    <input type="url" name="linkedin" class="social-input" placeholder="https://linkedin.com/in/..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
+                    <input type="text" name="linkedin" class="social-input" placeholder="https://linkedin.com/in/..." style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: inherit;">
                 </div>
             </div>
 

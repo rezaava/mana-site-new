@@ -1,76 +1,290 @@
 @extends('admin.panel')
 
 @section('content')
-<div style="padding: 20px;">
-    <div style="background: var(--card-bg); border-radius: 12px; padding: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h5 style="margin: 0;">
-                <i class="fa-solid fa-newspaper"></i> مدیریت مقالات
-            </h5>
-            <a href="{{ route('blogs.create') }}" class="btn btn-sm btn-primary" style="padding: 8px 16px; border-radius: 8px; text-decoration: none;">
-                <i class="fa-solid fa-plus"></i> افزودن مقاله جدید
-            </a>
-        </div>
+    <div style="padding: 20px;">
+        <style>
+            /* استایل‌های مربوط به جدول مقالات - هماهنگ با تم */
+            .blog-manage-card {
+                background: var(--surface);
+                border: 1px solid var(--line);
+                border-radius: 14px;
+                box-shadow: var(--shadow-strong);
+                padding: 20px;
+            }
 
-        @if(session('success'))
-            <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; color: #10b981; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
-                {{ session('success') }}
+            .blog-manage-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .blog-manage-title {
+                margin: 0;
+                font-size: 1.15rem;
+                font-weight: 700;
+                color: var(--text);
+            }
+
+            .btn-add-blog {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: linear-gradient(135deg, var(--brand), var(--accent-2));
+                color: var(--oncta);
+                padding: 8px 16px;
+                border-radius: 8px;
+                text-decoration: none;
+                font-weight: 600;
+                transition: all 0.3s var(--ease);
+                border: none;
+                cursor: pointer;
+            }
+
+            .btn-add-blog:hover {
+                filter: brightness(1.1);
+                transform: translateY(-1px);
+            }
+
+            .alert-success-blog {
+                background: rgba(16, 185, 129, 0.1);
+                border: 1px solid #10b981;
+                color: #10b981;
+                padding: 12px;
+                border-radius: 8px;
+                margin-bottom: 20px;
+                font-weight: 500;
+            }
+
+            .blog-table-wrapper {
+                overflow-x: auto;
+                border: 1px solid var(--line);
+                border-radius: 10px;
+                background: var(--surface);
+            }
+
+            .blog-table {
+                width: 100%;
+                border-collapse: collapse;
+                min-width: 600px;
+            }
+
+            .blog-table th {
+                background: var(--surface-2);
+                color: var(--text-dim);
+                font-weight: 700;
+                font-size: 0.85rem;
+                text-align: right;
+                padding: 12px 14px;
+                border-bottom: 1px solid var(--line);
+                border-left: 1px solid var(--line);
+                white-space: nowrap;
+            }
+
+            .blog-table th:last-child {
+                border-left: none;
+            }
+
+            .blog-table td {
+                padding: 12px 14px;
+                border-bottom: 1px solid var(--line);
+                border-left: 1px solid var(--line);
+                color: var(--text-dim);
+                font-size: 0.88rem;
+                vertical-align: middle;
+            }
+
+            .blog-table td:last-child {
+                border-left: none;
+            }
+
+            .blog-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+            .blog-table tbody tr:hover td {
+                background: var(--card-hover);
+                transition: background 0.2s ease;
+            }
+
+            .blog-thumb {
+                width: 45px;
+                height: 45px;
+                object-fit: cover;
+                border-radius: 6px;
+                border: 1px solid var(--line);
+            }
+
+            .blog-actions {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .btn-icon {
+                display: inline-flex;
+                align-items: center;
+                justify-content: center;
+                width: 32px;
+                height: 32px;
+                border-radius: 6px;
+                text-decoration: none;
+                transition: all 0.2s var(--ease);
+                border: 1px solid transparent;
+            }
+
+            .btn-icon-edit {
+                background: rgba(255, 176, 32, 0.1);
+                color: var(--accent);
+                border-color: var(--accent);
+            }
+
+            .btn-icon-edit:hover {
+                background: var(--accent);
+                color: var(--oncta);
+            }
+
+            .btn-icon-delete {
+                background: rgba(220, 38, 38, 0.1);
+                color: #dc2626;
+                border-color: #dc2626;
+                border: none;
+                cursor: pointer;
+            }
+
+            .btn-icon-delete:hover {
+                background: #dc2626;
+                color: #fff;
+            }
+
+            .empty-state {
+                text-align: center;
+                padding: 40px;
+                color: var(--text-dimmer);
+                font-size: 0.95rem;
+            }
+
+            .empty-state i {
+                display: block;
+                font-size: 2rem;
+                margin-bottom: 10px;
+                opacity: 0.6;
+            }
+
+            .blog-pagination {
+                margin-top: 20px;
+                display: flex;
+                justify-content: center;
+            }
+
+            .blog-pagination nav {
+                display: flex;
+                gap: 5px;
+            }
+
+            .blog-pagination .page-link {
+                color: var(--brand);
+                border: 1px solid var(--line);
+                padding: 6px 12px;
+                border-radius: 6px;
+                text-decoration: none;
+                background: var(--surface);
+                transition: all 0.2s;
+            }
+
+            .blog-pagination .page-link:hover {
+                background: var(--card-hover);
+            }
+
+            .blog-pagination .page-item.active .page-link {
+                background: var(--brand);
+                color: var(--oncta);
+                border-color: var(--brand);
+            }
+
+            .blog-pagination .page-item.disabled .page-link {
+                opacity: 0.5;
+                pointer-events: none;
+            }
+        </style>
+
+        <div class="blog-manage-card">
+            <div class="blog-manage-header">
+                <h5 class="blog-manage-title">
+                    <i class="fa-solid fa-newspaper"></i> مدیریت مقالات
+                </h5>
+                <a href="{{ route('blogs.create') }}" class="btn-add-blog">
+                    <i class="fa-solid fa-plus"></i> افزودن مقاله جدید
+                </a>
             </div>
-        @endif
 
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse;">
-                <thead>
-                    <tr style="border-bottom: 1px solid var(--border);">
-                        <th style="padding: 12px; text-align: right;">#</th>
-                        <th style="padding: 12px; text-align: right;">تصویر</th>
-                        <th style="padding: 12px; text-align: right;">عنوان</th>
-                        <th style="padding: 12px; text-align: right;">زمان مطالعه</th>
-                        <th style="padding: 12px; text-align: right;">شماره</th>
-                        <th style="padding: 12px; text-align: right;">عملیات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($blogs as $index => $blog)
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">{{ $blogs->firstItem() + $index }}</td>
-                            <td style="padding: 12px;">
-                                @if($blog->image_url)
-                                    <img src="{{ asset('storage/') }}) }} . $blog->image_url) }}" alt="{{ $blog->title }}" style="width: 45px; height: 45px; object-fit: cover; border-radius: 6px;">
-                                @else
-                                    <span style="color: var(--text-light);">بدون تصویر</span>
-                                @endif
-                            </td>
-                            <td style="padding: 12px;">{{ $blog->title }}</td>
-                            <td style="padding: 12px;">{{ $blog->{'reading-time'} ? $blog->{'reading-time'} . ' دقیقه' : '-' }}</td>
-                            <td style="padding: 12px;">{{ $blog->number ?? '-' }}</td>
-                            <td style="padding: 12px;">
-                                <a href="{{ route('blogs.edit', $blog->id) }}" class="btn btn-sm btn-warning" style="margin-left: 5px; display: inline-block; padding: 6px 10px; border-radius: 6px; text-decoration: none;">
-                                    <i class="fa-solid fa-edit"></i>
-                                </a>
-                                <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST" style="display: inline-block;" onsubmit="return confirm('آیا از حذف این مقاله اطمینان دارید؟');">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger" style="padding: 6px 10px; border-radius: 6px; border: none; cursor: pointer;">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                </form>
-                            </td>
-                        </tr>
-                    @empty
+            @if(session('success'))
+                <div class="alert-success-blog">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <div class="blog-table-wrapper">
+                <table class="blog-table">
+                    <thead>
                         <tr>
-                            <td colspan="6" style="text-align: center; padding: 40px; color: var(--text-light);">
-                                <i class="fa-solid fa-inbox"></i> هیچ مقاله‌ای یافت نشد
-                            </td>
+                            <th>#</th>
+                            <th>تصویر</th>
+                            <th>عنوان</th>
+                            <th>زمان مطالعه</th>
+                            <th>شماره</th>
+                            <th>عملیات</th>
                         </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        @forelse($blogs as $index => $blog)
+                            <tr>
+                                <td>{{ $blogs->firstItem() + $index }}</td>
+                                <td>
+                                    @if($blog->image_url)
+                                        <img src="{{ asset('storage/') }}) }} . $blog->image_url) }}" alt="{{ $blog->title }}"
+                                            class="blog-thumb">
+                                    @else
+                                        <span style="color: var(--text-dimmer);">بدون تصویر</span>
+                                    @endif
+                                </td>
+                                <td>{{ $blog->title }}</td>
+                                <td>{{ $blog->{'reading-time'} ? $blog->{'reading-time'} . ' دقیقه' : '-' }}</td>
+                                <td>{{ $blog->number ?? '-' }}</td>
+                                <td>
+                                    <div class="blog-actions">
+                                        <a href="{{ route('blogs.edit', $blog->id) }}" class="btn-icon btn-icon-edit"
+                                            title="ویرایش">
+                                            <i class="fa-solid fa-edit"></i>
+                                        </a>
+                                        <form action="{{ route('blogs.destroy', $blog->id) }}" method="POST"
+                                            style="display: inline-block;"
+                                            onsubmit="return confirm('آیا از حذف این مقاله اطمینان دارید؟');">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn-icon btn-icon-delete" title="حذف">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="6" class="empty-state">
+                                    <i class="fa-solid fa-inbox"></i> هیچ مقاله‌ای یافت نشد
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
 
-        <div style="margin-top: 20px;">
-            {{ $blogs->links() }}
+            <div class="blog-pagination">
+                {{ $blogs->links() }}
+            </div>
         </div>
     </div>
-</div>
 @endsection

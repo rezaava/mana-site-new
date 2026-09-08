@@ -220,6 +220,7 @@ class ProjectController extends Controller
             'feature_text.*' => 'nullable|string',
             'feature_icon' => 'nullable|array',
             'feature_icon.*' => 'nullable|string|max:255',
+            'slug'=>'required',
         ]);
 
         $uploadedFiles = [];
@@ -246,6 +247,8 @@ class ProjectController extends Controller
             $project->project_link = $validated['project_link'] ?? null;
             $project->testimonial = $validated['testimonial'] ?? null;
             $project->number = $number;
+
+            $project->slug=$validated['slug'];
 
             if ($request->hasFile('image')) {
                 $imagePath = $request->file('image')->store('projects', 'public');
@@ -415,6 +418,7 @@ class ProjectController extends Controller
             'feature_text.*'  => 'nullable|string',
             'feature_icon'    => 'nullable|array',
             'feature_icon.*'  => 'nullable|string|max:255',
+            'slug'=>'required',
         ]);
         $uploadedFiles = [];
         $oldImage = $project->image_url;

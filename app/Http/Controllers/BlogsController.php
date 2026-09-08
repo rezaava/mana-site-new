@@ -23,7 +23,7 @@ class BlogsController extends Controller
 
     public function blog()
     {
-        $blogs = Blogs::with(['category','tags'])->latest()->get();
+        $blogs = Blogs::with(['category', 'tags'])->latest()->get();
 
         return view('blog.all_blogs', compact('blogs'));
     }
@@ -58,6 +58,7 @@ class BlogsController extends Controller
             'number' => 'nullable|integer',
             'tags' => 'nullable|array',
             'tags.*' => 'nullable|string|max:255',
+            'slug' => 'required',
         ]);
 
         $uploadedFiles = [];
@@ -124,16 +125,20 @@ class BlogsController extends Controller
         $blog = Blogs::with('tags')
             ->findOrFail($id);
 
+        $blogTags = BlogTag::where('blog_id', $blog->id)->get();
+
         $categories = Categories::all();
 
         return view(
             'admin.blogs.edit',
             compact(
                 'blog',
-                'categories'
+                'categories',
+                'blogTags'
             )
         );
     }
+
 
     public function update(Request $request, $id)
     {
@@ -148,80 +153,66 @@ class BlogsController extends Controller
             'number' => 'nullable|integer',
             'tags' => 'nullable|array',
             'tags.*' => 'nullable|string|max:255',
+            'slug' => 'required',
         ]);
 
-        $uploadedFiles = [];
         $oldImage = $blog->image_url;
 
-        try {
-            DB::beginTransaction();
+        $blog->title = $validated['title'];
+        $blog->text = $validated['text'];
+        $blog->cat_id = $validated['cat_id'];
+        $blog->{'reading-time'} = $validated['reading-time'] ?? null;
+        $blog->number = $validated['number'] ?? null;
+        $blog->slug = $validated['slug'];
 
-            if ($request->hasFile('image')) {
-                $imagePath = $request
-                    ->file('image')
-                    ->store('blogs', 'public');
+        if ($request->hasFile('image')) {
 
-                $validated['image_url'] = $imagePath;
+            $imagePath = $request
+                ->file('image')
+                ->store('blogs', 'public');
 
-                $uploadedFiles[] = $imagePath;
-            }
-
-            unset($validated['image']);
-            unset($validated['tags']);
-
-            $blog->update($validated);
-
-            BlogTag::where(
-                'blog_id',
-                $blog->id
-            )->delete();
-
-            if ($request->has('tags') && is_array($request->tags)) {
-                foreach ($request->tags as $tag) {
-                    $tag = trim($tag);
-
-                    if (!empty($tag)) {
-                        BlogTag::create([
-                            'blog_id' => $blog->id,
-                            'text' => $tag,
-                        ]);
-                    }
-                }
-            }
-
-            DB::commit();
-
-            if (
-                $request->hasFile('image') &&
-                $oldImage &&
-                Storage::disk('public')->exists($oldImage)
-            ) {
-                Storage::disk('public')->delete($oldImage);
-            }
-
-            return redirect()
-                ->route('blogs.index')
-                ->with(
-                    'success',
-                    "مقاله «{$blog->title}» با موفقیت بروزرسانی شد."
-                );
-        } catch (\Throwable $e) {
-            DB::rollBack();
-
-            foreach ($uploadedFiles as $file) {
-                if (Storage::disk('public')->exists($file)) {
-                    Storage::disk('public')->delete($file);
-                }
-            }
-
-            return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors([
-                    'error' => 'خطا در بروزرسانی مقاله: ' . $e->getMessage()
-                ]);
+            $blog->image_url = $imagePath;
         }
+
+        $blog->save();
+
+        // حذف تگ‌های قبلی
+        BlogTag::where('blog_id', $blog->id)->delete();
+
+        // ثبت تگ‌های جدید
+        if ($request->has('tags') && is_array($request->tags)) {
+
+            foreach ($request->tags as $tag) {
+
+                $tag = trim($tag);
+
+                if (!empty($tag)) {
+                    BlogTag::create([
+                        'blog_id' => $blog->id,
+                        'text' => $tag,
+                    ]);
+                }
+            }
+        }
+
+        // حذف تصویر قبلی در صورت آپلود تصویر جدید
+        if (
+            $request->hasFile('image') &&
+            $oldImage &&
+            Storage::disk('public')->exists($oldImage)
+        ) {
+            Storage::disk('public')->delete($oldImage);
+        }
+
+        return redirect()
+            ->route('blogs.index')
+            ->with(
+                'success',
+                "مقاله «{$blog->title}» با موفقیت بروزرسانی شد."
+            );
     }
+
+
 
     public function destroy($id)
     {

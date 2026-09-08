@@ -1,11 +1,12 @@
 @extends('layout.master')
 
 @section('title')
-    ملیسان | {{ $service->title }}
+      {{ $service->title }}
 @endsection
 
 @section('head')
     <link rel="stylesheet" href="{{ asset('css/servise.css') }}">
+    {{ $service->meta }}
 @endsection
 
 @section('main')

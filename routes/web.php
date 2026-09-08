@@ -57,8 +57,10 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/site-texts', [SiteTextController::class, 'update'])->name('site-texts.update');
 
     //->middleware(['role:admin'])
-    Route::get('/1', function(){return view('admin.panel');})->name('admin_panel');
-    Route::get('/2', function(){return view('admin.dashboard');})->name('admin_dashboard');
+    Route::get('/1', function () {
+        return view('admin.panel'); })->name('admin_panel');
+    Route::get('/2', function () {
+        return view('admin.dashboard'); })->name('admin_dashboard');
 
     // بازدیدکنندگان
     Route::get('/visitors', [VisitorController::class, 'index'])->name('visitors.index');
@@ -80,7 +82,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/pages/create', [ServiceController::class, 'create'])->name('pages.create');
     Route::post('/pages', [ServiceController::class, 'store'])->name('pages.store');
     Route::get('/pages/{id}/edit', [ServiceController::class, 'edit'])->name('pages.edit');
-    Route::put('/pages/{id}', [ServiceController::class, 'update'])->name('pages.update');
+    Route::post('/pages/{id}', [ServiceController::class, 'update'])->name('pages.update');
     Route::delete('/pages/{id}', [ServiceController::class, 'destroy'])->name('pages.destroy');
 
     // نظرات
@@ -126,7 +128,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/create', [ProjectController::class, 'create'])->name('projects.create');
         Route::post('/', [ProjectController::class, 'store'])->name('projects.store');
         Route::get('/{id}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
-        Route::put('/{id}', [ProjectController::class, 'update'])->name('projects.update');
+        Route::post('/{id}', [ProjectController::class, 'update'])->name('projects.update');
         Route::delete('/{id}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
         // API
@@ -148,7 +150,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
 
 
 
-// Questions Routes
+    // Questions Routes
     Route::prefix('questions')->group(function () {
         Route::get('/', [QuestionsController::class, 'index'])->name('questions.index');
         Route::get('/create', [QuestionsController::class, 'create'])->name('questions.create');
@@ -163,20 +165,20 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/create', [BlogsController::class, 'create'])->name('create');
         Route::post('/', [BlogsController::class, 'store'])->name('store');
         Route::get('/{id}/edit', [BlogsController::class, 'edit'])->name('edit');
-        Route::put('/{id}', [BlogsController::class, 'update'])->name('update');
+        Route::post('/{id}', [BlogsController::class, 'update'])->name('update');
         Route::delete('/{id}', [BlogsController::class, 'destroy'])->name('destroy');
         Route::get('/all_blogs', [SiteController::class, 'all_blogs'])->name('all_blogs');
         Route::get('/blog/{id}', [SiteController::class, 'singleBlog'])->name('singleBlog');
-        });
+    });
 
     Route::prefix('/team')->group(function () {
-    Route::get('/', [TeamController::class, 'index'])->name('team.index');
-    Route::get('/create-team', [TeamController::class, 'create'])->name('create_team_form');
-    Route::post('/create-team', [TeamController::class, 'store'])->name('create_team');
-    Route::get('/edit-team/{id}', [TeamController::class, 'edit'])->name('edit_team_form');
-    Route::put('/edit-team/{id}', [TeamController::class, 'update'])->name('update_team');
-    Route::delete('/delete-team/{id}', [TeamController::class, 'destroy'])->name('destroy_team');
-});
+        Route::get('/', [TeamController::class, 'index'])->name('team.index');
+        Route::get('/create-team', [TeamController::class, 'create'])->name('create_team_form');
+        Route::post('/create-team', [TeamController::class, 'store'])->name('create_team');
+        Route::get('/edit-team/{id}', [TeamController::class, 'edit'])->name('edit_team_form');
+        Route::post('/edit-team/{id}', [TeamController::class, 'update'])->name('update_team');
+        Route::delete('/delete-team/{id}', [TeamController::class, 'destroy'])->name('destroy_team');
+    });
 
     Route::prefix('/images')->group(function () {
         Route::post('/store-image', [ImageController::class, 'store_image'])->name('store_image');
@@ -192,9 +194,9 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::put('/{id}', [SocialsController::class, 'update'])->name('socials.update');
         Route::delete('/{id}', [SocialsController::class, 'destroy'])->name('socials.destroy');
     });
-    
+
 });
 
-Route::prefix('projects')->group(function(){
-        Route::get('/{id}/{slug}', [ProjectController::class, 'show'])->name('projects.show');
-    });
+Route::prefix('projects')->group(function () {
+    Route::get('/{id}/{slug}', [ProjectController::class, 'show'])->name('projects.show');
+});
