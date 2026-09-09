@@ -224,7 +224,7 @@
                         <div class="folio-tab {{ $index === 0 ? 'active' : '' }}" data-index="{{ $index }}"
                             data-project="{{ $project->id }}" data-description="{{ $project->description }}"
                             data-from="{{ $project->from ?? '#1d2a6b' }}" data-to="{{ $project->to ?? '#0b1030' }}"
-                            data-url="{{ route('projects.show', ['id'=>$project->id, 'slug' => $project->slug]) }}">
+                            data-url="{{ route('projects.show', ['id' => $project->id, 'slug' => $project->slug]) }}">
                             <div class="ft-ic"><i class="{{ $project->icon ?? 'fa-solid fa-briefcase' }}"></i></div>
                             <div>
                                 <h5>{{ $project->title }}</h5>
@@ -258,7 +258,7 @@
                             <span class="tag">{{ $firstProject->category->name ?? 'پروژه' }}</span>
                             <h4>{{ $firstProject->title }}</h4>
                             <p>{{ $firstProject->description }}</p>
-                            <a href="{{ route('projects.show', ['id'=>$firstProject->id, 'slug' => $firstProject->slug]) }}"
+                            <a href="{{ route('projects.show', ['id' => $firstProject->id, 'slug' => $firstProject->slug]) }}"
                                 class="pill">مشاهده جزئیات <i class="fa-solid fa-arrow-up-left"></i></a>
                         </div>
                     @else
@@ -279,8 +279,8 @@
             </div>
             <div class="team-grid">
                 @foreach($teams as $index => $team)
-                    <div class="team-card reveal reveal-delay-{{ ($index % 4) + 1 }}">
-                        @if ($team->owner == 1)
+                    @if ($team->owner == 1)
+                        <div class="team-card reveal reveal-delay-{{ ($index % 4) + 1 }}" style="margin-top: -20px;">
                             <div class="team-ring-1">
                                 <div class="team-avatar tc{{ ($index % 5) + 1 }}">
                                     <img src="{{ asset($team->image) }}" alt="{{ $team->name }}">
@@ -292,7 +292,11 @@
                                     </div>
                                 </div>
                             </div>
-                        @else
+                            <h4>{{ $team->name }}</h4>
+                            <p>{{ $team->title }}</p>
+                        </div>
+                    @else
+                        <div class="team-card reveal reveal-delay-{{ ($index % 4) + 1 }}">
                             <div class="team-ring">
                                 <div class="team-avatar tc{{ ($index % 5) + 1 }}">
                                     <img src="{{ asset($team->image) }}" alt="{{ $team->name }}">
@@ -304,10 +308,10 @@
                                     </div>
                                 </div>
                             </div>
-                        @endif
-                        <h4>{{ $team->name }}</h4>
-                        <p>{{ $team->position }}</p>
-                    </div>
+                            <h4>{{ $team->name }}</h4>
+                            <p>{{ $team->title }}</p>
+                        </div>
+                    @endif
                 @endforeach
             </div>
         </div>

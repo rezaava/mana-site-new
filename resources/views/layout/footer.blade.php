@@ -23,10 +23,7 @@
 
                     <form onsubmit="return false;">
 
-                        <input
-                            type="email"
-                            placeholder="آدرس ایمیل شما..."
-                        >
+                        <input type="email" placeholder="آدرس ایمیل شما...">
 
                         <button type="submit">
                             ارسال
@@ -132,40 +129,19 @@
                     {{-- خدمات --}}
 
                     <div class="footer-col">
-
                         <h5>
                             {{ $siteTexts['footer_services']->value ?? 'خدمات' }}
                         </h5>
 
                         <ul>
-
-                            <li>
-                                <a href="#services">
-                                    <i class="fa-solid fa-caret-left"></i>
-                                    هوش مصنوعی
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="#services">
-                                    <i class="fa-solid fa-caret-left"></i>
-                                    طراحی وب‌سایت
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="#services">
-                                    <i class="fa-solid fa-caret-left"></i>
-                                    اپلیکیشن موبایل
-                                </a>
-                            </li>
-
-                            <li>
-                                <a href="#services">
-                                    <i class="fa-solid fa-caret-left"></i>
-                                    زیرساخت ابری
-                                </a>
-                            </li>
+                            @foreach ($services->take(4) as $service)
+                                <li>
+                                    <a href="#services">
+                                        <i class="fa-solid fa-caret-left"></i>
+                                        {{ $service->title }}
+                                    </a>
+                                </li>
+                            @endforeach
 
                             <li>
                                 <a href="tel:02117545678">
@@ -173,9 +149,7 @@
                                     ۰۲۱-۱۷۵۴۵۶۷۸
                                 </a>
                             </li>
-
                         </ul>
-
                     </div>
 
                 </div>
