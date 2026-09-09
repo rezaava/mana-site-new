@@ -427,10 +427,14 @@
                         <small class="blog-form-error">{{ $message }}</small>
                     @enderror
                 </div>
-
-                <button type="submit" class="blog-submit-btn">
-                    <i class="fa-solid fa-check"></i> ذخیره مقاله
-                </button>
+                <div style="margin-top:25px; display:flex; gap:10px; flex-wrap:wrap;">
+                    <button type="submit" class="btn-submit-form">
+                        <i class="fa-solid fa-check"></i> ذخیره خدمت
+                    </button>
+                    <a href="{{ route('pages.index') }}" class="btn-back-form">
+                        بازگشت
+                    </a>
+                </div>
             </form>
         </div>
     </div>
@@ -444,11 +448,11 @@
             const row = document.createElement('div');
             row.className = 'blog-tag-row';
             row.innerHTML = `
-                                    <input type="text" name="tags[]" placeholder="مثلاً Laravel" class="blog-form-input-tag">
-                                    <button type="button" onclick="removeTag(this)" class="blog-tag-remove">
-                                        <i class="fa-solid fa-trash"></i>
-                                    </button>
-                                `;
+                                        <input type="text" name="tags[]" placeholder="مثلاً Laravel" class="blog-form-input-tag">
+                                        <button type="button" onclick="removeTag(this)" class="blog-tag-remove">
+                                            <i class="fa-solid fa-trash"></i>
+                                        </button>
+                                    `;
             container.appendChild(row);
         }
 

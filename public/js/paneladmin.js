@@ -70,3 +70,38 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
+
+// ===== CUSTOM CURSOR =====
+if (window.matchMedia("(pointer:fine)").matches) {
+    document.body.classList.add("has-cursor");
+    const dot = document.getElementById("curDot");
+    const ring = document.getElementById("curRing");
+
+    if (dot && ring) {
+        let mx = 0, my = 0, rx = 0, ry = 0;
+
+        window.addEventListener("mousemove", (e) => {
+            mx = e.clientX;
+            my = e.clientY;
+            dot.style.transform = `translate(${mx}px, ${my}px) translate(-50%, -50%)`;
+        });
+
+        function loop() {
+            rx += (mx - rx) * 0.16;
+            ry += (my - ry) * 0.16;
+            ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%, -50%)`;
+            requestAnimationFrame(loop);
+        }
+        loop();
+
+        // افکت hover روی المان‌های تعاملی پنل
+        const interactiveElements = document.querySelectorAll(
+            "a, button, .nav-item, .toggle-btn, .notif-btn, .theme-switch, input, textarea, select, .stat-card, .chart-card, .visitor-card, .comments-card, .user-card, .badge-num, .badge-dot"
+        );
+
+        interactiveElements.forEach((el) => {
+            el.addEventListener("mouseenter", () => ring.classList.add("hover"));
+            el.addEventListener("mouseleave", () => ring.classList.remove("hover"));
+        });
+    }
+}

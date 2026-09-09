@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-    ملیسان | صفحه اصلی
+مانا
 @endsection
 
 @section('head')

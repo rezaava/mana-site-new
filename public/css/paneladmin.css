@@ -75,6 +75,11 @@ a {
   border-radius: 10px;
 }
 
+body.has-cursor,
+body.has-cursor * {
+  cursor: none !important;
+}
+
 .cur-dot,
 .cur-ring {
   position: fixed;
@@ -91,15 +96,20 @@ a {
   width: 7px;
   height: 7px;
   background: var(--accent);
-  transition: transform 0.15s var(--ease), background 0.3s;
+  transition:
+    transform 0.15s var(--ease),
+    background 0.3s;
 }
 
 .cur-ring {
   width: 34px;
   height: 34px;
   border: 1.5px solid var(--brand);
-  transition: width 0.3s var(--ease), height 0.3s var(--ease),
-    border-color 0.3s, background 0.3s;
+  transition:
+    width 0.3s var(--ease),
+    height 0.3s var(--ease),
+    border-color 0.3s,
+    background 0.3s;
 }
 
 .cur-ring.hover {

@@ -437,7 +437,7 @@
                     <i class="fa-solid fa-plus"></i> افزودن تکنولوژی
                 </button>
 
-                {{-- slug و meta --}}
+                {{-- slug و meta و title_head --}}
                 <h6 class="form-section-title">
                     <i class="fa-solid fa-link"></i> slug
                 </h6>
@@ -450,6 +450,13 @@
                 </h6>
                 <div class="form-group" style="margin-bottom:10px;">
                     <input type="text" name="meat" value="{{ old('meta') }}" placeholder="افزودن meta" class="form-input">
+                </div>
+
+                <h6 class="form-section-title">
+                    <i class="fa-solid fa-tags"></i> title_head 
+                </h6>
+                <div class="form-group" style="margin-bottom:10px;">
+                    <input type="text" name="title_head " value="{{ old('title_head ') }}" placeholder="افزودن title_head " class="form-input">
                 </div>
 
                 {{-- دکمه‌ها --}}
@@ -601,13 +608,13 @@
                 const item = document.createElement('div');
                 item.className = 'dynamic-item';
                 item.innerHTML = `
-                        <div class="form-grid form-grid-3">
-                            <input type="text" name="what_receive[${whatReceiveIndex}][title]" placeholder="عنوان" class="form-input">
-                            <input type="text" name="what_receive[${whatReceiveIndex}][icon]" placeholder="fa-comments" class="form-input">
-                            <input type="number" name="what_receive[${whatReceiveIndex}][number]" value="${whatReceiveIndex}" placeholder="اولویت" class="form-input">
-                        </div>
-                        <textarea name="what_receive[${whatReceiveIndex}][text]" rows="3" placeholder="توضیحات" class="form-textarea" style="margin-top:10px;"></textarea>
-                    `;
+                            <div class="form-grid form-grid-3">
+                                <input type="text" name="what_receive[${whatReceiveIndex}][title]" placeholder="عنوان" class="form-input">
+                                <input type="text" name="what_receive[${whatReceiveIndex}][icon]" placeholder="fa-comments" class="form-input">
+                                <input type="number" name="what_receive[${whatReceiveIndex}][number]" value="${whatReceiveIndex}" placeholder="اولویت" class="form-input">
+                            </div>
+                            <textarea name="what_receive[${whatReceiveIndex}][text]" rows="3" placeholder="توضیحات" class="form-textarea" style="margin-top:10px;"></textarea>
+                        `;
                 container.appendChild(item);
                 whatReceiveIndex++;
             });
@@ -619,12 +626,12 @@
                 const item = document.createElement('div');
                 item.className = 'dynamic-item';
                 item.innerHTML = `
-                        <div class="form-grid form-grid-3">
-                            <input type="text" name="techs[${techIndex}][text]" placeholder="مثلاً Laravel" class="form-input">
-                            <input type="text" name="techs[${techIndex}][icon]" placeholder="fa-code" class="form-input">
-                            <input type="number" name="techs[${techIndex}][number]" value="${techIndex}" placeholder="اولویت" class="form-input">
-                        </div>
-                    `;
+                            <div class="form-grid form-grid-3">
+                                <input type="text" name="techs[${techIndex}][text]" placeholder="مثلاً Laravel" class="form-input">
+                                <input type="text" name="techs[${techIndex}][icon]" placeholder="fa-code" class="form-input">
+                                <input type="number" name="techs[${techIndex}][number]" value="${techIndex}" placeholder="اولویت" class="form-input">
+                            </div>
+                        `;
                 container.appendChild(item);
                 techIndex++;
             });

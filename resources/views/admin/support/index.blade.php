@@ -7,7 +7,7 @@
             <h5 style="margin: 0;">
                 <i class="fa-solid fa-headset"></i> تیکت‌های پشتیبانی
                 @if($openCount > 0)
-                    <span style="background: #ef4444; color: white; padding: 2px 10px; border-radius: 10px; font-size: 13px; margin-right: 8px;">{{ persianNum($openCount) }}</span>
+                    <span style="background: #ef4444; color: white; padding: 2px 10px; border-radius: 10px; font-size: 13px; margin-right: 8px;">{{ $openCount }}</span>
                 @endif
             </h5>
         </div>
@@ -33,7 +33,7 @@
                 <tbody>
                     @forelse($tickets as $index => $ticket)
                         <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">{{ persianNum($tickets->firstItem() + $index) }}</td>
+                            <td style="padding: 12px;">{{ $tickets->firstItem() + $index }}</td>
                             <td style="padding: 12px;">{{ $ticket->user_name }}</td>
                             <td style="padding: 12px;">{{ Str::limit($ticket->subject, 40) }}</td>
                             <td style="padding: 12px;">

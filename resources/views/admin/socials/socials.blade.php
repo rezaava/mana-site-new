@@ -1,83 +1,415 @@
 @extends('admin.panel')
 
 @section('content')
-<div style="padding: 20px;">
-    {{-- Alerts Section --}}
-    @if (session('success'))
-        <div style="background: #10b981; color: #fff; padding: 12px 15px; border-radius: 8px; margin-bottom: 20px;">
-            <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
-        </div>
-    @endif
+    <style>
+        /* استایل‌های جدول شبکه‌های اجتماعی - هماهنگ با تم و ریسپانسیو */
+        .social-manage-card {
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            box-shadow: var(--shadow-strong);
+            padding: 20px;
+        }
 
-    @if (session('error'))
-        <div style="background: #ef4444; color: #fff; padding: 12px 15px; border-radius: 8px; margin-bottom: 20px;">
-            <i class="fa-solid fa-circle-exclamation"></i> {{ session('error') }}
-        </div>
-    @endif
+        .social-manage-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
 
-    <div style="background: var(--card-bg); border-radius: 12px; padding: 20px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-            <h5 style="margin: 0;">
-                <i class="fa-solid fa-share-nodes"></i> مدیریت شبکه‌های اجتماعی
-            </h5>
-            <a href="{{ route('socials.create') }}" class="btn btn-primary" style="padding: 10px 20px; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-                <i class="fa-solid fa-plus"></i> افزودن شبکه جدید
-            </a>
-        </div>
+        .social-manage-title {
+            margin: 0;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
 
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; color: inherit;">
-                <thead>
-                    <tr style="border-bottom: 1px solid var(--border); text-align: right;">
-                        <th style="padding: 12px;">#</th>
-                        <th style="padding: 12px;">تصویر / آیکون</th>
-                        <th style="padding: 12px;">نام شبکه</th>
-                        <th style="padding: 12px;">آدرس (URL)</th>
-                        <th style="padding: 12px;">عملیات</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse($socials as $social)
-                        <tr style="border-bottom: 1px solid var(--border);">
-                            <td style="padding: 12px;">{{ $social->id }}</td>
-                            <td style="padding: 12px;">
-                                @if($social->image_url)
-                                    <img src="{{ asset('storage/') }}) }} . $social->image_url) }}" alt="{{ $social->name }}" style="width: 40px; height: 40px; object-fit: contain; border-radius: 6px;">
-                                @else
-                                    <span style="color: var(--text-light);">بدون تصویر</span>
-                                @endif
-                            </td>
-                            <td style="padding: 12px;">{{ $social->name }}</td>
-                            <td style="padding: 12px;">
-                                <a href="{{ $social->url }}" target="_blank" style="color: #3b82f6; text-decoration: none;">{{ $social->url }}</a>
-                            </td>
-                            <td style="padding: 12px;">
-                                <div style="display: flex; gap: 8px;">
-                                    <a href="{{ route('socials.edit', $social->id) }}" style="background: #f59e0b; color: #fff; padding: 6px 12px; border-radius: 6px; text-decoration: none; font-size: 0.85rem;">
-                                        <i class="fa-solid fa-pen"></i> ویرایش
-                                    </a>
-                                    <form action="{{ route('socials.destroy', $social->id) }}" method="POST" style="margin: 0;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" style="background: #ef4444; color: #fff; padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; font-size: 0.85rem;" onclick="return confirm('آیا از حذف این مورد اطمینان دارید؟')">
-                                            <i class="fa-solid fa-trash"></i> حذف
-                                        </button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                    @empty
+        .btn-add-social {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: linear-gradient(135deg, var(--brand), var(--accent-2));
+            color: var(--oncta);
+            padding: 8px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s var(--ease);
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-add-social:hover {
+            filter: brightness(1.1);
+            transform: translateY(-1px);
+        }
+
+        .alert-success-social {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid #10b981;
+            color: #10b981;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .alert-error-social {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid #ef4444;
+            color: #ef4444;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .social-table-wrapper {
+            overflow-x: auto;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: var(--surface);
+        }
+
+        .social-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .social-table th {
+            background: var(--surface-2);
+            color: var(--text-dim);
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-align: right;
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+            border-left: 1px solid var(--line);
+            white-space: nowrap;
+        }
+
+        .social-table th:last-child {
+            border-left: none;
+        }
+
+        .social-table td {
+            padding: 12px 14px;
+            border-bottom: 1px solid var(--line);
+            border-left: 1px solid var(--line);
+            color: var(--text-dim);
+            font-size: 0.88rem;
+            vertical-align: middle;
+        }
+
+        .social-table td:last-child {
+            border-left: none;
+        }
+
+        .social-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .social-table tbody tr:hover td {
+            background: var(--card-hover);
+            transition: background 0.2s ease;
+        }
+
+        .social-thumb {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            border-radius: 6px;
+            border: 1px solid var(--line);
+        }
+
+        .social-url {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+
+        .social-actions {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            text-decoration: none;
+            transition: all 0.2s var(--ease);
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+
+        .btn-icon-edit {
+            background: rgba(255, 176, 32, 0.1);
+            color: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .btn-icon-edit:hover {
+            background: var(--accent);
+            color: var(--oncta);
+        }
+
+        .btn-icon-delete {
+            background: rgba(220, 38, 38, 0.1);
+            color: #dc2626;
+            border-color: #dc2626;
+            border: none;
+        }
+
+        .btn-icon-delete:hover {
+            background: #dc2626;
+            color: #fff;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-dimmer);
+            font-size: 0.95rem;
+        }
+
+        .empty-state i {
+            display: block;
+            font-size: 2rem;
+            margin-bottom: 10px;
+            opacity: 0.6;
+        }
+
+        .social-pagination {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .social-pagination nav {
+            display: flex;
+            gap: 5px;
+        }
+
+        .social-pagination .page-link {
+            color: var(--brand);
+            border: 1px solid var(--line);
+            padding: 6px 12px;
+            border-radius: 6px;
+            text-decoration: none;
+            background: var(--surface);
+            transition: all 0.2s;
+        }
+
+        .social-pagination .page-link:hover {
+            background: var(--card-hover);
+        }
+
+        .social-pagination .page-item.active .page-link {
+            background: var(--brand);
+            color: var(--oncta);
+            border-color: var(--brand);
+        }
+
+        .social-pagination .page-item.disabled .page-link {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        /* ===== ریسپانسیو موبایل: تبدیل جدول به کارت ===== */
+        @media (max-width: 768px) {
+            .social-table-wrapper {
+                overflow-x: visible;
+                border: none;
+                background: transparent;
+            }
+
+            .social-table {
+                min-width: 0;
+                display: block;
+            }
+
+            .social-table thead {
+                display: none;
+            }
+
+            .social-table tbody {
+                display: block;
+            }
+
+            .social-table tr {
+                display: block;
+                background: var(--surface);
+                border: 1px solid var(--line);
+                border-radius: 12px;
+                margin-bottom: 15px;
+                padding: 10px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            }
+
+            .social-table td {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                gap: 10px;
+                border: none;
+                border-bottom: 1px solid var(--line);
+                padding: 10px 5px;
+                font-size: 0.85rem;
+                text-align: left;
+            }
+
+            .social-table td:last-child {
+                border-bottom: none;
+            }
+
+            .social-table td::before {
+                content: attr(data-label);
+                font-weight: 700;
+                color: var(--text-dim);
+                margin-left: auto;
+                white-space: nowrap;
+            }
+
+            .social-table td[data-label="تصویر / آیکون"] {
+                justify-content: flex-start;
+            }
+
+            .social-table td[data-label="تصویر / آیکون"]::before {
+                margin-left: 0;
+                margin-right: auto;
+            }
+
+            .social-table .social-actions {
+                justify-content: flex-start;
+            }
+
+            .social-table .social-actions::before {
+                display: none;
+            }
+
+            .social-thumb {
+                width: 50px;
+                height: 50px;
+            }
+
+            .empty-state {
+                padding: 20px;
+            }
+        }
+    </style>
+
+    <div style="padding: 20px;">
+        <div class="social-manage-card">
+            <div class="social-manage-header">
+                <h5 class="social-manage-title">
+                    <i class="fa-solid fa-share-nodes"></i> مدیریت شبکه‌های اجتماعی
+                </h5>
+                <a href="{{ route('socials.create') }}" class="btn-add-social">
+                    <i class="fa-solid fa-plus"></i> افزودن شبکه جدید
+                </a>
+            </div>
+
+            @if (session('success'))
+                <div class="alert-success-social">
+                    <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
+                </div>
+            @endif
+
+            @if (session('error'))
+                <div class="alert-error-social">
+                    <i class="fa-solid fa-circle-exclamation"></i> {{ session('error') }}
+                </div>
+            @endif
+
+            <div class="social-table-wrapper">
+                <table class="social-table" id="socialTable">
+                    <thead>
                         <tr>
-                            <td colspan="5" style="text-align: center; padding: 20px; color: var(--text-light);">هیچ شبکه اجتماعی یافت نشد.</td>
+                            <th>#</th>
+                            <th>تصویر / آیکون</th>
+                            <th>نام شبکه</th>
+                            <th>آدرس (URL)</th>
+                            <th>عملیات</th>
                         </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
+                    </thead>
+                    <tbody>
+                        @forelse($socials as $social)
+                            <tr>
+                                <td>{{ $social->id }}</td>
+                                <td>
+                                    @if($social->image_url)
+                                        <img src="{{ asset('storage/' . $social->image_url) }}" alt="{{ $social->name }}"
+                                            class="social-thumb">
+                                    @else
+                                        <span style="color: var(--text-dimmer);">بدون تصویر</span>
+                                    @endif
+                                </td>
+                                <td>{{ $social->name }}</td>
+                                <td>
+                                    <a href="{{ $social->url }}" target="_blank" class="social-url">{{ $social->url }}</a>
+                                </td>
+                                <td>
+                                    <div class="social-actions">
+                                        <a href="{{ route('socials.edit', $social->id) }}" class="btn-icon btn-icon-edit"
+                                            title="ویرایش">
+                                            <i class="fa-solid fa-pen"></i>
+                                        </a>
+                                        <form action="{{ route('socials.destroy', $social->id) }}" method="POST"
+                                            style="margin: 0;" onsubmit="return confirm('آیا از حذف این مورد اطمینان دارید؟')">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="btn-icon btn-icon-delete" title="حذف">
+                                                <i class="fa-solid fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="5" class="empty-state">
+                                    <i class="fa-solid fa-inbox"></i> هیچ شبکه اجتماعی یافت نشد.
+                                </td>
+                            </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
 
-        <div style="margin-top: 20px;">
-            {{ $socials->links() }}
+            <div class="social-pagination">
+                {{ $socials->links() }}
+            </div>
         </div>
     </div>
-</div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const table = document.getElementById('socialTable');
+            if (!table) return;
+
+            // استخراج متن هدرها
+            const headers = [];
+            table.querySelectorAll('thead th').forEach(th => headers.push(th.textContent.trim()));
+
+            // افزودن data-label به هر td بر اساس ایندکس ستون
+            table.querySelectorAll('tbody tr').forEach(row => {
+                row.querySelectorAll('td').forEach((td, index) => {
+                    if (headers[index]) {
+                        td.setAttribute('data-label', headers[index]);
+                    }
+                });
+            });
+        });
+    </script>
 @endsection

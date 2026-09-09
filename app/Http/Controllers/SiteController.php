@@ -23,8 +23,6 @@ class SiteController extends Controller
      */
     public function index()
     {
-        $services = Services::orderBy('number', 'asc')->get();
-
         $projects = Projects::orderBy('number', 'asc')
             ->limit(6)
             ->get();
@@ -52,7 +50,6 @@ class SiteController extends Controller
         ];
 
         return view('index', compact(
-            'services',
             'projects',
             'teams',
             'questions',

@@ -40,19 +40,6 @@
                 داشبورد
             </a>
 
-            <!-- آمار و گزارشات (زیرمنو) -->
-            <button class="nav-item has-sub" id="statsToggle">
-                <i class="fa-solid fa-chart-line"></i>
-                آمار و گزارشات
-                <span class="arrow">
-                    <i class="fa-solid fa-chevron-left"></i>
-                </span>
-            </button>
-            <div class="sub-menu" id="statsSub">
-                <a href="{{ url('/admin/visitors') }}" class="nav-item">بازدیدکنندگان</a>
-                <a href="{{ url('/admin/sales') }}" class="nav-item">فروش</a>
-                <a href="{{ url('/admin/users-stats') }}" class="nav-item">کاربران</a>
-            </div>
 
             <!-- مدیریت محتوا (زیرمنو) -->
             <button class="nav-item has-sub" id="contentToggle">
@@ -68,23 +55,54 @@
                 <a href="{{ url('/admin/comments') }}" class="nav-item">نظرات
                     <span class="badge-num">{{ \App\Models\Comments::where('is_approved', true)->count() }}</span>
                 </a>
+                <a href="{{ url('/admin/site-texts') }}" class="nav-item">
+                    <!-- <i class="fa-solid fa-text-height"></i> -->
+                    متن‌های سایت
+                </a>
+
             </div>
 
-            <a href="{{ url('/admin/site-texts') }}" class="nav-item">
-                <i class="fa-solid fa-text-height"></i>
-                متن‌های سایت
-            </a>
 
-            <a href="{{ url('/admin/categories') }}" class="nav-item">
-                <i class="fa-solid fa-tags"></i>
-                دسته‌بندی‌ها
-            </a>
 
-            <!-- مدیریت پروژه‌ها -->
-            <a href="{{ url('/admin/projects') }}" class="nav-item">
-                <i class="fa-solid fa-diagram-project"></i>
-                پروژه‌ها
-            </a>
+            <!-- آمار و گزارشات (زیرمنو) -->
+            <button class="nav-item has-sub" id="statsToggle">
+                <i class="fa-solid fa-chart-line"></i>
+                آمار و گزارشات
+                <span class="arrow">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </span>
+            </button>
+            <div class="sub-menu" id="statsSub">
+                <a href="{{ url('/admin/visitors') }}" class="nav-item">بازدیدکنندگان</a>
+                <a href="{{ url('/admin/sales') }}" class="nav-item">فروش</a>
+                <a href="{{ url('/admin/users-stats') }}" class="nav-item">کاربران</a>
+            </div>
+
+
+            <!-- نمونه کارها -->
+            <button class="nav-item has-sub" id="contentToggle">
+                <i class="fa-solid fa-folder-tree"></i>
+                نمونه کارها
+                <span class="arrow">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </span>
+            </button>
+            <div class="sub-menu" id="contentSub">
+                <a href="{{ url('/admin/categories') }}" class="nav-item">
+                    <i class="fa-solid fa-tags"></i>
+                    دسته‌بندی‌ها
+                </a>
+
+                <!-- مدیریت پروژه‌ها -->
+                <a href="{{ url('/admin/projects') }}" class="nav-item">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    پروژه‌ها
+                </a>
+
+            </div>
+
+
+
 
             <!-- کاربران -->
             <a href="{{ url('/admin/users') }}" class="nav-item">
@@ -146,11 +164,11 @@
                     <h4 id="pageTitle">داشبورد</h4>
                 </div>
                 <div class="right">
-                    <div class="theme-switch" id="themeSwitch">
+                    <!-- <div class="theme-switch" id="themeSwitch">
                         <div class="knob">
                             <i class="fa-solid fa-moon" id="themeIcon"></i>
                         </div>
-                    </div>
+                    </div> -->
                     <button class="notif-btn" id="notifBtn">
                         <i class="fa-regular fa-bell"></i>
                         <span class="dot"></span>

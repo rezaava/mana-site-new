@@ -54,7 +54,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
 
     // متن‌های سایت
     Route::get('/site-texts', [SiteTextController::class, 'index'])->name('site-texts.index');
-    Route::put('/site-texts', [SiteTextController::class, 'update'])->name('site-texts.update');
+    Route::post('/site-texts', [SiteTextController::class, 'update'])->name('site-texts.update');
 
     //->middleware(['role:admin'])
     Route::get('/1', function () {
@@ -71,7 +71,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/sales/create', [SaleController::class, 'create'])->name('sales.create');
     Route::post('/sales', [SaleController::class, 'store'])->name('sales.store');
     Route::get('/sales/{id}/edit', [SaleController::class, 'edit'])->name('sales.edit');
-    Route::put('/sales/{id}', [SaleController::class, 'update'])->name('sales.update');
+    Route::post('/sales/{id}', [SaleController::class, 'update'])->name('sales.update');
     Route::delete('/sales/{id}', [SaleController::class, 'destroy'])->name('sales.destroy');
 
     // آمار کاربران
@@ -93,7 +93,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/comments', [CommentController::class, 'store'])->name('comments.store');
     Route::get('/comments/{id}/unapprove', [CommentController::class, 'unapprove'])->name('comments.unapprove');
     Route::get('/comments/{id}/edit', [CommentController::class, 'edit'])->name('comments.edit');
-    Route::put('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
+    Route::post('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
 
     // کاربران
     Route::get('/users', [UserController::class, 'index'])->name('users.index');
@@ -105,7 +105,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
 
     // تنظیمات
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-    Route::put('/settings', [SettingController::class, 'update'])->name('settings.update');
+    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
 
     // پشتیبانی
     Route::get('/support', [TicketController::class, 'index'])->name('support.index');
@@ -118,7 +118,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/categories/create', [CategoryController::class, 'create'])->name('categories.create');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
-    Route::put('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
+    Route::post('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
     // Projects
@@ -156,7 +156,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/create', [QuestionsController::class, 'create'])->name('questions.create');
         Route::post('/', [QuestionsController::class, 'store'])->name('questions.store');
         Route::get('/{id}/edit', [QuestionsController::class, 'edit'])->name('questions.edit');
-        Route::put('/{id}', [QuestionsController::class, 'update'])->name('questions.update');
+        Route::post('/{id}', [QuestionsController::class, 'update'])->name('questions.update');
         Route::delete('/{id}', [QuestionsController::class, 'destroy'])->name('questions.destroy');
     });
 
@@ -191,7 +191,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/create', [SocialsController::class, 'create'])->name('socials.create');
         Route::post('/', [SocialsController::class, 'store'])->name('socials.store');
         Route::get('/{id}/edit', [SocialsController::class, 'edit'])->name('socials.edit');
-        Route::put('/{id}', [SocialsController::class, 'update'])->name('socials.update');
+        Route::post('/{id}', [SocialsController::class, 'update'])->name('socials.update');
         Route::delete('/{id}', [SocialsController::class, 'destroy'])->name('socials.destroy');
     });
 
