@@ -110,13 +110,16 @@
                     <div class="case-hero-btns reveal in reveal-delay-3">
 
                         <a href="{{ url('/#contact') }}" class="btn-flow">
+
                             دریافت مشاوره رایگان
 
                             <i class="fa-solid fa-arrow-left"></i>
+
                         </a>
 
 
                         <a href="{{ url('/services') }}" class="btn-ghost">
+
                             <i class="fa-solid fa-arrow-right"></i>
 
                             بازگشت به همه خدمات
@@ -134,13 +137,17 @@
 
                         @if($service->image_url)
 
-                            <img src="{{ asset('storage/' . $service->image_url) }}" alt="{{ $service->title }}" style="
-                                        max-width:100%;
-                                        max-height:400px;
-                                        object-fit:contain;
-                                        position:relative;
-                                        z-index:5;
-                                    ">
+                            <img
+                                src="{{ asset('storage/' . $service->image_url) }}"
+                                alt="{{ $service->title }}"
+                                style="
+                                    max-width:100%;
+                                    max-height:400px;
+                                    object-fit:contain;
+                                    position:relative;
+                                    z-index:5;
+                                "
+                            >
 
                         @else
 
@@ -281,105 +288,109 @@
 
         <div class="container-x">
 
-            <div class="row g-5">
+            {{-- ===================================================== --}}
+            {{-- اگر نقل قول وجود داشته باشد --}}
+            {{-- ===================================================== --}}
 
-                <div class="col-lg-7">
+            @if($service->quote_text || $service->quote_person || $service->quote_role)
 
-                    @if($service->overview)
+                <div class="row g-5">
 
-                        <span class="eyebrow reveal">
+                    <!-- معرفی + چالش + راهکار -->
 
-                            <i class="fa-solid fa-circle-info"></i>
+                    <div class="col-lg-7">
 
-                            معرفی خدمت
+                        @if($service->overview)
 
-                        </span>
+                            <span class="eyebrow reveal">
+
+                                <i class="fa-solid fa-circle-info"></i>
+
+                                معرفی خدمت
+
+                            </span>
 
 
-                        <div class="cs-block reveal reveal-delay-1">
+                            <div class="cs-block reveal reveal-delay-1">
 
-                            {!! $service->overview !!}
+                                {!! $service->overview !!}
+
+                            </div>
+
+                        @endif
+
+
+                        <div class="cs-cards reveal reveal-delay-2">
+
+                            @if($service->challenge_title || $service->challenge_text)
+
+                                <div class="cs-card challenge">
+
+                                    <div class="ic">
+
+                                        <i class="fa-solid fa-triangle-exclamation"></i>
+
+                                    </div>
+
+
+                                    @if($service->challenge_title)
+
+                                        <h4>
+                                            {{ $service->challenge_title }}
+                                        </h4>
+
+                                    @endif
+
+
+                                    @if($service->challenge_text)
+
+                                        {!! $service->challenge_text !!}
+
+                                    @endif
+
+                                </div>
+
+                            @endif
+
+
+                            @if($service->solution_title || $service->solution_text)
+
+                                <div class="cs-card solution">
+
+                                    <div class="ic">
+
+                                        <i class="fa-solid fa-lightbulb"></i>
+
+                                    </div>
+
+
+                                    @if($service->solution_title)
+
+                                        <h4>
+                                            {{ $service->solution_title }}
+                                        </h4>
+
+                                    @endif
+
+
+                                    @if($service->solution_text)
+
+                                        {!! $service->solution_text !!}
+
+                                    @endif
+
+                                </div>
+
+                            @endif
 
                         </div>
 
-                    @endif
-
-
-                    <div class="cs-cards reveal reveal-delay-2">
-
-                        @if($service->challenge_title || $service->challenge_text)
-
-                            <div class="cs-card challenge">
-
-                                <div class="ic">
-
-                                    <i class="fa-solid fa-triangle-exclamation"></i>
-
-                                </div>
-
-
-                                @if($service->challenge_title)
-
-                                    <h4>
-                                        {{ $service->challenge_title }}
-                                    </h4>
-
-                                @endif
-
-
-                                @if($service->challenge_text)
-
-                                    <p>
-                                        {{ $service->challenge_text }}
-                                    </p>
-
-                                @endif
-
-                            </div>
-
-                        @endif
-
-
-                        @if($service->solution_title || $service->solution_text)
-
-                            <div class="cs-card solution">
-
-                                <div class="ic">
-
-                                    <i class="fa-solid fa-lightbulb"></i>
-
-                                </div>
-
-
-                                @if($service->solution_title)
-
-                                    <h4>
-                                        {{ $service->solution_title }}
-                                    </h4>
-
-                                @endif
-
-
-                                @if($service->solution_text)
-
-                                    <p>
-                                        {{ $service->solution_text }}
-                                    </p>
-
-                                @endif
-
-                            </div>
-
-                        @endif
-
                     </div>
 
-                </div>
 
+                    <!-- نقل قول -->
 
-                <div class="col-lg-5">
-
-                    @if($service->quote_text || $service->quote_person || $service->quote_role)
+                    <div class="col-lg-5">
 
                         <div class="quote-card reveal reveal-delay-1">
 
@@ -440,11 +451,123 @@
 
                         </div>
 
+                    </div>
+
+                </div>
+
+
+            {{-- ===================================================== --}}
+            {{-- اگر نقل قول وجود نداشته باشد --}}
+            {{-- ===================================================== --}}
+
+            @else
+
+                <!-- معرفی خدمت تمام عرض -->
+
+                @if($service->overview)
+
+                    <div class="row">
+
+                        <div class="col-12">
+
+                            <span class="eyebrow reveal">
+
+                                <i class="fa-solid fa-circle-info"></i>
+
+                                معرفی خدمت
+
+                            </span>
+
+
+                            <div class="cs-block reveal reveal-delay-1">
+
+                                {!! $service->overview !!}
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                @endif
+
+
+                <!-- چالش و راهکار -->
+
+                <div class="row g-4 mt-2">
+
+                    @if($service->challenge_title || $service->challenge_text)
+
+                        <div class="col-12 col-lg-6">
+
+                            <div class="cs-card challenge reveal reveal-delay-1">
+
+                                <div class="ic">
+
+                                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                                </div>
+
+
+                                @if($service->challenge_title)
+
+                                    <h4>
+                                        {{ $service->challenge_title }}
+                                    </h4>
+
+                                @endif
+
+
+                                @if($service->challenge_text)
+
+                                    {!! $service->challenge_text !!}
+
+                                @endif
+
+                            </div>
+
+                        </div>
+
+                    @endif
+
+
+                    @if($service->solution_title || $service->solution_text)
+
+                        <div class="col-12 col-lg-6">
+
+                            <div class="cs-card solution reveal reveal-delay-2">
+
+                                <div class="ic">
+
+                                    <i class="fa-solid fa-lightbulb"></i>
+
+                                </div>
+
+
+                                @if($service->solution_title)
+
+                                    <h4>
+                                        {{ $service->solution_title }}
+                                    </h4>
+
+                                @endif
+
+
+                                @if($service->solution_text)
+
+                                    {!! $service->solution_text !!}
+
+                                @endif
+
+                            </div>
+
+                        </div>
+
                     @endif
 
                 </div>
 
-            </div>
+            @endif
 
         </div>
 
@@ -483,7 +606,10 @@
 
                 @foreach($whatReceives as $index => $item)
 
-                    <div class="incl-card reveal reveal-delay-{{ ($index % 3) + 1 }}" data-tilt>
+                    <div
+                        class="incl-card reveal reveal-delay-{{ ($index % 3) + 1 }}"
+                        data-tilt
+                    >
 
                         <span class="incl-index">
 

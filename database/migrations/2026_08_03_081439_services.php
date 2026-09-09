@@ -17,7 +17,7 @@ return new class extends Migration
             $table->integer('number')->nullable();
             $table->text('slug')->unique();
             $table->text('meta')->nullable();
-            $table->text('title_head ')->nullable();
+            $table->text('title_head')->nullable();
             $table->timestamps();
         });
     }
