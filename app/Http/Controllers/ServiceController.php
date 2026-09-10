@@ -81,8 +81,8 @@ class ServiceController extends Controller
             'cta_title' => 'nullable|string|max:255',
             'cta_text' => 'nullable|string',
 
-            'slug' => 'required|string|max:255',
-            'meta' => 'required|string',
+            'slug' => 'required|string|max:255|unique:services,slug',
+            'meta' => 'nullable|string',
             'title_head' => 'nullable|string|max:255',
 
             /*
@@ -452,8 +452,8 @@ class ServiceController extends Controller
             'cta_title' => 'nullable|string|max:255',
             'cta_text' => 'nullable|string',
 
-            'slug' => 'required|string|max:255',
-            'meta' => 'required|string',
+            'slug' => 'required|string|max:255|unique:services,slug',
+            'meta' => 'nullable|string',
             'title_head' => 'nullable|string|max:255',
 
             /*

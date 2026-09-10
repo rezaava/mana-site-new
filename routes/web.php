@@ -26,7 +26,7 @@ use App\Http\Controllers\UploadController;
 
 
 Route::get('/', [SiteController::class, 'index'])->name('home');
-Route::get('/servise/{id}/{slug}', [SiteController::class, 'servise'])->name('servise');
+Route::get('/services/{slug}', [SiteController::class, 'servise'])->name('servise');
 
 Route::post('/upload/video', [UploadController::class, 'uploadVideo'])->name('upload.video');
 Route::post('/upload/image', [UploadController::class, 'uploadImage'])->name('upload.image');
@@ -62,21 +62,6 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/2', function () {
         return view('admin.dashboard'); })->name('admin_dashboard');
 
-    // بازدیدکنندگان
-    Route::get('/visitors', [VisitorController::class, 'index'])->name('visitors.index');
-    Route::delete('/visitors/{id}', [VisitorController::class, 'destroy'])->name('visitors.destroy');
-
-    // فروش
-    Route::get('/sales', [SaleController::class, 'index'])->name('sales.index');
-    Route::get('/sales/create', [SaleController::class, 'create'])->name('sales.create');
-    Route::post('/sales', [SaleController::class, 'store'])->name('sales.store');
-    Route::get('/sales/{id}/edit', [SaleController::class, 'edit'])->name('sales.edit');
-    Route::post('/sales/{id}', [SaleController::class, 'update'])->name('sales.update');
-    Route::delete('/sales/{id}', [SaleController::class, 'destroy'])->name('sales.destroy');
-
-    // آمار کاربران
-    Route::get('/users-stats', [UserStatsController::class, 'index'])->name('users-stats.index');
-
     // صفحات
     Route::get('/pages', [ServiceController::class, 'index'])->name('pages.index');
     Route::get('/pages/create', [ServiceController::class, 'create'])->name('pages.create');
@@ -94,18 +79,6 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/comments/{id}/unapprove', [CommentController::class, 'unapprove'])->name('comments.unapprove');
     Route::get('/comments/{id}/edit', [CommentController::class, 'edit'])->name('comments.edit');
     Route::post('/comments/{id}', [CommentController::class, 'update'])->name('comments.update');
-
-    // کاربران
-    Route::get('/users', [UserController::class, 'index'])->name('users.index');
-    Route::get('/users/create', [UserController::class, 'create'])->name('users.create');
-    Route::post('/users', [UserController::class, 'store'])->name('users.store');
-    Route::get('/users/{id}/edit', [UserController::class, 'edit'])->name('users.edit');
-    Route::put('/users/{id}', [UserController::class, 'update'])->name('users.update');
-    Route::delete('/users/{id}', [UserController::class, 'destroy'])->name('users.destroy');
-
-    // تنظیمات
-    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
 
     // پشتیبانی
     Route::get('/support', [TicketController::class, 'index'])->name('support.index');

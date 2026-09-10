@@ -470,14 +470,14 @@
                     <i class="fa-solid fa-tags"></i> meta tag
                 </h6>
                 <div class="form-group" style="margin-bottom:10px;">
-                    <input type="text" name="meat" value="{{ old('meta') }}" placeholder="افزودن meta" class="form-input">
+                    <input type="text" name="meta" value="{{ old('meta') }}" placeholder="افزودن meta" class="form-input">
                 </div>
 
                 <h6 class="form-section-title">
                     <i class="fa-solid fa-tags"></i> title_head 
                 </h6>
                 <div class="form-group" style="margin-bottom:10px;">
-                    <input type="text" name="title_head " value="{{ old('title_head ') }}" placeholder="افزودن title_head " class="form-input">
+                    <input type="text" name="title_head" value="{{ old('title_head ') }}" placeholder="افزودن title_head " class="form-input">
                 </div>
 
                 {{-- دکمه‌ها --}}

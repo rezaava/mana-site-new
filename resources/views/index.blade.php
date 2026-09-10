@@ -126,7 +126,7 @@
                 </svg>
                 <div class="svc-grid">
                     @foreach($services as $index => $service)
-                        <a href="{{ route('servise', ['id' => $service->id, 'slug' => $service->slug]) }}">
+                        <a href="{{ route('servise', ['slug' => $service->slug]) }}">
                             <div class="svc-card reveal reveal-delay-{{ ($index % 3) + 1 }}" data-tilt>
                                 <span class="svc-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
                                 <div class="svc-icon"><i class="fa-solid {!! $service->icon !!}"></i></div>

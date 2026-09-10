@@ -521,6 +521,12 @@
                     <input type="text" name="meta" value="{{ old('meta', $service->meta) }}" class="form-input">
                 </div>
 
+                <h6 class="form-section-title">
+                    <i class="fa-solid fa-tags"></i> title_head 
+                </h6>
+                <div class="form-group" style="margin-bottom:10px;">
+                    <input type="text" name="title_head" value="{{ old('meta', $service->title_head) }}" placeholder="افزودن title_head " class="form-input">
+                </div>
                 {{-- دکمه‌ها --}}
                 <div style="margin-top:25px; display:flex; gap:10px; flex-wrap:wrap;">
                     <button type="submit" class="btn-submit-form">

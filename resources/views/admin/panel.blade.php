@@ -62,23 +62,6 @@
 
             </div>
 
-
-
-            <!-- آمار و گزارشات (زیرمنو) -->
-            <button class="nav-item has-sub" id="statsToggle">
-                <i class="fa-solid fa-chart-line"></i>
-                آمار و گزارشات
-                <span class="arrow">
-                    <i class="fa-solid fa-chevron-left"></i>
-                </span>
-            </button>
-            <div class="sub-menu" id="statsSub">
-                <a href="{{ url('/admin/visitors') }}" class="nav-item">بازدیدکنندگان</a>
-                <a href="{{ url('/admin/sales') }}" class="nav-item">فروش</a>
-                <a href="{{ url('/admin/users-stats') }}" class="nav-item">کاربران</a>
-            </div>
-
-
             <!-- نمونه کارها -->
             <button class="nav-item has-sub" id="contentToggle">
                 <i class="fa-solid fa-folder-tree"></i>
@@ -102,15 +85,6 @@
             </div>
 
 
-
-
-            <!-- کاربران -->
-            <a href="{{ url('/admin/users') }}" class="nav-item">
-                <i class="fa-solid fa-users"></i>
-                کاربران
-                <span class="badge-dot"></span>
-            </a>
-
             <a href="{{ url('/admin/questions') }}" class="nav-item">
                 <i class="fa-solid fa-question-circle"></i>
                 سوالات متداول
@@ -127,12 +101,6 @@
                 <i class="fa-solid fa-users"></i>
                 شبکه‌های اجتماعی
                 <span class="badge-dot"></span>
-            </a>
-
-            <!-- تنظیمات -->
-            <a href="{{ url('/admin/settings') }}" class="nav-item">
-                <i class="fa-solid fa-gear"></i>
-                تنظیمات
             </a>
 
             <!-- پشتیبانی -->

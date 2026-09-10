@@ -101,28 +101,15 @@
 
                         <div class="footer-social">
 
-                            <a href="#">
-                                <i class="fa-brands fa-telegram"></i>
-                            </a>
+                            @foreach ($socials as $social)
 
-                            <a href="#">
-                                <i class="fa-brands fa-instagram"></i>
-                            </a>
+                                <a href="{{ $social->url }}" target="_blank" rel="noopener noreferrer">
+                                    <i class="fa-brands {{ $social->icon_class }}"></i>
+                                </a>
 
-                            <a href="#">
-                                <i class="fa-brands fa-whatsapp"></i>
-                            </a>
-
-                            <a href="#">
-                                <i class="fa-brands fa-x-twitter"></i>
-                            </a>
-
-                            <a href="#">
-                                <i class="fa-brands fa-linkedin-in"></i>
-                            </a>
+                            @endforeach
 
                         </div>
-
                     </div>
 
 

@@ -1,8 +1,8 @@
 @extends('admin.panel')
 
 @section('content')
+
     <style>
-        /* استایل‌های جدول شبکه‌های اجتماعی - هماهنگ با تم و ریسپانسیو */
         .social-manage-card {
             background: var(--surface);
             border: 1px solid var(--line);
@@ -80,7 +80,7 @@
         .social-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 600px;
+            min-width: 700px;
         }
 
         .social-table th {
@@ -121,17 +121,40 @@
             transition: background 0.2s ease;
         }
 
-        .social-thumb {
+        .social-icon {
             width: 40px;
             height: 40px;
-            object-fit: contain;
-            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
             border: 1px solid var(--line);
+            background: var(--surface-2);
+            color: var(--text);
+            font-size: 20px;
+        }
+
+        .social-icon-class {
+            direction: ltr;
+            text-align: left;
+            font-family: monospace;
+            font-size: 0.82rem;
+            color: var(--text-dim);
         }
 
         .social-url {
             color: #3b82f6;
             text-decoration: none;
+            direction: ltr;
+            display: inline-block;
+            max-width: 350px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .social-url:hover {
+            text-decoration: underline;
         }
 
         .social-actions {
@@ -168,7 +191,6 @@
             background: rgba(220, 38, 38, 0.1);
             color: #dc2626;
             border-color: #dc2626;
-            border: none;
         }
 
         .btn-icon-delete:hover {
@@ -226,7 +248,6 @@
             pointer-events: none;
         }
 
-        /* ===== ریسپانسیو موبایل: تبدیل جدول به کارت ===== */
         @media (max-width: 768px) {
             .social-table-wrapper {
                 overflow-x: visible;
@@ -281,11 +302,11 @@
                 white-space: nowrap;
             }
 
-            .social-table td[data-label="تصویر / آیکون"] {
+            .social-table td[data-label="آیکون"] {
                 justify-content: flex-start;
             }
 
-            .social-table td[data-label="تصویر / آیکون"]::before {
+            .social-table td[data-label="آیکون"]::before {
                 margin-left: 0;
                 margin-right: auto;
             }
@@ -298,9 +319,21 @@
                 display: none;
             }
 
-            .social-thumb {
-                width: 50px;
-                height: 50px;
+            .social-icon {
+                width: 45px;
+                height: 45px;
+                font-size: 22px;
+            }
+
+            .social-url {
+                max-width: 220px;
+            }
+
+            .social-icon-class {
+                max-width: 180px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
             }
 
             .empty-state {
@@ -311,105 +344,176 @@
 
     <div style="padding: 20px;">
         <div class="social-manage-card">
+
             <div class="social-manage-header">
+
                 <h5 class="social-manage-title">
-                    <i class="fa-solid fa-share-nodes"></i> مدیریت شبکه‌های اجتماعی
+                    <i class="fa-solid fa-share-nodes"></i>
+                    مدیریت شبکه‌های اجتماعی
                 </h5>
+
                 <a href="{{ route('socials.create') }}" class="btn-add-social">
-                    <i class="fa-solid fa-plus"></i> افزودن شبکه جدید
+                    <i class="fa-solid fa-plus"></i>
+                    افزودن شبکه جدید
                 </a>
+
             </div>
 
             @if (session('success'))
                 <div class="alert-success-social">
-                    <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
+                    <i class="fa-solid fa-circle-check"></i>
+                    {{ session('success') }}
                 </div>
             @endif
 
             @if (session('error'))
                 <div class="alert-error-social">
-                    <i class="fa-solid fa-circle-exclamation"></i> {{ session('error') }}
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    {{ session('error') }}
                 </div>
             @endif
 
             <div class="social-table-wrapper">
+
                 <table class="social-table" id="socialTable">
+
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>تصویر / آیکون</th>
+                            <th>آیکون</th>
                             <th>نام شبکه</th>
+                            <th>کلاس آیکون</th>
                             <th>آدرس (URL)</th>
                             <th>عملیات</th>
                         </tr>
                     </thead>
+
                     <tbody>
+
                         @forelse($socials as $social)
+
                             <tr>
-                                <td>{{ $social->id }}</td>
+
                                 <td>
-                                    @if($social->image_url)
-                                        <img src="{{ asset('storage/' . $social->image_url) }}" alt="{{ $social->name }}"
-                                            class="social-thumb">
-                                    @else
-                                        <span style="color: var(--text-dimmer);">بدون تصویر</span>
-                                    @endif
+                                    {{ $social->id }}
                                 </td>
-                                <td>{{ $social->name }}</td>
+
                                 <td>
-                                    <a href="{{ $social->url }}" target="_blank" class="social-url">{{ $social->url }}</a>
+                                    <span class="social-icon">
+                                        <i class="fa-brands  {{ $social->icon_class }}"></i>
+                                    </span>
                                 </td>
+
                                 <td>
+                                    {{ $social->name }}
+                                </td>
+
+                                <td>
+                                    <span class="social-icon-class">
+                                        {{ $social->icon_class }}
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <a
+                                        href="{{ $social->url }}"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        class="social-url"
+                                    >
+                                        {{ $social->url }}
+                                    </a>
+                                </td>
+
+                                <td>
+
                                     <div class="social-actions">
-                                        <a href="{{ route('socials.edit', $social->id) }}" class="btn-icon btn-icon-edit"
-                                            title="ویرایش">
+
+                                        <a
+                                            href="{{ route('socials.edit', $social->id) }}"
+                                            class="btn-icon btn-icon-edit"
+                                            title="ویرایش"
+                                        >
                                             <i class="fa-solid fa-pen"></i>
                                         </a>
-                                        <form action="{{ route('socials.destroy', $social->id) }}" method="POST"
-                                            style="margin: 0;" onsubmit="return confirm('آیا از حذف این مورد اطمینان دارید؟')">
+
+                                        <form
+                                            action="{{ route('socials.destroy', $social->id) }}"
+                                            method="POST"
+                                            style="margin: 0;"
+                                            onsubmit="return confirm('آیا از حذف این مورد اطمینان دارید؟')"
+                                        >
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn-icon btn-icon-delete" title="حذف">
+
+                                            <button
+                                                type="submit"
+                                                class="btn-icon btn-icon-delete"
+                                                title="حذف"
+                                            >
                                                 <i class="fa-solid fa-trash"></i>
                                             </button>
+
                                         </form>
+
                                     </div>
+
                                 </td>
+
                             </tr>
+
                         @empty
+
                             <tr>
-                                <td colspan="5" class="empty-state">
-                                    <i class="fa-solid fa-inbox"></i> هیچ شبکه اجتماعی یافت نشد.
+                                <td colspan="6" class="empty-state">
+                                    <i class="fa-solid fa-inbox"></i>
+                                    هیچ شبکه اجتماعی یافت نشد.
                                 </td>
                             </tr>
+
                         @endforelse
+
                     </tbody>
+
                 </table>
+
             </div>
 
             <div class="social-pagination">
                 {{ $socials->links() }}
             </div>
+
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+
             const table = document.getElementById('socialTable');
-            if (!table) return;
 
-            // استخراج متن هدرها
+            if (!table) {
+                return;
+            }
+
             const headers = [];
-            table.querySelectorAll('thead th').forEach(th => headers.push(th.textContent.trim()));
 
-            // افزودن data-label به هر td بر اساس ایندکس ستون
-            table.querySelectorAll('tbody tr').forEach(row => {
-                row.querySelectorAll('td').forEach((td, index) => {
+            table.querySelectorAll('thead th').forEach(function (th) {
+                headers.push(th.textContent.trim());
+            });
+
+            table.querySelectorAll('tbody tr').forEach(function (row) {
+
+                row.querySelectorAll('td').forEach(function (td, index) {
+
                     if (headers[index]) {
                         td.setAttribute('data-label', headers[index]);
                     }
+
                 });
+
             });
+
         });
     </script>
+
 @endsection

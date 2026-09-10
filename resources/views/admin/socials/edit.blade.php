@@ -1,6 +1,7 @@
 @extends('admin.panel')
 
 @section('content')
+
     <style>
         .social-form-card {
             background: var(--surface);
@@ -60,8 +61,7 @@
             color: var(--text-dim);
         }
 
-        .form-input,
-        .form-file {
+        .form-input {
             width: 100%;
             padding: 10px 12px;
             border-radius: 8px;
@@ -71,10 +71,10 @@
             transition: all 0.3s var(--ease);
             font-family: inherit;
             font-size: 0.9rem;
+            box-sizing: border-box;
         }
 
-        .form-input:focus,
-        .form-file:focus {
+        .form-input:focus {
             outline: none;
             border-color: var(--brand);
             box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 20%, transparent);
@@ -85,31 +85,24 @@
             color: var(--text-dimmer);
         }
 
-        .form-file {
-            padding: 8px;
-            cursor: pointer;
-        }
-
-        .form-file::-webkit-file-upload-button {
-            background: var(--brand);
-            color: var(--oncta);
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-weight: 600;
-            cursor: pointer;
-            margin-left: 10px;
-            transition: filter 0.2s;
-        }
-
-        .form-file::-webkit-file-upload-button:hover {
-            filter: brightness(1.1);
-        }
-
         .form-error {
             color: #ef4444;
             font-size: 0.8rem;
             margin-top: 4px;
+        }
+
+        .icon-preview {
+            width: 55px;
+            height: 55px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            background: var(--surface-2);
+            color: var(--text);
+            font-size: 26px;
+            margin-top: 5px;
         }
 
         .btn-submit-form {
@@ -135,6 +128,7 @@
         }
 
         @media (max-width: 768px) {
+
             .social-form-card {
                 padding: 15px;
             }
@@ -143,77 +137,180 @@
                 grid-template-columns: 1fr;
                 gap: 10px;
             }
+
         }
     </style>
 
     <div style="padding: 20px;">
+
         <div class="social-form-card">
+
             <div class="social-form-header">
+
                 <h5 class="social-form-title">
-                    <i class="fa-solid fa-pen-to-square"></i> ویرایش شبکه اجتماعی
+                    <i class="fa-solid fa-pen-to-square"></i>
+                    ویرایش شبکه اجتماعی
                 </h5>
-                <a href="{{ route('socials.index') }}" class="btn-back-form">
-                    <i class="fa-solid fa-arrow-right"></i> بازگشت
+
+                <a
+                    href="{{ route('socials.index') }}"
+                    class="btn-back-form"
+                >
+                    <i class="fa-solid fa-arrow-right"></i>
+                    بازگشت
                 </a>
+
             </div>
 
             @if (session('success'))
-                <div class="form-error" style="color:#10b981; margin-bottom: 15px;">
-                    <i class="fa-solid fa-circle-check"></i> {{ session('success') }}
+                <div class="form-error" style="color:#10b981; margin-bottom:15px;">
+                    <i class="fa-solid fa-circle-check"></i>
+                    {{ session('success') }}
                 </div>
             @endif
 
             @if (session('error'))
-                <div class="form-error" style="color:#ef4444; margin-bottom: 15px;">
-                    <i class="fa-solid fa-circle-exclamation"></i> {{ session('error') }}
+                <div class="form-error" style="color:#ef4444; margin-bottom:15px;">
+                    <i class="fa-solid fa-circle-exclamation"></i>
+                    {{ session('error') }}
                 </div>
             @endif
 
-            <form action="{{ route('socials.update', $social->id) }}" method="POST" enctype="multipart/form-data">
+            <form
+                action="{{ route('socials.update', $social->id) }}"
+                method="POST"
+            >
+
                 @csrf
-                
 
                 <div class="form-grid">
+
                     <div class="form-group">
-                        <label class="form-label">نام شبکه اجتماعی</label>
-                        <input type="text" name="name" value="{{ old('name', $social->name) }}" required class="form-input">
+
+                        <label class="form-label">
+                            نام شبکه اجتماعی
+                        </label>
+
+                        <input
+                            type="text"
+                            name="name"
+                            value="{{ old('name', $social->name) }}"
+                            required
+                            class="form-input"
+                        >
+
                         @error('name')
-                            <small class="form-error">{{ $message }}</small>
+                            <small class="form-error">
+                                {{ $message }}
+                            </small>
                         @enderror
+
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">آدرس لینک (URL)</label>
-                        <input type="url" name="url" value="{{ old('url', $social->url) }}" required class="form-input">
-                        @error('url')
-                            <small class="form-error">{{ $message }}</small>
+
+                        <label class="form-label">
+                            کلاس آیکون
+                        </label>
+
+                        <input
+                            type="text"
+                            name="icon_class"
+                            value="{{ old('icon_class', $social->icon_class) }}"
+                            required
+                            placeholder="مثلا: fa-brands fa-telegram"
+                            class="form-input"
+                            dir="ltr"
+                        >
+
+                        @error('icon_class')
+                            <small class="form-error">
+                                {{ $message }}
+                            </small>
                         @enderror
+
                     </div>
+
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">تصویر / آیکون جدید (اختیاری)</label>
 
-                    @if($social->image_url)
-                        <div style="margin-bottom: 10px;">
-                            <span
-                                style="font-size: 0.85rem; color: var(--text-dimmer); display: block; margin-bottom: 4px;">تصویر
-                                فعلی:</span>
-                            <img src="{{ asset('storage/' . $social->image_url) }}" alt="{{ $social->name }}"
-                                style="width: 50px; height: 50px; object-fit: contain; border-radius: 8px; border: 1px solid var(--line); padding: 4px;">
-                        </div>
-                    @endif
+                    <label class="form-label">
+                        آدرس لینک (URL)
+                    </label>
 
-                    <input type="file" name="image_url" class="form-file">
-                    @error('image_url')
-                        <small class="form-error">{{ $message }}</small>
+                    <input
+                        type="url"
+                        name="url"
+                        value="{{ old('url', $social->url) }}"
+                        required
+                        class="form-input"
+                        dir="ltr"
+                    >
+
+                    @error('url')
+                        <small class="form-error">
+                            {{ $message }}
+                        </small>
                     @enderror
+
                 </div>
 
-                <button type="submit" class="btn-submit-form">
-                    <i class="fa-solid fa-check"></i> بروزرسانی شبکه اجتماعی
+                <div class="form-group">
+
+                    <label class="form-label">
+                        پیش‌نمایش آیکون
+                    </label>
+
+                    <span class="icon-preview" id="iconPreview">
+                        <i class="fa-brands {{ $social->icon_class }}"></i>
+                    </span>
+
+                </div>
+
+                <button
+                    type="submit"
+                    class="btn-submit-form"
+                >
+                    <i class="fa-solid fa-check"></i>
+                    بروزرسانی شبکه اجتماعی
                 </button>
+
             </form>
+
         </div>
+
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const iconInput = document.querySelector('input[name="icon_class"]');
+            const iconPreview = document.getElementById('iconPreview');
+
+            if (!iconInput || !iconPreview) {
+                return;
+            }
+
+            iconInput.addEventListener('input', function () {
+
+                const iconName = this.value.trim();
+
+                iconPreview.innerHTML = '';
+
+                if (iconName) {
+                    const icon = document.createElement('i');
+                    icon.className = 'fa-brands ' + iconName;
+                    iconPreview.appendChild(icon);
+                } else {
+                    const icon = document.createElement('i');
+                    icon.className = 'fa-solid fa-icons';
+                    iconPreview.appendChild(icon);
+                }
+
+            });
+
+        });
+    </script>
+
 @endsection

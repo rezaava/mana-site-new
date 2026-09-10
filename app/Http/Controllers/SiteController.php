@@ -114,9 +114,9 @@ class SiteController extends Controller
         ));
     }
 
-    public function servise($id)
+    public function servise($slug)
     {
-        $service = Services::findOrFail($id);
+        $service = Services::where('slug',$slug)->firstOrFail();
 
         $state = ServiceState::where('service_id', $service->id)->first();
 
