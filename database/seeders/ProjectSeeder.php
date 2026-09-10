@@ -6,11 +6,34 @@ use App\Models\Projects;
 use App\Models\Categories;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use App\Models\CatImg;
 
 class ProjectSeeder extends Seeder
 {
     public function run(): void
     {
+        /*
+        |--------------------------------------------------------------------------
+        | Image Categories
+        |--------------------------------------------------------------------------
+        */
+
+        $imageCategories = [
+            'desktop' => CatImg::firstOrCreate(
+                ['title' => 'دسکتاپ'],
+                ['number' => 1]
+            ),
+
+            'mobile' => CatImg::firstOrCreate(
+                ['title' => 'موبایل'],
+                ['number' => 2]
+            ),
+
+            'key_pages' => CatImg::firstOrCreate(
+                ['title' => 'صفحات کلیدی'],
+                ['number' => 3]
+            ),
+        ];
         /*
         |--------------------------------------------------------------------------
         | Categories
@@ -731,32 +754,32 @@ class ProjectSeeder extends Seeder
             $gallery = [
 
                 [
-                    'category' => 'desktop',
+                    'cat_img_id' => $imageCategories['desktop']->id,
                     'image_url' => 'projects/project' . $project->number . '-desktop-1.jpg',
                 ],
 
                 [
-                    'category' => 'desktop',
+                    'cat_img_id' => $imageCategories['desktop']->id,
                     'image_url' => 'projects/project' . $project->number . '-desktop-2.jpg',
                 ],
 
                 [
-                    'category' => 'mobile',
+                    'cat_img_id' => $imageCategories['mobile']->id,
                     'image_url' => 'projects/project' . $project->number . '-mobile-1.jpg',
                 ],
 
                 [
-                    'category' => 'mobile',
+                    'cat_img_id' => $imageCategories['mobile']->id,
                     'image_url' => 'projects/project' . $project->number . '-mobile-2.jpg',
                 ],
 
                 [
-                    'category' => 'key_pages',
+                    'cat_img_id' => $imageCategories['key_pages']->id,
                     'image_url' => 'projects/project' . $project->number . '-key-1.jpg',
                 ],
 
                 [
-                    'category' => 'key_pages',
+                    'cat_img_id' => $imageCategories['key_pages']->id,
                     'image_url' => 'projects/project' . $project->number . '-key-2.jpg',
                 ],
             ];
@@ -765,7 +788,7 @@ class ProjectSeeder extends Seeder
 
                 DB::table('project_galleries')->insert([
                     'project_id' => $project->id,
-                    'category' => $image['category'],
+                    'cat_img_id' => $image['cat_img_id'],
                     'image_url' => $image['image_url'],
                     'created_at' => now(),
                     'updated_at' => now(),

@@ -499,43 +499,41 @@
                 </div>
 
                 <p class="section-description">
-                    هر دسته‌بندی می‌تواند تا ۳ تصویر داشته باشد.
+                    برای هر دسته‌بندی می‌توانید تا ۳ تصویر انتخاب کنید.
                 </p>
 
-                @php
-                    $galleryCategories = [
-                        'desktop' => 'دسکتاپ',
-                        'mobile' => 'موبایل',
-                        'key_pages' => 'صفحات کلیدی'
-                    ];
-                @endphp
+                @foreach($galleryCategories as $galleryCategory)
 
-                @foreach($galleryCategories as $catKey => $catLabel)
                     <div class="gallery-category">
 
                         <span class="category-label">
                             <i class="fa-regular fa-folder-open"></i>
-                            {{ $catLabel }}
+                            {{ $galleryCategory->title }}
                         </span>
 
                         <div class="gallery-files">
 
                             @for($i = 0; $i < 3; $i++)
+
                                 <div class="file-item">
 
                                     <span style="font-size:0.75rem; color:var(--text-dimmer);">
                                         تصویر {{ $i + 1 }}
                                     </span>
 
-                                    <input type="file"
-                                        name="gallery_images[{{ $catKey }}][]"
-                                        accept="image/*">
+                                    <input
+                                        type="file"
+                                        name="gallery_images[{{ $galleryCategory->id }}][]"
+                                        accept="image/jpeg,image/png,image/jpg,image/webp">
 
                                 </div>
+
                             @endfor
 
                         </div>
+
                     </div>
+
                 @endforeach
 
                 {{-- تکنولوژی‌ها --}}

@@ -7,21 +7,33 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration
 {
     /**
-     * Run the migrations.
+     * ایجاد جدول گالری پروژه‌ها
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('project_galleries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('project_id')->constrained('projects')->onDelete('cascade');
-            $table->enum('category', ['desktop', 'mobile', 'key_pages']); // دسته‌بندی دقیق عکس
+
+            // پروژه‌ای که تصویر متعلق به آن است
+            $table->foreignId('project_id')
+                ->constrained('projects')
+                ->onDelete('cascade');
+
+            // دسته‌بندی تصویر
+            // این مقدار از جدول cat_imgs می‌آید
+            $table->foreignId('cat_img_id')
+                ->constrained('cat_imgs')
+                ->onDelete('cascade');
+
+            // مسیر تصویر
             $table->string('image_url');
+
             $table->timestamps();
         });
     }
 
     /**
-     * Reverse the migrations.
+     * حذف جدول گالری پروژه‌ها
      */
     public function down(): void
     {

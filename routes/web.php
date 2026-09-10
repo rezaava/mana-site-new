@@ -11,6 +11,7 @@ use App\Http\Controllers\TeamController;
 use App\Http\Controllers\SocialsController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\BlogsController;
+use App\Http\Controllers\Admin\CatImgController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\Admin\UserController;
@@ -52,6 +53,12 @@ Route::prefix('/student')->middleware(['role:student|admin'])->group(function ()
 
 
 Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
+    Route::prefix('/cat-imgs')->group(function () {
+        Route::get('/', [CatImgController::class, 'index'])->name('cat-imgs.index');
+        Route::post('/', [CatImgController::class, 'store'])->name('cat-imgs.store');
+        Route::post('/{id}', [CatImgController::class, 'update'])->name('cat-imgs.update');
+        Route::delete('/{id}', [CatImgController::class, 'destroy'])->name('cat-imgs.destroy');
+    });
 
     // متن‌های سایت
     Route::get('/site-texts', [SiteTextController::class, 'index'])->name('site-texts.index');

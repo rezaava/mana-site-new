@@ -596,58 +596,57 @@
                 </div>
 
                 <p class="section-description">
-                    هر دسته‌بندی می‌تواند تا ۳ تصویر داشته باشد.
-                    تصاویر جدید جایگزین تصاویر قبلی می‌شوند.
+                    اگر برای یک دسته تصویر جدید انتخاب کنید، تصاویر قبلی همان دسته جایگزین می‌شوند.
+                    اگر تصویری انتخاب نکنید، تصاویر قبلی آن دسته حفظ می‌شوند.
                 </p>
 
                 @php
-                    $galleryCategories = [
-                        'desktop' => 'دسکتاپ',
-                        'mobile' => 'موبایل',
-                        'key_pages' => 'صفحات کلیدی'
-                    ];
-
-                    $existingGalleries = $project->galleries->groupBy('category');
+                    $existingGalleries = $project->galleries->groupBy('cat_img_id');
                 @endphp
 
-                @foreach($galleryCategories as $catKey => $catLabel)
+                @foreach($galleryCategories as $galleryCategory)
+
+                    @php
+                        $images = $existingGalleries->get(
+                            $galleryCategory->id,
+                            collect()
+                        )->values();
+
+                        $images = $images->take(3);
+
+                        $imageCount = $images->count();
+                    @endphp
 
                     <div class="gallery-category">
 
                         <span class="category-label">
                             <i class="fa-regular fa-folder-open"></i>
-                            {{ $catLabel }}
+                            {{ $galleryCategory->title }}
                         </span>
 
                         <div class="gallery-files">
 
-                            @php
-                                $images = $existingGalleries->get($catKey, collect())->toArray();
-
-                                $images = array_pad($images, 3, [
-                                    'image_url' => ''
-                                ]);
-                            @endphp
-
-                            @foreach($images as $idx => $img)
+                            @for($i = 0; $i < 3; $i++)
 
                                 <div class="file-item">
 
                                     <span style="font-size:0.75rem;color:var(--text-dimmer);">
-                                        تصویر {{ $idx + 1 }}
+                                        تصویر {{ $i + 1 }}
                                     </span>
 
-                                    <input type="file"
-                                        name="gallery_images[{{ $catKey }}][]"
-                                        accept="image/*">
+                                    <input
+                                        type="file"
+                                        name="gallery_images[{{ $galleryCategory->id }}][]"
+                                        accept="image/jpeg,image/png,image/jpg,image/webp">
 
-                                    @if(!empty($img['image_url']))
+                                    @if(isset($images[$i]) && $images[$i]->image_url)
 
                                         <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
 
-                                            <img src="{{ asset('storage/' . $img['image_url']) }}"
+                                            <img
+                                                src="{{ asset('storage/' . $images[$i]->image_url) }}"
                                                 class="preview-img"
-                                                alt="تصویر موجود">
+                                                alt="{{ $galleryCategory->title }}">
 
                                         </div>
 
@@ -655,7 +654,7 @@
 
                                 </div>
 
-                            @endforeach
+                            @endfor
 
                         </div>
 

@@ -81,7 +81,10 @@
                     <i class="fa-solid fa-diagram-project"></i>
                     پروژه‌ها
                 </a>
-
+                <a href="{{ route('cat-imgs.index') }}" class="nav-item">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    دسته بندی عکس پروژه
+                </a>
             </div>
 
 

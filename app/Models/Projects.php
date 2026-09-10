@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use App\Models\Images;
 
 class Projects extends Model
@@ -44,7 +43,7 @@ class Projects extends Model
         return $this->belongsTo(Categories::class, 'cat_id', 'id');
     }
 
-    // رابطه با تصاویر
+    // رابطه با تصاویر قدیمی پروژه
     public function Images()
     {
         return $this->hasMany(Images::class);
@@ -65,13 +64,18 @@ class Projects extends Model
     // رابطه با تکنولوژی‌ها
     public function technologies()
     {
-        return $this->hasMany(ProjectTechnology::class, 'project_id')->orderBy('order');
+        return $this->hasMany(ProjectTechnology::class, 'project_id')
+            ->orderBy('order');
     }
+
     // رابطه با سرویس‌ها
     public function services()
     {
-        return $this->hasMany(ProjectService::class, 'project_id')->orderBy('order');
+        return $this->hasMany(ProjectService::class, 'project_id')
+            ->orderBy('order');
     }
+
+    // رابطه با ویژگی‌ها
     public function features()
     {
         return $this->hasMany(ProjectFeature::class, 'project_id', 'id');

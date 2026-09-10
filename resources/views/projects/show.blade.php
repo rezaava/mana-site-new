@@ -295,76 +295,59 @@
 
 
             @php
-                $desktop = $project->galleries->where('category', 'desktop');
-                $mobile = $project->galleries->where('category', 'mobile');
-                $key = $project->galleries->where('category', 'key_pages');
+                $activeCategory = $imageCategories->first();
             @endphp
 
-            <div class="gal-tabs reveal">
-                <button class="gal-tab active" data-tab="desktop">دسکتاپ</button>
-                <button class="gal-tab" data-tab="mobile">موبایل</button>
-                <button class="gal-tab" data-tab="key">صفحات کلیدی</button>
-            </div>
+            @if($imageCategories->count() > 0)
 
-            <div class="gal-grid" data-panel="desktop">
-                @forelse($desktop as $image)
-                    <div class="gal-item reveal">
-                        <div class="ph g1">
-                            <img src="{{ asset('storage/' . $image->image_url) }}" alt="دسکتاپ">
-                        </div>
-                        <div class="zoom-ic">
-                            <i class="fa-solid fa-magnifying-glass-plus"></i>
-                        </div>
-                    </div>
-                @empty
-                    @for($i = 0; $i < 3; $i++)
-                        <div class="gal-item-empty reveal">
-                            <i class="fa-regular fa-image"></i>
-                            <span>تصویر موجود نیست</span>
-                        </div>
-                    @endfor
-                @endforelse
-            </div>
+                <div class="gal-tabs reveal">
 
-            <div class="gal-grid hidden" data-panel="mobile">
-                @forelse($mobile as $image)
-                    <div class="gal-item reveal">
-                        <div class="ph g2">
-                            <img src="{{ asset('storage/' . $image->image_url) }}" alt="موبایل">
-                        </div>
-                        <div class="zoom-ic">
-                            <i class="fa-solid fa-magnifying-glass-plus"></i>
-                        </div>
-                    </div>
-                @empty
-                    @for($i = 0; $i < 3; $i++)
-                        <div class="gal-item-empty reveal">
-                            <i class="fa-regular fa-image"></i>
-                            <span>تصویر موجود نیست</span>
-                        </div>
-                    @endfor
-                @endforelse
-            </div>
+                    @foreach($imageCategories as $index => $category)
 
-            <div class="gal-grid hidden" data-panel="key">
-                @forelse($key as $image)
-                    <div class="gal-item reveal">
-                        <div class="ph g3">
-                            <img src="{{ asset('storage/' . $image->image_url) }}" alt="صفحه کلیدی">
-                        </div>
-                        <div class="zoom-ic">
-                            <i class="fa-solid fa-magnifying-glass-plus"></i>
-                        </div>
+                        <button
+                            class="gal-tab {{ $index === 0 ? 'active' : '' }}"
+                            data-tab="gallery-category-{{ $category->id }}"
+                        >
+                            {{ $category->title }}
+                        </button>
+
+                    @endforeach
+
+                </div>
+
+                @foreach($imageCategories as $index => $category)
+
+                    <div
+                        class="gal-grid {{ $index !== 0 ? 'hidden' : '' }}"
+                        data-panel="gallery-category-{{ $category->id }}"
+                    >
+
+                        @foreach($category->galleries as $image)
+
+                            <div class="gal-item reveal">
+
+                                <div class="ph g{{ ($index % 3) + 1 }}">
+
+                                    <img
+                                        src="{{ asset($image->image_url) }}"
+                                        alt="{{ $category->title }}"
+                                    >
+
+                                </div>
+
+                                <div class="zoom-ic">
+                                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                                </div>
+
+                            </div>
+
+                        @endforeach
+
                     </div>
-                @empty
-                    @for($i = 0; $i < 3; $i++)
-                        <div class="gal-item-empty reveal">
-                            <i class="fa-regular fa-image"></i>
-                            <span>تصویر موجود نیست</span>
-                        </div>
-                    @endfor
-                @endforelse
-            </div>
+
+                @endforeach
+
+            @endif
         </div>
 
 

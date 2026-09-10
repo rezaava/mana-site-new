@@ -4,11 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use App\Models\Projects;
 use App\Models\Images;
 use App\Models\Categories;
+use App\Models\CatImg;
 use App\Models\ProjectStat;
 use App\Models\ProjectGallery;
 use App\Models\ProjectService;
@@ -131,7 +131,7 @@ class ProjectController extends Controller
     {
         $project = Projects::with([
             'stats',
-            'galleries',
+            'galleries.category',
             'technologies',
             'services',
             'features'
@@ -219,8 +219,13 @@ class ProjectController extends Controller
     {
         $categories = Categories::all();
 
+        $galleryCategories = CatImg::orderBy('number')
+            ->orderBy('id')
+            ->get();
+
         return view('admin.projects.create', compact(
-            'categories'
+            'categories',
+            'galleryCategories'
         ));
     }
 
@@ -270,17 +275,19 @@ class ProjectController extends Controller
             'service_name' => 'nullable|array',
             'service_name.*' => 'nullable|string|max:255',
 
+            'gallery_images' => 'nullable|array',
+            'gallery_images.*' => 'nullable|array',
+            'gallery_images.*.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+
             'slug' => 'required|string|max:255',
         ]);
 
         $uploadedFiles = [];
 
         try {
-
             DB::beginTransaction();
 
             $maxNumber = Projects::max('number');
-
             $number = ($maxNumber ?? 0) + 1;
 
             $project = new Projects();
@@ -302,19 +309,29 @@ class ProjectController extends Controller
             $project->number = $number;
             $project->slug = $validated['slug'];
 
-            if ($request->hasFile('image')) {
+            /*
+             * ==========================
+             * MAIN IMAGE
+             * ==========================
+             */
 
-                $imagePath = $request->file('image')
-                    ->store('projects', 'public');
+            if ($request->hasFile('image')) {
+                $file = $request->file('image');
+
+                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+                $file->move(
+                    public_path('projects'),
+                    $fileName
+                );
+
+                $imagePath = 'projects/' . $fileName;
 
                 $project->image_url = $imagePath;
 
                 $uploadedFiles[] = $imagePath;
-
             } else {
-
                 $project->image_url = 'default.jpg';
-
             }
 
             $project->save();
@@ -330,7 +347,6 @@ class ProjectController extends Controller
             $featureIcons = $request->input('feature_icon', []);
 
             foreach ($featureTitles as $index => $title) {
-
                 $title = trim($title);
 
                 $text = isset($featureTexts[$index])
@@ -365,7 +381,6 @@ class ProjectController extends Controller
             $statsLabels = $request->input('stats_label', []);
 
             foreach ($statsValues as $index => $value) {
-
                 $value = trim($value);
 
                 $label = isset($statsLabels[$index])
@@ -396,7 +411,6 @@ class ProjectController extends Controller
             $technologyOrders = $request->input('technology_order', []);
 
             foreach ($technologyNames as $index => $name) {
-
                 $name = trim($name);
 
                 $icon = isset($technologyIcons[$index])
@@ -430,7 +444,6 @@ class ProjectController extends Controller
             $serviceNames = $request->input('service_name', []);
 
             foreach ($serviceNames as $index => $name) {
-
                 $name = trim($name);
 
                 if ($name === '') {
@@ -452,35 +465,42 @@ class ProjectController extends Controller
              * ==========================
              */
 
-            if ($request->hasFile('gallery_images')) {
+            $galleryImages = $request->file('gallery_images', []);
 
-                foreach ($request->file('gallery_images') as $category => $files) {
+            foreach ($galleryImages as $catImgId => $files) {
+                if (!is_array($files)) {
+                    $files = [$files];
+                }
 
-                    if (!is_array($files)) {
-                        $files = [$files];
+                $category = CatImg::find($catImgId);
+
+                if (!$category) {
+                    continue;
+                }
+
+                foreach ($files as $file) {
+                    if (!$file || !$file->isValid()) {
+                        continue;
                     }
 
-                    foreach ($files as $file) {
+                    $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
-                        if (!$file || !$file->isValid()) {
-                            continue;
-                        }
+                    $file->move(
+                        public_path('projects'),
+                        $fileName
+                    );
 
-                        $path = $file->store(
-                            'project_galleries',
-                            'public'
-                        );
+                    $path = 'projects/' . $fileName;
 
-                        $uploadedFiles[] = $path;
+                    $uploadedFiles[] = $path;
 
-                        $gallery = new ProjectGallery();
+                    $gallery = new ProjectGallery();
 
-                        $gallery->project_id = $project->id;
-                        $gallery->category = $category;
-                        $gallery->image_url = $path;
+                    $gallery->project_id = $project->id;
+                    $gallery->cat_img_id = $category->id;
+                    $gallery->image_url = $path;
 
-                        $gallery->save();
-                    }
+                    $gallery->save();
                 }
             }
 
@@ -491,13 +511,13 @@ class ProjectController extends Controller
                 ->with('success', 'پروژه با موفقیت ایجاد شد.');
 
         } catch (\Throwable $e) {
-
             DB::rollBack();
 
             foreach ($uploadedFiles as $file) {
+                $fullPath = public_path($file);
 
-                if (Storage::disk('public')->exists($file)) {
-                    Storage::disk('public')->delete($file);
+                if (file_exists($fullPath)) {
+                    @unlink($fullPath);
                 }
             }
 
@@ -522,9 +542,14 @@ class ProjectController extends Controller
 
         $categories = Categories::all();
 
+        $galleryCategories = CatImg::orderBy('number')
+            ->orderBy('id')
+            ->get();
+
         return view('admin.projects.edit', compact(
             'project',
-            'categories'
+            'categories',
+            'galleryCategories'
         ));
     }
 
@@ -576,6 +601,10 @@ class ProjectController extends Controller
             'service_name' => 'nullable|array',
             'service_name.*' => 'nullable|string|max:255',
 
+            'gallery_images' => 'nullable|array',
+            'gallery_images.*' => 'nullable|array',
+            'gallery_images.*.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
+
             'slug' => 'required|string|max:255',
         ]);
 
@@ -584,7 +613,6 @@ class ProjectController extends Controller
         $oldImage = $project->image_url;
 
         try {
-
             DB::beginTransaction();
 
             /*
@@ -594,9 +622,16 @@ class ProjectController extends Controller
              */
 
             if ($request->hasFile('image')) {
+                $file = $request->file('image');
 
-                $imagePath = $request->file('image')
-                    ->store('projects', 'public');
+                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+                $file->move(
+                    public_path('projects'),
+                    $fileName
+                );
+
+                $imagePath = 'projects/' . $fileName;
 
                 $validated['image_url'] = $imagePath;
 
@@ -621,7 +656,6 @@ class ProjectController extends Controller
             $featureIcons = $request->input('feature_icon', []);
 
             foreach ($featureTitles as $index => $title) {
-
                 $title = trim($title);
 
                 $text = isset($featureTexts[$index])
@@ -632,11 +666,7 @@ class ProjectController extends Controller
                     ? trim($featureIcons[$index])
                     : '';
 
-                if (
-                    $title === '' &&
-                    $text === '' &&
-                    $icon === ''
-                ) {
+                if ($title === '' && $text === '' && $icon === '') {
                     continue;
                 }
 
@@ -662,17 +692,13 @@ class ProjectController extends Controller
             $statsLabels = $request->input('stats_label', []);
 
             foreach ($statsValues as $index => $value) {
-
                 $value = trim($value);
 
                 $label = isset($statsLabels[$index])
                     ? trim($statsLabels[$index])
                     : '';
 
-                if (
-                    $value === '' ||
-                    $label === ''
-                ) {
+                if ($value === '' || $label === '') {
                     continue;
                 }
 
@@ -709,7 +735,6 @@ class ProjectController extends Controller
             );
 
             foreach ($technologyNames as $index => $name) {
-
                 $name = trim($name);
 
                 $icon = isset($technologyIcons[$index])
@@ -750,7 +775,6 @@ class ProjectController extends Controller
             );
 
             foreach ($serviceNames as $index => $name) {
-
                 $name = trim($name);
 
                 if ($name === '') {
@@ -770,73 +794,109 @@ class ProjectController extends Controller
              * ==========================
              * GALLERY
              * ==========================
+             *
+             * اگر برای یک دسته تصویر جدید آپلود شود،
+             * تصاویر قبلی همان دسته حذف و تصاویر جدید جایگزین می‌شوند.
+             *
+             * اگر برای یک دسته هیچ تصویر جدیدی انتخاب نشود،
+             * تصاویر قبلی آن دسته باقی می‌مانند.
              */
 
-            $oldGalleries = $project->galleries()->get();
+            $galleryImages = $request->file('gallery_images', []);
 
-            foreach ($oldGalleries as $gallery) {
-
-                if (
-                    $gallery->image_url &&
-                    Storage::disk('public')->exists(
-                        $gallery->image_url
-                    )
-                ) {
-                    Storage::disk('public')->delete(
-                        $gallery->image_url
-                    );
+            foreach ($galleryImages as $catImgId => $files) {
+                if (!is_array($files)) {
+                    $files = [$files];
                 }
-            }
 
-            $project->galleries()->delete();
+                $category = CatImg::find($catImgId);
 
-            if ($request->hasFile('gallery_images')) {
+                if (!$category) {
+                    continue;
+                }
 
-                foreach (
-                    $request->file('gallery_images')
-                    as $category => $files
-                ) {
+                $validFiles = [];
 
-                    if (!is_array($files)) {
-                        $files = [$files];
+                foreach ($files as $file) {
+                    if ($file && $file->isValid()) {
+                        $validFiles[] = $file;
                     }
+                }
 
-                    foreach ($files as $file) {
+                if (count($validFiles) === 0) {
+                    continue;
+                }
 
-                        if (
-                            !$file ||
-                            !$file->isValid()
-                        ) {
-                            continue;
-                        }
+                /*
+                 * حذف تصاویر قبلی همین دسته
+                 */
 
-                        $path = $file->store(
-                            'project_galleries',
-                            'public'
+                $oldGalleries = ProjectGallery::where(
+                    'project_id',
+                    $project->id
+                )
+                    ->where(
+                        'cat_img_id',
+                        $category->id
+                    )
+                    ->get();
+
+                foreach ($oldGalleries as $oldGallery) {
+                    if ($oldGallery->image_url) {
+                        $oldPath = public_path(
+                            $oldGallery->image_url
                         );
 
-                        $uploadedFiles[] = $path;
-
-                        $gallery = new ProjectGallery();
-
-                        $gallery->project_id = $project->id;
-                        $gallery->category = $category;
-                        $gallery->image_url = $path;
-
-                        $gallery->save();
+                        if (file_exists($oldPath)) {
+                            @unlink($oldPath);
+                        }
                     }
+
+                    $oldGallery->delete();
+                }
+
+                /*
+                 * ذخیره تصاویر جدید
+                 */
+
+                foreach ($validFiles as $file) {
+                    $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+                    $file->move(
+                        public_path('projects'),
+                        $fileName
+                    );
+
+                    $path = 'projects/' . $fileName;
+
+                    $uploadedFiles[] = $path;
+
+                    $gallery = new ProjectGallery();
+
+                    $gallery->project_id = $project->id;
+                    $gallery->cat_img_id = $category->id;
+                    $gallery->image_url = $path;
+
+                    $gallery->save();
                 }
             }
 
             DB::commit();
 
+            /*
+             * حذف تصویر شاخص قبلی بعد از موفقیت
+             */
+
             if (
                 $request->hasFile('image') &&
                 $oldImage &&
-                $oldImage !== 'default.jpg' &&
-                Storage::disk('public')->exists($oldImage)
+                $oldImage !== 'default.jpg'
             ) {
-                Storage::disk('public')->delete($oldImage);
+                $oldImagePath = public_path($oldImage);
+
+                if (file_exists($oldImagePath)) {
+                    @unlink($oldImagePath);
+                }
             }
 
             return redirect()
@@ -847,15 +907,13 @@ class ProjectController extends Controller
                 );
 
         } catch (\Throwable $e) {
-
             DB::rollBack();
 
             foreach ($uploadedFiles as $file) {
+                $fullPath = public_path($file);
 
-                if (
-                    Storage::disk('public')->exists($file)
-                ) {
-                    Storage::disk('public')->delete($file);
+                if (file_exists($fullPath)) {
+                    @unlink($fullPath);
                 }
             }
 
@@ -875,49 +933,89 @@ class ProjectController extends Controller
         $project = Projects::findOrFail($id);
 
         try {
-
             DB::beginTransaction();
+
+            /*
+             * ==========================
+             * MAIN IMAGE
+             * ==========================
+             */
 
             if (
                 $project->image_url &&
-                $project->image_url !== 'default.jpg' &&
-                Storage::disk('public')->exists(
-                    $project->image_url
-                )
+                $project->image_url !== 'default.jpg'
             ) {
-                Storage::disk('public')->delete(
+                $imagePath = public_path(
                     $project->image_url
                 );
+
+                if (file_exists($imagePath)) {
+                    @unlink($imagePath);
+                }
             }
+
+            /*
+             * ==========================
+             * STATS
+             * ==========================
+             */
 
             $project->stats()->delete();
 
+            /*
+             * ==========================
+             * TECHNOLOGIES
+             * ==========================
+             */
+
             $project->technologies()->delete();
 
+            /*
+             * ==========================
+             * SERVICES
+             * ==========================
+             */
+
             $project->services()->delete();
+
+            /*
+             * ==========================
+             * FEATURES
+             * ==========================
+             */
 
             ProjectFeature::where(
                 'project_id',
                 $project->id
             )->delete();
 
+            /*
+             * ==========================
+             * GALLERY
+             * ==========================
+             */
+
             $galleries = $project->galleries()->get();
 
             foreach ($galleries as $gallery) {
-
-                if (
-                    $gallery->image_url &&
-                    Storage::disk('public')->exists(
-                        $gallery->image_url
-                    )
-                ) {
-                    Storage::disk('public')->delete(
+                if ($gallery->image_url) {
+                    $galleryPath = public_path(
                         $gallery->image_url
                     );
+
+                    if (file_exists($galleryPath)) {
+                        @unlink($galleryPath);
+                    }
                 }
             }
 
             $project->galleries()->delete();
+
+            /*
+             * ==========================
+             * PROJECT
+             * ==========================
+             */
 
             $project->delete();
 
@@ -931,7 +1029,6 @@ class ProjectController extends Controller
                 );
 
         } catch (\Throwable $e) {
-
             DB::rollBack();
 
             return redirect()
@@ -946,15 +1043,37 @@ class ProjectController extends Controller
 
     public function show($slug)
     {
-        $project = Projects::where('slug',$slug)->with([
-            'stats',
-            'galleries',
-            'features',
-            'technologies',
-            'services'
-        ])->firstOrFail();
+        $project = Projects::where('slug', $slug)
+            ->with([
+                'stats',
+                'galleries.category',
+                'features',
+                'technologies',
+                'services'
+            ])
+            ->firstOrFail();
 
-        $relatedProjects = Projects::where('id','!=',$project->id)
+        $imageCategories = CatImg::orderBy('number')
+            ->orderBy('id')
+            ->with([
+                'galleries' => function ($query) use ($project) {
+                    $query->where(
+                        'project_id',
+                        $project->id
+                    );
+                }
+            ])
+            ->get()
+            ->filter(function ($category) {
+                return $category->galleries->isNotEmpty();
+            })
+            ->values();
+
+        $relatedProjects = Projects::where(
+            'id',
+            '!=',
+            $project->id
+        )
             ->orderBy('number', 'asc')
             ->limit(3)
             ->get();
@@ -963,7 +1082,8 @@ class ProjectController extends Controller
             'projects.show',
             compact(
                 'project',
-                'relatedProjects'
+                'relatedProjects',
+                'imageCategories'
             )
         );
     }
@@ -1016,11 +1136,8 @@ class ProjectController extends Controller
         $validator = Validator::make(
             $request->all(),
             [
-                'category' =>
-                    'required|in:desktop,mobile,key_pages',
-
-                'image_url' =>
-                    'required|string|max:255',
+                'cat_img_id' => 'required|exists:cat_imgs,id',
+                'image_url' => 'required|string|max:255',
             ]
         );
 
@@ -1033,7 +1150,7 @@ class ProjectController extends Controller
 
         ProjectGallery::create([
             'project_id' => $projectId,
-            'category' => $request->input('category'),
+            'cat_img_id' => $request->input('cat_img_id'),
             'image_url' => $request->input('image_url'),
         ]);
 
@@ -1046,15 +1163,14 @@ class ProjectController extends Controller
     {
         $gallery = ProjectGallery::findOrFail($galleryId);
 
-        if (
-            $gallery->image_url &&
-            Storage::disk('public')->exists(
-                $gallery->image_url
-            )
-        ) {
-            Storage::disk('public')->delete(
+        if ($gallery->image_url) {
+            $galleryPath = public_path(
                 $gallery->image_url
             );
+
+            if (file_exists($galleryPath)) {
+                @unlink($galleryPath);
+            }
         }
 
         $gallery->delete();
