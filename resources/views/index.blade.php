@@ -365,30 +365,80 @@
 
                 <div class="col-lg-6">
                     <div class="contact-card reveal reveal-delay-2">
-                        <span class="eyebrow"><i
-                                class="fa-solid fa-paper-plane"></i>{{ $siteTexts['contact_badge']->value ?? 'تماس با ما' }}</span>
+                        <span class="eyebrow">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            {{ $siteTexts['contact_badge']->value ?? 'تماس با ما' }}
+                        </span>
+
                         <h3 style="font-weight:800;font-size:1.5rem;margin-bottom:6px">
                             {{ $siteTexts['contact_title']->value ?? 'برای مشاوره رایگان با ما تماس بگیرید' }}
                         </h3>
+
                         <p class="section-sub" style="margin-bottom:26px">
                             {{ $siteTexts['contact_desc']->value ?? 'فرم زیر را پر کنید تا در کمتر از ۲۴ ساعت با شما تماس بگیریم.' }}
                         </p>
-                        <form onsubmit="return false;">
+
+                        <form id="ticketForm">
+                            @csrf
+
                             <div class="row">
-                                <div class="col-sm-6"><input class="form-control-x"
-                                        placeholder="{{ $siteTexts['contact_name_placeholder']->value ?? 'نام و نام‌خانوادگی' }}">
+                                <div class="col-sm-6">
+                                    <input
+                                        type="text"
+                                        name="user_name"
+                                        class="form-control-x"
+                                        placeholder="{{ $siteTexts['contact_name_placeholder']->value ?? 'نام و نام‌خانوادگی' }}"
+                                        required
+                                    >
                                 </div>
-                                <div class="col-sm-6"><input class="form-control-x"
-                                        placeholder="{{ $siteTexts['contact_phone_placeholder']->value ?? 'شماره تماس' }}">
+
+                                <div class="col-sm-6">
+                                    <input
+                                        type="text"
+                                        name="email"
+                                        class="form-control-x"
+                                        placeholder="{{ $siteTexts['contact_email_placeholder']->value ?? 'ایمیل' }}"
+                                        required
+                                    >
                                 </div>
                             </div>
-                            <input class="form-control-x"
-                                placeholder="{{ $siteTexts['contact_email_placeholder']->value ?? 'ایمیل' }}">
-                            <textarea class="form-control-x"
-                                placeholder="{{ $siteTexts['contact_message_placeholder']->value ?? 'شرح پروژه شما' }}"></textarea>
-                            <button class="btn-flow w-100 justify-content-center"
-                                style="border:none">{{ $siteTexts['contact_button']->value ?? 'ارسال پیام' }} <i
-                                    class="fa-solid fa-paper-plane"></i></button>
+
+                            <input
+                                type="text"
+                                name="subject"
+                                class="form-control-x"
+                                placeholder="موضوع پیام"
+                                required
+                            >
+
+                            <textarea
+                                name="message"
+                                class="form-control-x"
+                                placeholder="{{ $siteTexts['contact_message_placeholder']->value ?? 'شرح پروژه شما' }}"
+                                required
+                            ></textarea>
+
+                            <button
+                                type="submit"
+                                id="ticketSubmit"
+                                class="btn-flow w-100 justify-content-center"
+                                style="border:none"
+                            >
+                                <span id="ticketSubmitText">
+                                    {{ $siteTexts['contact_button']->value ?? 'ارسال پیام' }}
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                </span>
+
+                                <span id="ticketSubmitLoading" style="display:none;">
+                                    در حال ارسال...
+                                    <i class="fa-solid fa-spinner fa-spin"></i>
+                                </span>
+                            </button>
+
+                            <div
+                                id="ticketMessage"
+                                style="display:none;margin-top:15px;padding:12px 15px;border-radius:10px;"
+                            ></div>
                         </form>
                     </div>
                 </div>
@@ -473,4 +523,274 @@
 
 @section('js')
     <script src="{{ asset('js/client/index.js') }}"></script>
+    <style>
+        .ticket-toast {
+            position: fixed;
+            top: 25px;
+            left: 50%;
+            transform: translate(-50%, -30px) scale(.95);
+            min-width: 320px;
+            max-width: 90%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.96);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            border-radius: 16px;
+            box-shadow: 0 15px 45px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            gap: 13px;
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transition:
+                opacity .35s ease,
+                transform .35s cubic-bezier(.34, 1.56, .64, 1),
+                visibility .35s;
+            direction: rtl;
+        }
+
+        .ticket-toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, 0) scale(1);
+        }
+
+        .ticket-toast.hide {
+            opacity: 0;
+            visibility: hidden;
+            transform: translate(-50%, -25px) scale(.95);
+            transition:
+                opacity .3s ease,
+                transform .3s ease,
+                visibility .3s;
+        }
+
+        .ticket-toast-icon {
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            font-size: 20px;
+            box-shadow: 0 7px 18px rgba(16, 185, 129, .3);
+        }
+
+        .ticket-toast-content {
+            flex: 1;
+        }
+
+        .ticket-toast-title {
+            font-size: 14px;
+            font-weight: 800;
+            color: #111827;
+            margin-bottom: 3px;
+        }
+
+        .ticket-toast-text {
+            font-size: 12px;
+            color: #6b7280;
+            line-height: 1.7;
+        }
+
+        .ticket-toast-close {
+            width: 28px;
+            height: 28px;
+            border: none;
+            background: transparent;
+            color: #9ca3af;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: .2s;
+        }
+
+        .ticket-toast-close:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        .ticket-toast-progress {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            height: 3px;
+            width: 100%;
+            background: linear-gradient(90deg, #10b981, #34d399);
+            border-radius: 0 0 16px 16px;
+            transform-origin: right;
+        }
+
+        .ticket-toast.show .ticket-toast-progress {
+            animation: ticketToastProgress 2s linear forwards;
+        }
+
+        @keyframes ticketToastProgress {
+            from {
+                transform: scaleX(1);
+            }
+
+            to {
+                transform: scaleX(0);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .ticket-toast {
+                min-width: auto;
+                width: calc(100% - 30px);
+                top: 15px;
+            }
+        }
+    </style>
+
+    <div id="ticketToast" class="ticket-toast">
+        <div class="ticket-toast-icon">
+            <i class="fa-solid fa-check"></i>
+        </div>
+
+        <div class="ticket-toast-content">
+            <div class="ticket-toast-title">
+                پیام با موفقیت ارسال شد
+            </div>
+
+            <div class="ticket-toast-text" id="ticketToastText">
+                درخواست شما ثبت شد.
+            </div>
+        </div>
+
+        <button type="button" class="ticket-toast-close" id="ticketToastClose">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+
+        <div class="ticket-toast-progress"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const form = document.getElementById('ticketForm');
+            const submitButton = document.getElementById('ticketSubmit');
+            const submitText = document.getElementById('ticketSubmitText');
+            const submitLoading = document.getElementById('ticketSubmitLoading');
+
+            const toast = document.getElementById('ticketToast');
+            const toastText = document.getElementById('ticketToastText');
+            const toastClose = document.getElementById('ticketToastClose');
+            const toastProgress = toast.querySelector('.ticket-toast-progress');
+
+            let toastTimer = null;
+
+            function showTicketToast(message) {
+
+                clearTimeout(toastTimer);
+
+                toastText.textContent = message;
+
+                toast.classList.remove('hide');
+                toast.classList.add('show');
+
+                // ریست کردن انیمیشن Progress
+                toastProgress.style.animation = 'none';
+                void toastProgress.offsetWidth;
+                toastProgress.style.animation = 'ticketToastProgress 2s linear forwards';
+
+                toastTimer = setTimeout(function () {
+                    hideTicketToast();
+                }, 2000);
+            }
+
+            function hideTicketToast() {
+
+                clearTimeout(toastTimer);
+
+                toast.classList.remove('show');
+                toast.classList.add('hide');
+
+                setTimeout(function () {
+                    toast.classList.remove('hide');
+                }, 350);
+            }
+
+            toastClose.addEventListener('click', function () {
+                hideTicketToast();
+            });
+
+            form.addEventListener('submit', function (e) {
+
+                e.preventDefault();
+
+                submitButton.disabled = true;
+                submitText.style.display = 'none';
+                submitLoading.style.display = 'inline';
+
+                const formData = new FormData(form);
+
+                fetch('{{ route('tickets.store') }}', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    body: formData
+                })
+                .then(async response => {
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw {
+                            status: response.status,
+                            data: data
+                        };
+                    }
+
+                    return data;
+                })
+                .then(data => {
+
+                    form.reset();
+
+                    showTicketToast(
+                        data.message || 'تیکت شما با موفقیت ثبت شد.'
+                    );
+                })
+                .catch(error => {
+
+                    let errorMessage =
+                        'ارسال پیام با خطا مواجه شد. لطفاً دوباره تلاش کنید.';
+
+                    if (
+                        error.data &&
+                        error.data.errors
+                    ) {
+                        const firstError =
+                            Object.values(error.data.errors)[0];
+
+                        if (firstError && firstError.length) {
+                            errorMessage = firstError[0];
+                        }
+                    }
+
+                    alert(errorMessage);
+                })
+                .finally(() => {
+
+                    submitButton.disabled = false;
+                    submitText.style.display = 'inline';
+                    submitLoading.style.display = 'none';
+
+                });
+
+            });
+
+        });
+    </script>
 @endsection
