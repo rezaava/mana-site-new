@@ -2,7 +2,6 @@
 
 @section('content')
     <style>
-        /* ===== استایل فرم پروژه ===== */
         .project-form-card {
             background: var(--surface);
             border: 1px solid var(--line);
@@ -49,7 +48,7 @@
             font-size: 0.9rem;
         }
 
-        select option{
+        select option {
             color: var(--oncta);
         }
 
@@ -168,6 +167,28 @@
             color: var(--accent-2);
         }
 
+        .technology-item {
+            position: relative;
+        }
+
+        .technology-remove {
+            width: 42px;
+            height: 42px;
+            border: 1px solid #ef4444;
+            border-radius: 8px;
+            background: transparent;
+            color: #ef4444;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .technology-remove:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
         .gallery-category {
             background: var(--surface-2);
             border-radius: 12px;
@@ -219,40 +240,6 @@
             grid-template-columns: repeat(5, 1fr);
         }
 
-        .tech-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 12px;
-            border: 1px solid var(--line);
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s;
-            background: var(--surface);
-        }
-
-        .tech-label:hover {
-            border-color: var(--accent-2);
-            background: var(--card-hover);
-        }
-
-        .tech-label input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--accent-2);
-            cursor: pointer;
-        }
-
-        .tech-label i {
-            color: var(--accent-2);
-            font-size: 1.2rem;
-            width: 24px;
-        }
-
-        .tech-label span {
-            font-weight: 500;
-        }
-
         .inline-actions {
             display: flex;
             gap: 12px;
@@ -262,10 +249,11 @@
             border-top: 1px solid var(--line);
         }
 
-        /* ===== ریسپانسیو ===== */
-        @media (max-width: 992px) {
+        .add-technology-btn {
+            margin-top: 5px;
+        }
 
-            .tech-grid,
+        @media (max-width: 992px) {
             .stats-grid,
             .services-grid {
                 grid-template-columns: repeat(2, 1fr);
@@ -281,14 +269,9 @@
                 padding: 15px;
             }
 
-            .tech-grid,
             .stats-grid,
             .services-grid,
             .gallery-category .gallery-files {
-                grid-template-columns: 1fr;
-            }
-
-            .features-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -296,6 +279,7 @@
 
     <div style="padding:20px;">
         <div class="project-form-card">
+
             <h5 style="margin-bottom:25px; font-weight:700; font-size:1.2rem; color:var(--text);">
                 <i class="fa-solid fa-plus-circle" style="color:var(--accent-2); margin-left:10px;"></i>
                 افزودن پروژه جدید
@@ -304,13 +288,13 @@
             <form action="{{ route('projects.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
-                {{-- اطلاعات اصلی --}}
                 <div class="form-section-title">
                     <i class="fa-solid fa-circle-info"></i>
                     اطلاعات اصلی پروژه
                 </div>
 
                 <div class="row g-3">
+
                     <div class="col-md-6">
                         <label class="form-label">عنوان پروژه <span style="color:#ef4444;">*</span></label>
                         <input type="text" name="title" value="{{ old('title') }}" required class="form-input">
@@ -327,7 +311,8 @@
                         <select name="cat_id" class="form-select">
                             <option value="">انتخاب دسته‌بندی...</option>
                             @foreach($categories as $category)
-                                <option value="{{ $category->id }}" {{ old('cat_id') == $category->id ? 'selected' : '' }}>
+                                <option value="{{ $category->id }}"
+                                    {{ old('cat_id') == $category->id ? 'selected' : '' }}>
                                     {{ $category->name }}
                                 </option>
                             @endforeach
@@ -382,7 +367,8 @@
 
                     <div class="col-md-6">
                         <label class="form-label" style="color:#f5a623;">
-                            <i class="fa-solid fa-triangle-exclamation"></i> چالش اصلی
+                            <i class="fa-solid fa-triangle-exclamation"></i>
+                            چالش اصلی
                         </label>
                         <textarea name="challenge" rows="4" class="form-textarea"
                             placeholder="چالش‌های اصلی پروژه را بنویسید...">{{ old('challenge') }}</textarea>
@@ -390,7 +376,8 @@
 
                     <div class="col-md-6">
                         <label class="form-label" style="color:#00d1b2;">
-                            <i class="fa-solid fa-lightbulb"></i> راه‌حل ما
+                            <i class="fa-solid fa-lightbulb"></i>
+                            راه‌حل ما
                         </label>
                         <textarea name="solution" rows="4" class="form-textarea"
                             placeholder="راه‌حل‌های پیاده‌سازی‌شده را بنویسید...">{{ old('solution') }}</textarea>
@@ -408,9 +395,11 @@
                     </div>
 
                     <div class="col-md-6">
-                        <label class="form-label">افزودن Slug</label>
-                        <input type="text" name="slug" value="{{ old('slug') }}" class="form-input" placeholder="slug">
+                        <label class="form-label">Slug</label>
+                        <input type="text" name="slug" value="{{ old('slug') }}" class="form-input"
+                            placeholder="slug">
                     </div>
+
                 </div>
 
                 {{-- فیچرها --}}
@@ -418,30 +407,46 @@
                     <i class="fa-solid fa-star"></i>
                     ویژگی‌ها و فیچرهای پروژه
                 </div>
-                <p class="section-description">برای هر فیچر عنوان، متن و کلاس CSS آیکون را وارد کنید.</p>
+
+                <p class="section-description">
+                    برای هر فیچر عنوان، متن و کلاس CSS آیکون را وارد کنید.
+                </p>
 
                 <div class="row g-3">
                     @for($i = 0; $i < 6; $i++)
                         <div class="col-md-6">
                             <div class="feature-box">
+
                                 <div class="feature-box-title">
-                                    <i class="fa-solid fa-star"></i> فیچر {{ $i + 1 }}
+                                    <i class="fa-solid fa-star"></i>
+                                    فیچر {{ $i + 1 }}
                                 </div>
+
                                 <div style="margin-bottom:10px;">
                                     <label class="form-label">عنوان فیچر</label>
-                                    <input type="text" name="feature_title[]" value="{{ old('feature_title.' . $i) }}"
-                                        class="form-input" placeholder="مثلاً پنل مدیریت هوشمند">
+                                    <input type="text"
+                                        name="feature_title[]"
+                                        value="{{ old('feature_title.' . $i) }}"
+                                        class="form-input"
+                                        placeholder="مثلاً پنل مدیریت هوشمند">
                                 </div>
+
                                 <div style="margin-bottom:10px;">
                                     <label class="form-label">متن فیچر</label>
                                     <textarea name="feature_text[]" rows="3" class="form-textarea"
                                         placeholder="توضیح این ویژگی را وارد کنید...">{{ old('feature_text.' . $i) }}</textarea>
                                 </div>
+
                                 <div>
                                     <label class="form-label">کلاس CSS آیکون</label>
-                                    <input type="text" name="feature_icon[]" value="{{ old('feature_icon.' . $i) }}"
-                                        class="form-input" placeholder="مثلاً fa-solid fa-chart-line" dir="ltr">
+                                    <input type="text"
+                                        name="feature_icon[]"
+                                        value="{{ old('feature_icon.' . $i) }}"
+                                        class="form-input"
+                                        placeholder="مثلاً fa-solid fa-chart-line"
+                                        dir="ltr">
                                 </div>
+
                             </div>
                         </div>
                     @endfor
@@ -452,22 +457,37 @@
                     <i class="fa-solid fa-chart-simple"></i>
                     آمارهای پروژه
                 </div>
-                <p class="section-description">حداکثر ۴ آیتم آمار را وارد کنید.</p>
+
+                <p class="section-description">
+                    حداکثر ۴ آیتم آمار را وارد کنید.
+                </p>
 
                 <div class="stats-grid">
                     @for($i = 0; $i < 4; $i++)
                         <div class="field-group-box">
-                            <span style="font-weight:700; color:var(--text);">آمار {{ $i + 1 }}</span>
+
+                            <span style="font-weight:700; color:var(--text);">
+                                آمار {{ $i + 1 }}
+                            </span>
+
                             <div style="margin-top:8px;">
                                 <label class="form-label">مقدار</label>
-                                <input type="text" name="stats_value[]" value="{{ old('stats_value.' . $i) }}"
-                                    class="form-input" placeholder="مثلاً ۴۵%">
+                                <input type="text"
+                                    name="stats_value[]"
+                                    value="{{ old('stats_value.' . $i) }}"
+                                    class="form-input"
+                                    placeholder="مثلاً ۴۵%">
                             </div>
+
                             <div style="margin-top:8px;">
                                 <label class="form-label">برچسب</label>
-                                <input type="text" name="stats_label[]" value="{{ old('stats_label.' . $i) }}"
-                                    class="form-input" placeholder="مثلاً افزایش نرخ تبدیل">
+                                <input type="text"
+                                    name="stats_label[]"
+                                    value="{{ old('stats_label.' . $i) }}"
+                                    class="form-input"
+                                    placeholder="مثلاً افزایش نرخ تبدیل">
                             </div>
+
                         </div>
                     @endfor
                 </div>
@@ -477,7 +497,10 @@
                     <i class="fa-solid fa-images"></i>
                     گالری تصاویر
                 </div>
-                <p class="section-description">هر دسته‌بندی می‌تواند تا ۳ تصویر داشته باشد.</p>
+
+                <p class="section-description">
+                    هر دسته‌بندی می‌تواند تا ۳ تصویر داشته باشد.
+                </p>
 
                 @php
                     $galleryCategories = [
@@ -489,16 +512,28 @@
 
                 @foreach($galleryCategories as $catKey => $catLabel)
                     <div class="gallery-category">
+
                         <span class="category-label">
-                            <i class="fa-regular fa-folder-open"></i> {{ $catLabel }}
+                            <i class="fa-regular fa-folder-open"></i>
+                            {{ $catLabel }}
                         </span>
+
                         <div class="gallery-files">
+
                             @for($i = 0; $i < 3; $i++)
                                 <div class="file-item">
-                                    <span style="font-size:0.75rem; color:var(--text-dimmer);">تصویر {{ $i + 1 }}</span>
-                                    <input type="file" name="gallery_images[{{ $catKey }}][]" accept="image/*">
+
+                                    <span style="font-size:0.75rem; color:var(--text-dimmer);">
+                                        تصویر {{ $i + 1 }}
+                                    </span>
+
+                                    <input type="file"
+                                        name="gallery_images[{{ $catKey }}][]"
+                                        accept="image/*">
+
                                 </div>
                             @endfor
+
                         </div>
                     </div>
                 @endforeach
@@ -508,49 +543,174 @@
                     <i class="fa-solid fa-code"></i>
                     تکنولوژی‌های استفاده‌شده
                 </div>
-                <p class="section-description">تکنولوژی‌های استفاده‌شده در این پروژه را انتخاب کنید.</p>
 
-                <div class="tech-grid">
-                    @foreach($allTechnologies as $tech)
-                        <label class="tech-label">
-                            <input type="checkbox" name="technologies[]" value="{{ $tech['name'] }}">
-                            <i class="{{ $tech['icon'] }}"></i>
-                            <span>{{ $tech['name'] }}</span>
-                        </label>
-                    @endforeach
+                <p class="section-description">
+                    برای هر تکنولوژی نام، کلاس CSS آیکون و ترتیب نمایش را وارد کنید.
+                </p>
+
+                <div id="technologies-container">
+
+                    <div class="technology-item field-group-box">
+
+                        <div class="row g-3 align-items-end">
+
+                            <div class="col-md-5">
+                                <label class="form-label">نام تکنولوژی</label>
+                                <input type="text"
+                                    name="technology_name[]"
+                                    class="form-input"
+                                    placeholder="مثلاً React">
+                            </div>
+
+                            <div class="col-md-5">
+                                <label class="form-label">کلاس CSS آیکون</label>
+                                <input type="text"
+                                    name="technology_icon[]"
+                                    class="form-input"
+                                    placeholder="مثلاً fa-brands fa-react"
+                                    dir="ltr">
+                            </div>
+
+                            <div class="col-md-2">
+                                <label class="form-label">Order</label>
+                                <input type="number"
+                                    name="technology_order[]"
+                                    class="form-input"
+                                    value="0"
+                                    min="0">
+                            </div>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
-                @foreach($allTechnologies as $tech)
-                    <input type="hidden" name="tech_icon[{{ $tech['name'] }}]" value="{{ $tech['icon'] }}">
-                @endforeach
+                <button type="button"
+                    class="btn-back-form add-technology-btn"
+                    id="add-technology">
+                    <i class="fa-solid fa-plus"></i>
+                    افزودن تکنولوژی
+                </button>
 
                 {{-- خدمات --}}
                 <div class="form-section-title">
                     <i class="fa-solid fa-list-check"></i>
                     خدمات ارائه‌شده در پروژه
                 </div>
-                <p class="section-description">خدماتی که در این پروژه ارائه شده‌اند را وارد کنید. (تا ۵ مورد)</p>
+
+                <p class="section-description">
+                    خدماتی که در این پروژه ارائه شده‌اند را وارد کنید. (تا ۵ مورد)
+                </p>
 
                 <div class="services-grid">
                     @for($i = 0; $i < 5; $i++)
                         <div>
                             <label class="form-label">نام خدمت</label>
-                            <input type="text" name="service_name[]" value="{{ old('service_name.' . $i) }}" class="form-input"
+                            <input type="text"
+                                name="service_name[]"
+                                value="{{ old('service_name.' . $i) }}"
+                                class="form-input"
                                 placeholder="مثلاً طراحی UX/UI">
                         </div>
                     @endfor
                 </div>
 
-                {{-- دکمه‌ها --}}
                 <div class="inline-actions">
+
                     <button type="submit" class="btn-submit-form">
-                        <i class="fa-solid fa-check"></i> ذخیره پروژه
+                        <i class="fa-solid fa-check"></i>
+                        ذخیره پروژه
                     </button>
+
                     <a href="{{ route('projects.index') }}" class="btn-back-form">
-                        <i class="fa-solid fa-arrow-right"></i> بازگشت به لیست
+                        <i class="fa-solid fa-arrow-right"></i>
+                        بازگشت به لیست
                     </a>
+
                 </div>
+
             </form>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const container = document.getElementById('technologies-container');
+            const addButton = document.getElementById('add-technology');
+
+            addButton.addEventListener('click', function () {
+
+                const item = document.createElement('div');
+
+                item.className = 'technology-item field-group-box';
+
+                item.innerHTML = `
+                    <div class="row g-3 align-items-end">
+
+                        <div class="col-md-5">
+                            <label class="form-label">نام تکنولوژی</label>
+                            <input
+                                type="text"
+                                name="technology_name[]"
+                                class="form-input"
+                                placeholder="مثلاً Laravel">
+                        </div>
+
+                        <div class="col-md-5">
+                            <label class="form-label">کلاس CSS آیکون</label>
+                            <input
+                                type="text"
+                                name="technology_icon[]"
+                                class="form-input"
+                                placeholder="مثلاً fa-brands fa-laravel"
+                                dir="ltr">
+                        </div>
+
+                        <div class="col-md-2">
+                            <label class="form-label">Order</label>
+
+                            <div style="display:flex; gap:8px;">
+
+                                <input
+                                    type="number"
+                                    name="technology_order[]"
+                                    class="form-input"
+                                    value="0"
+                                    min="0">
+
+                                <button
+                                    type="button"
+                                    class="technology-remove remove-technology"
+                                    title="حذف تکنولوژی">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+
+                            </div>
+                        </div>
+
+                    </div>
+                `;
+
+                container.appendChild(item);
+            });
+
+            container.addEventListener('click', function (event) {
+
+                const button = event.target.closest('.remove-technology');
+
+                if (!button) {
+                    return;
+                }
+
+                const item = button.closest('.technology-item');
+
+                if (item) {
+                    item.remove();
+                }
+            });
+
+        });
+    </script>
 @endsection

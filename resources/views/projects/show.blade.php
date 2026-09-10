@@ -430,7 +430,7 @@
                     @foreach($project->technologies as $tech)
                         <div class="tech-pill">
                             @if($tech->icon)
-                                <i class="fa-{{ $tech->icon }}"></i>
+                                <i class="{{ $tech->icon }}"></i>
                             @else
                                 <i class="fa-solid fa-cube"></i>
                             @endif

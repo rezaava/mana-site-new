@@ -171,5 +171,5 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
 });
 
 Route::prefix('projects')->group(function () {
-    Route::get('/{id}/{slug}', [ProjectController::class, 'show'])->name('projects.show');
+    Route::get('/{slug}', [ProjectController::class, 'show'])->name('projects.show');
 });

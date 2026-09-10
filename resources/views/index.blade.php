@@ -224,7 +224,7 @@
                         <div class="folio-tab {{ $index === 0 ? 'active' : '' }}" data-index="{{ $index }}"
                             data-project="{{ $project->id }}" data-description="{{ $project->description }}"
                             data-from="{{ $project->from ?? '#1d2a6b' }}" data-to="{{ $project->to ?? '#0b1030' }}"
-                            data-url="{{ route('projects.show', ['id' => $project->id, 'slug' => $project->slug]) }}">
+                            data-url="{{ route('projects.show', ['slug' => $project->slug]) }}">
                             <div class="ft-ic"><i class="{{ $project->icon ?? 'fa-solid fa-briefcase' }}"></i></div>
                             <div>
                                 <h5>{{ $project->title }}</h5>
@@ -258,7 +258,7 @@
                             <span class="tag">{{ $firstProject->category->name ?? 'پروژه' }}</span>
                             <h4>{{ $firstProject->title }}</h4>
                             <p>{{ $firstProject->description }}</p>
-                            <a href="{{ route('projects.show', ['id' => $firstProject->id, 'slug' => $firstProject->slug]) }}"
+                            <a href="{{ route('projects.show', ['slug' => $firstProject->slug]) }}"
                                 class="pill">مشاهده جزئیات <i class="fa-solid fa-arrow-up-left"></i></a>
                         </div>
                     @else
