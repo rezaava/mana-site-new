@@ -6,6 +6,7 @@
 
 @section('head')
     <link rel="stylesheet" href="{{ asset('css/servise.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/index.css') }}">
 
     {!! $service->meta !!}
 @endsection
@@ -110,16 +111,13 @@
                     <div class="case-hero-btns reveal in reveal-delay-3">
 
                         <a href="{{ url('/#contact') }}" class="btn-flow">
-
                             دریافت مشاوره رایگان
 
                             <i class="fa-solid fa-arrow-left"></i>
-
                         </a>
 
 
                         <a href="{{ url('/services') }}" class="btn-ghost">
-
                             <i class="fa-solid fa-arrow-right"></i>
 
                             بازگشت به همه خدمات
@@ -137,17 +135,13 @@
 
                         @if($service->image_url)
 
-                            <img
-                                src="{{ asset('storage/' . $service->image_url) }}"
-                                alt="{{ $service->title }}"
-                                style="
-                                    max-width:100%;
-                                    max-height:400px;
-                                    object-fit:contain;
-                                    position:relative;
-                                    z-index:5;
-                                "
-                            >
+                            <img src="{{ asset('storage/' . $service->image_url) }}" alt="{{ $service->title }}" style="
+                                                                                max-width:100%;
+                                                                                max-height:400px;
+                                                                                object-fit:contain;
+                                                                                position:relative;
+                                                                                z-index:5;
+                                                                            ">
 
                         @else
 
@@ -283,6 +277,7 @@
     <!-- ========================================================= -->
     <!-- OVERVIEW -->
     <!-- ========================================================= -->
+
 
     <section class="overview" id="overview">
 
@@ -606,10 +601,7 @@
 
                 @foreach($whatReceives as $index => $item)
 
-                    <div
-                        class="incl-card reveal reveal-delay-{{ ($index % 3) + 1 }}"
-                        data-tilt
-                    >
+                    <div class="incl-card reveal reveal-delay-{{ ($index % 3) + 1 }}" data-tilt>
 
                         <span class="incl-index">
 
@@ -826,6 +818,49 @@
     </section>
 
 
+    @if($questions->count() > 0)
+        <section class="faqc" id="contact">
+            <div class="container-x">
+                <div class="row g-4">
+                    <div class="col-lg-12">
+
+                        <span class="eyebrow reveal">
+                            <i class="fa-solid fa-circle-question"></i>
+                            {{ $siteTexts['faq_badge']->value ?? 'سوالات متداول' }}
+                        </span>
+
+                        <h2 class="section-title reveal reveal-delay-1 mb-4">
+                            {{ $siteTexts['faq_title']->value ?? 'پاسخ سوالات رایج شما' }}
+                        </h2>
+
+                        <div class="acc-list">
+
+                            @foreach($questions as $index => $question)
+
+                                <div class="acc-item {{ $index === 0 ? 'open' : '' }} reveal reveal-delay-{{ ($index % 4) + 1 }}">
+
+                                    <button type="button" class="acc-btn">
+                                        <span>{{ $question->title }}</span>
+                                        <i class="fa-solid fa-plus"></i>
+                                    </button>
+
+                                    <div class="acc-panel">
+                                        <p>{{ $question->answer }}</p>
+                                    </div>
+
+                                </div>
+
+                            @endforeach
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </section>
+    @endif
+
+
     <!-- ========================================================= -->
     <!-- RELATED SERVICES -->
     <!-- ========================================================= -->
@@ -960,7 +995,5 @@
 
 
 @section('js')
-
     <script src="{{ asset('js/client/servise.js') }}"></script>
-
 @endsection

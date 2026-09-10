@@ -59,7 +59,7 @@ class SiteController extends Controller
             'stats',
         ));
     }
-        
+
     public function index_admin()
     {
         $projectsCount = Projects::count();
@@ -133,6 +133,8 @@ class SiteController extends Controller
     {
         $service = Services::where('slug',$slug)->firstOrFail();
 
+        $questions = Questions::where('service_id' , $service->id) ->orderBy('number')->get();
+
         $state = ServiceState::where('service_id', $service->id)->first();
 
         $techs = ServiceTech::where('service_id', $service->id)
@@ -147,7 +149,8 @@ class SiteController extends Controller
             'service',
             'state',
             'techs',
-            'whatReceives'
+            'whatReceives',
+            'questions',
         ));
     }
 }

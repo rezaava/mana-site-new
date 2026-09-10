@@ -121,6 +121,18 @@
             background: var(--surface);
         }
 
+        .dynamic-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .dynamic-item-header strong {
+            color: var(--text-dim);
+            font-size: 0.85rem;
+        }
+
         .btn-add-dynamic {
             padding: 9px 15px;
             border: none;
@@ -138,6 +150,28 @@
 
         .btn-add-dynamic:hover {
             filter: brightness(1.1);
+        }
+
+        .btn-remove-dynamic {
+            padding: 6px 10px;
+            border-radius: 8px;
+            background: rgba(220, 38, 38, 0.1);
+            color: #dc2626;
+            border: 1px solid #dc2626;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            transition: all 0.2s var(--ease);
+            font-family: inherit;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .btn-remove-dynamic:hover {
+            background: #dc2626;
+            color: #fff;
         }
 
         .btn-submit-form {
@@ -189,6 +223,18 @@
         .jodit-workplace {
             background: var(--surface) !important;
             color: var(--text) !important;
+        }
+
+        .faq-row {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .faq-row {
+                grid-template-columns: 1fr;
+            }
         }
 
         /* ===== ریسپانسیو ===== */
@@ -324,31 +370,21 @@
                     <textarea name="overview" id="overviewEditor"
                         rows="10">{{ old('overview', $service->overview) }}</textarea>
                 </div>
+
                 {{-- چالش --}}
                 <h6 class="form-section-title">
                     <i class="fa-solid fa-triangle-exclamation"></i> چالش
                 </h6>
 
                 <div class="form-group" style="margin-bottom:10px;">
-                    <input
-                        type="text"
-                        name="challenge_title"
-                        value="{{ old('challenge_title', $service->challenge_title) }}"
-                        placeholder="عنوان چالش"
-                        class="form-input"
-                    >
+                    <input type="text" name="challenge_title"
+                        value="{{ old('challenge_title', $service->challenge_title) }}" placeholder="عنوان چالش"
+                        class="form-input">
                 </div>
-
-                <div class="form-group" style="margin-bottom:20px;">
-                    <label class="form-label">متن چالش</label>
-
-                    <textarea
-                        name="challenge_text"
-                        id="challengeEditor"
-                        rows="10"
-                    >{{ old('challenge_text', $service->challenge_text) }}</textarea>
+                <div class="form-group">
+                    <textarea name="challenge_text" rows="5" placeholder="متن چالش"
+                        class="form-textarea">{{ old('challenge_text', $service->challenge_text) }}</textarea>
                 </div>
-
 
                 {{-- راهکار --}}
                 <h6 class="form-section-title">
@@ -356,23 +392,12 @@
                 </h6>
 
                 <div class="form-group" style="margin-bottom:10px;">
-                    <input
-                        type="text"
-                        name="solution_title"
-                        value="{{ old('solution_title', $service->solution_title) }}"
-                        placeholder="عنوان راهکار"
-                        class="form-input"
-                    >
+                    <input type="text" name="solution_title" value="{{ old('solution_title', $service->solution_title) }}"
+                        placeholder="عنوان راهکار" class="form-input">
                 </div>
-
-                <div class="form-group" style="margin-bottom:20px;">
-                    <label class="form-label">متن راهکار</label>
-
-                    <textarea
-                        name="solution_text"
-                        id="solutionEditor"
-                        rows="10"
-                    >{{ old('solution_text', $service->solution_text) }}</textarea>
+                <div class="form-group">
+                    <textarea name="solution_text" rows="5" placeholder="متن راهکار"
+                        class="form-textarea">{{ old('solution_text', $service->solution_text) }}</textarea>
                 </div>
 
                 {{-- نظر مشتری --}}
@@ -437,6 +462,14 @@
                 <div id="whatReceiveContainer">
                     @forelse($whatReceives as $index => $item)
                         <div class="dynamic-item">
+                            @if($index > 0)
+                                <div class="dynamic-item-header">
+                                    <strong>مورد {{ $index + 1 }}</strong>
+                                    <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
+                                        <i class="fa-solid fa-trash"></i> حذف
+                                    </button>
+                                </div>
+                            @endif
                             <div class="form-grid form-grid-3">
                                 <input type="text" name="what_receive[{{ $index }}][title]"
                                     value="{{ old('what_receive.' . $index . '.title', $item->title) }}" placeholder="عنوان"
@@ -478,6 +511,14 @@
                 <div id="techContainer">
                     @forelse($techs as $index => $tech)
                         <div class="dynamic-item">
+                            @if($index > 0)
+                                <div class="dynamic-item-header">
+                                    <strong>تکنولوژی {{ $index + 1 }}</strong>
+                                    <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
+                                        <i class="fa-solid fa-trash"></i> حذف
+                                    </button>
+                                </div>
+                            @endif
                             <div class="form-grid form-grid-3">
                                 <input type="text" name="techs[{{ $index }}][text]"
                                     value="{{ old('techs.' . $index . '.text', $tech->text) }}" placeholder="مثلاً Laravel"
@@ -505,6 +546,79 @@
                     <i class="fa-solid fa-plus"></i> افزودن تکنولوژی
                 </button>
 
+                {{-- سوالات متداول --}}
+                <h6 class="form-section-title">
+                    <i class="fa-solid fa-circle-question"></i> سوالات متداول
+                </h6>
+
+                <div id="faqContainer">
+                    @forelse($faqs as $index => $faq)
+                        <div class="dynamic-item">
+                            @if($index > 0)
+                                <div class="dynamic-item-header">
+                                    <strong>سوال {{ $index + 1 }}</strong>
+                                    <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
+                                        <i class="fa-solid fa-trash"></i> حذف
+                                    </button>
+                                </div>
+                            @endif
+                            <div class="faq-row">
+                                <div class="form-group">
+                                    <label class="form-label">شماره ترتیب</label>
+                                    <input type="number" name="faqs[{{ $index }}][number]"
+                                        value="{{ old('faqs.' . $index . '.number', $faq->number) }}" required min="1"
+                                        class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">صورت سوال</label>
+                                    <input type="text" name="faqs[{{ $index }}][question]"
+                                        value="{{ old('faqs.' . $index . '.question', $faq->title) }}"
+                                        placeholder="مثلاً نحوه ثبت‌نام به چه صورت است؟" class="form-input">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top:15px;">
+                                <label class="form-label">پاسخ سوال</label>
+                                <textarea name="faqs[{{ $index }}][answer]" rows="5" placeholder="پاسخ کامل سوال را بنویسید..."
+                                    class="form-textarea"
+                                    style="resize: vertical;">{{ old('faqs.' . $index . '.answer', $faq->answer) }}</textarea>
+                            </div>
+                        </div>
+                    @empty
+                        <div class="dynamic-item">
+                            <div class="faq-row">
+                                <div class="form-group">
+                                    <label class="form-label">شماره ترتیب</label>
+                                    <input type="number" name="faqs[0][number]" value="{{ old('faqs.0.number', 1) }}" required
+                                        min="1" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">صورت سوال</label>
+                                    <input type="text" name="faqs[0][question]" value="{{ old('faqs.0.question') }}"
+                                        placeholder="مثلاً نحوه ثبت‌نام به چه صورت است؟" class="form-input">
+                                </div>
+                            </div>
+                            <div class="form-group" style="margin-top:15px;">
+                                <label class="form-label">پاسخ سوال</label>
+                                <textarea name="faqs[0][answer]" rows="5" placeholder="پاسخ کامل سوال را بنویسید..."
+                                    class="form-textarea" style="resize: vertical;">{{ old('faqs.0.answer') }}</textarea>
+                            </div>
+                        </div>
+                    @endforelse
+                </div>
+
+                <button type="button" id="addFaq" class="btn-add-dynamic" style="margin-bottom:25px;">
+                    <i class="fa-solid fa-plus"></i> افزودن سوال
+                </button>
+
+                {{-- title_head --}}
+                <h6 class="form-section-title">
+                    <i class="fa-solid fa-tags"></i> title_head
+                </h6>
+                <div class="form-group" style="margin-bottom:10px;">
+                    <input type="text" name="title_head" value="{{ old('title_head', $service->title_head) }}"
+                        placeholder="افزودن title_head" class="form-input">
+                </div>
+
                 {{-- slug --}}
                 <h6 class="form-section-title">
                     <i class="fa-solid fa-link"></i> slug
@@ -521,12 +635,6 @@
                     <input type="text" name="meta" value="{{ old('meta', $service->meta) }}" class="form-input">
                 </div>
 
-                <h6 class="form-section-title">
-                    <i class="fa-solid fa-tags"></i> title_head 
-                </h6>
-                <div class="form-group" style="margin-bottom:10px;">
-                    <input type="text" name="title_head" value="{{ old('meta', $service->title_head) }}" placeholder="افزودن title_head " class="form-input">
-                </div>
                 {{-- دکمه‌ها --}}
                 <div style="margin-top:25px; display:flex; gap:10px; flex-wrap:wrap;">
                     <button type="submit" class="btn-submit-form">
@@ -546,524 +654,24 @@
     <script src="https://cdn.jsdelivr.net/npm/jodit/build/jodit.min.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-
-            function createEditor(selector) {
-
-                return new Jodit(selector, {
-                    width: '100%',
-                    height: 300,
-
-                    allowResize: true,
-                    allowResizeImages: true,
-
-                    direction: 'rtl',
-
-                    buttons: [
-                        'source', '|',
-
-                        'undo',
-                        'redo',
-                        '|',
-
-                        'cut',
-                        'copy',
-                        'paste',
-                        'selectall',
-                        'removeformat',
-                        '|',
-
-                        'bold',
-                        'italic',
-                        'underline',
-                        'strikethrough',
-                        'subscript',
-                        'superscript',
-                        '|',
-
-                        'font',
-                        'fontsize',
-                        'brush',
-                        'paragraph',
-                        '|',
-
-                        'ul',
-                        'ol',
-                        'outdent',
-                        'indent',
-                        '|',
-
-                        'align',
-                        'hr',
-                        'table',
-                        '|',
-
-                        'link',
-                        'unlink',
-
-                        {
-                            name: 'uploadImage',
-
-                            iconURL: 'https://cdn-icons-png.flaticon.com/512/1829/1829586.png',
-
-                            tooltip: 'آپلود تصویر',
-
-                            exec: (editor) => {
-
-                                let input =
-                                    document.createElement('input');
-
-                                input.type = 'file';
-                                input.accept = 'image/*';
-
-                                input.onchange = () => {
-
-                                    let file = input.files[0];
-
-                                    if (!file) {
-                                        return;
-                                    }
-
-                                    let formData = new FormData();
-
-                                    formData.append('file', file);
-
-                                    fetch(
-                                        '{{ route('upload.image') }}',
-                                        {
-                                            method: 'POST',
-
-                                            headers: {
-                                                'X-CSRF-TOKEN':
-                                                    '{{ csrf_token() }}'
-                                            },
-
-                                            body: formData
-                                        }
-                                    )
-                                    .then(res => res.json())
-                                    .then(data => {
-
-                                        if (
-                                            data.files &&
-                                            data.files[0] &&
-                                            data.files[0].url
-                                        ) {
-
-                                            let img =
-                                                document.createElement('img');
-
-                                            img.src =
-                                                data.files[0].url;
-
-                                            img.style.maxWidth = '100%';
-
-                                            editor.s.insertNode(img);
-
-                                        } else {
-
-                                            alert(
-                                                'خطا در آپلود تصویر'
-                                            );
-                                        }
-                                    })
-                                    .catch(err => {
-
-                                        console.error(err);
-
-                                        alert(
-                                            'خطا در آپلود تصویر'
-                                        );
-                                    });
-                                };
-
-                                input.click();
-                            }
-                        },
-
-                        {
-                            name: 'uploadVideo',
-
-                            iconURL: 'https://cdn-icons-png.flaticon.com/512/727/727245.png',
-
-                            tooltip: 'آپلود ویدیو',
-
-                            exec: (editor) => {
-
-                                let input =
-                                    document.createElement('input');
-
-                                input.type = 'file';
-                                input.accept = 'video/*';
-
-                                input.onchange = () => {
-
-                                    let file = input.files[0];
-
-                                    if (!file) {
-                                        return;
-                                    }
-
-                                    let formData = new FormData();
-
-                                    formData.append('file', file);
-
-                                    fetch(
-                                        '{{ route('upload.video') }}',
-                                        {
-                                            method: 'POST',
-
-                                            headers: {
-                                                'X-CSRF-TOKEN':
-                                                    '{{ csrf_token() }}'
-                                            },
-
-                                            body: formData
-                                        }
-                                    )
-                                    .then(res => res.json())
-                                    .then(data => {
-
-                                        if (
-                                            data.files &&
-                                            data.files[0] &&
-                                            data.files[0].url
-                                        ) {
-
-                                            let wrapper =
-                                                document.createElement('div');
-
-                                            wrapper.classList.add(
-                                                'video-wrapper'
-                                            );
-
-                                            let video =
-                                                document.createElement('video');
-
-                                            video.setAttribute(
-                                                'controls',
-                                                ''
-                                            );
-
-                                            video.style.maxWidth = '100%';
-                                            video.style.width = '100%';
-
-                                            video.src =
-                                                data.files[0].url;
-
-                                            wrapper.appendChild(video);
-
-                                            editor.s.insertNode(wrapper);
-
-                                        } else {
-
-                                            alert(
-                                                'خطا در آپلود ویدیو'
-                                            );
-                                        }
-                                    })
-                                    .catch(err => {
-
-                                        console.error(err);
-
-                                        alert(
-                                            'خطا در آپلود ویدیو'
-                                        );
-                                    });
-                                };
-
-                                input.click();
-                            }
-                        },
-
-                        '|',
-
-                        'symbols',
-                        'emoticons',
-                        'specialCharacters',
-                        '|',
-
-                        'print',
-                        'fullsize',
-                        'preview',
-                        '|',
-
-                        'about'
-                    ],
-
-                    colors: {
-                        text: [
-                            '#000000',
-                            '#ff0000',
-                            '#00ff00',
-                            '#0000ff',
-                            '#ff00ff',
-                            '#00ffff'
-                        ],
-
-                        background: [
-                            '#ffffff',
-                            '#ffff00',
-                            '#00ffff',
-                            '#ffcc99'
-                        ]
-                    },
-
-                    defaultFont:
-                        'Vazir, Tahoma, Arial, sans-serif',
-
-                    defaultFontSize:
-                        '14px',
-
-                    fonts: [
-                        'Vazir',
-                        'Tahoma',
-                        'Arial',
-                        'Courier New'
-                    ]
+        // ===== Remove Dynamic Item (باید در global scope باشد) =====
+        function removeDynamic(button) {
+            const item = button.closest('.dynamic-item');
+            const container = item.parentElement;
+
+            if (container.querySelectorAll('.dynamic-item').length > 1) {
+                item.remove();
+            } else {
+                item.querySelectorAll('input, textarea').forEach(field => {
+                    if (field.type === 'number') {
+                        field.value = 0;
+                    } else {
+                        field.value = '';
+                    }
                 });
             }
+        }
 
-
-            /*
-            |--------------------------------------------------------------------------
-            | Editors
-            |--------------------------------------------------------------------------
-            */
-
-            createEditor('#overviewEditor');
-
-            createEditor('#challengeEditor');
-
-            createEditor('#solutionEditor');
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | Image / Icon
-            |--------------------------------------------------------------------------
-            */
-
-            const imageInput =
-                document.getElementById('imageInput');
-
-            const iconInput =
-                document.getElementById('iconInput');
-
-
-            if (imageInput && iconInput) {
-
-                function checkImageIcon() {
-
-                    if (imageInput.files.length > 0) {
-
-                        iconInput.disabled = true;
-
-                    } else {
-
-                        iconInput.disabled = false;
-                    }
-                }
-
-
-                imageInput.addEventListener(
-                    'change',
-                    function () {
-
-                        if (imageInput.files.length > 0) {
-
-                            iconInput.disabled = true;
-
-                            iconInput.value = '';
-
-                        } else {
-
-                            iconInput.disabled = false;
-                        }
-                    }
-                );
-
-
-                iconInput.addEventListener(
-                    'input',
-                    function () {
-
-                        if (
-                            iconInput.value.trim() !== ''
-                        ) {
-
-                            imageInput.disabled = true;
-
-                        } else {
-
-                            imageInput.disabled = false;
-                        }
-                    }
-                );
-
-
-                checkImageIcon();
-            }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | What Receive
-            |--------------------------------------------------------------------------
-            */
-
-            let whatReceiveIndex =
-                document.querySelectorAll(
-                    '#whatReceiveContainer .dynamic-item'
-                ).length;
-
-
-            const addWhatReceive =
-                document.getElementById(
-                    'addWhatReceive'
-                );
-
-
-            if (addWhatReceive) {
-
-                addWhatReceive.addEventListener(
-                    'click',
-                    function () {
-
-                        const container =
-                            document.getElementById(
-                                'whatReceiveContainer'
-                            );
-
-                        const item =
-                            document.createElement('div');
-
-                        item.className =
-                            'dynamic-item';
-
-
-                        item.innerHTML = `
-
-                            <div class="form-grid form-grid-3">
-
-                                <input
-                                    type="text"
-                                    name="what_receive[${whatReceiveIndex}][title]"
-                                    placeholder="عنوان"
-                                    class="form-input"
-                                >
-
-                                <input
-                                    type="text"
-                                    name="what_receive[${whatReceiveIndex}][icon]"
-                                    placeholder="fa-comments"
-                                    class="form-input"
-                                >
-
-                                <input
-                                    type="number"
-                                    name="what_receive[${whatReceiveIndex}][number]"
-                                    value="${whatReceiveIndex}"
-                                    placeholder="اولویت"
-                                    class="form-input"
-                                >
-
-                            </div>
-
-                            <textarea
-                                name="what_receive[${whatReceiveIndex}][text]"
-                                rows="3"
-                                placeholder="توضیحات"
-                                class="form-textarea"
-                                style="margin-top:10px;"
-                            ></textarea>
-
-                        `;
-
-
-                        container.appendChild(item);
-
-                        whatReceiveIndex++;
-                    }
-                );
-            }
-
-
-            /*
-            |--------------------------------------------------------------------------
-            | Technologies
-            |--------------------------------------------------------------------------
-            */
-
-            let techIndex =
-                document.querySelectorAll(
-                    '#techContainer .dynamic-item'
-                ).length;
-
-
-            const addTech =
-                document.getElementById('addTech');
-
-
-            if (addTech) {
-
-                addTech.addEventListener(
-                    'click',
-                    function () {
-
-                        const container =
-                            document.getElementById(
-                                'techContainer'
-                            );
-
-                        const item =
-                            document.createElement('div');
-
-                        item.className =
-                            'dynamic-item';
-
-
-                        item.innerHTML = `
-
-                            <div class="form-grid form-grid-3">
-
-                                <input
-                                    type="text"
-                                    name="techs[${techIndex}][text]"
-                                    placeholder="مثلاً Laravel"
-                                    class="form-input"
-                                >
-
-                                <input
-                                    type="text"
-                                    name="techs[${techIndex}][icon]"
-                                    placeholder="fa-code"
-                                    class="form-input"
-                                >
-
-                                <input
-                                    type="number"
-                                    name="techs[${techIndex}][number]"
-                                    value="${techIndex}"
-                                    placeholder="اولویت"
-                                    class="form-input"
-                                >
-
-                            </div>
-
-                        `;
-
-
-                        container.appendChild(item);
-
-                        techIndex++;
-                    }
-                );
-            }
-
-        });
-    </script>
-    <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Jodit Editor
             const editor = new Jodit('#overviewEditor', {
@@ -1196,13 +804,19 @@
 
             checkImageIcon();
 
-            // Dynamic What Receive
-            let whatReceiveIndex = document.querySelectorAll('.what-receive-item').length;
+            // ===== Dynamic What Receive =====
+            let whatReceiveIndex = document.querySelectorAll('#whatReceiveContainer .dynamic-item').length;
             document.getElementById('addWhatReceive').addEventListener('click', function () {
                 const container = document.getElementById('whatReceiveContainer');
                 const item = document.createElement('div');
                 item.className = 'dynamic-item';
                 item.innerHTML = `
+                        <div class="dynamic-item-header">
+                            <strong>مورد ${whatReceiveIndex + 1}</strong>
+                            <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
+                                <i class="fa-solid fa-trash"></i> حذف
+                            </button>
+                        </div>
                         <div class="form-grid form-grid-3">
                             <input type="text" name="what_receive[${whatReceiveIndex}][title]" placeholder="عنوان" class="form-input">
                             <input type="text" name="what_receive[${whatReceiveIndex}][icon]" placeholder="fa-comments" class="form-input">
@@ -1214,13 +828,19 @@
                 whatReceiveIndex++;
             });
 
-            // Dynamic Technologies
-            let techIndex = document.querySelectorAll('.tech-item').length;
+            // ===== Dynamic Technologies =====
+            let techIndex = document.querySelectorAll('#techContainer .dynamic-item').length;
             document.getElementById('addTech').addEventListener('click', function () {
                 const container = document.getElementById('techContainer');
                 const item = document.createElement('div');
                 item.className = 'dynamic-item';
                 item.innerHTML = `
+                        <div class="dynamic-item-header">
+                            <strong>تکنولوژی ${techIndex + 1}</strong>
+                            <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
+                                <i class="fa-solid fa-trash"></i> حذف
+                            </button>
+                        </div>
                         <div class="form-grid form-grid-3">
                             <input type="text" name="techs[${techIndex}][text]" placeholder="مثلاً Laravel" class="form-input">
                             <input type="text" name="techs[${techIndex}][icon]" placeholder="fa-code" class="form-input">
@@ -1229,6 +849,38 @@
                     `;
                 container.appendChild(item);
                 techIndex++;
+            });
+
+            // ===== Dynamic FAQs =====
+            let faqIndex = document.querySelectorAll('#faqContainer .dynamic-item').length;
+            document.getElementById('addFaq').addEventListener('click', function () {
+                const container = document.getElementById('faqContainer');
+                const item = document.createElement('div');
+                item.className = 'dynamic-item';
+                item.innerHTML = `
+                        <div class="dynamic-item-header">
+                            <strong>سوال ${faqIndex + 1}</strong>
+                            <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
+                                <i class="fa-solid fa-trash"></i> حذف
+                            </button>
+                        </div>
+                        <div class="faq-row">
+                            <div class="form-group">
+                                <label class="form-label">شماره ترتیب</label>
+                                <input type="number" name="faqs[${faqIndex}][number]" value="${faqIndex + 1}" required min="1" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">صورت سوال</label>
+                                <input type="text" name="faqs[${faqIndex}][question]" placeholder="مثلاً نحوه ثبت‌نام به چه صورت است؟" class="form-input">
+                            </div>
+                        </div>
+                        <div class="form-group" style="margin-top:15px;">
+                            <label class="form-label">پاسخ سوال</label>
+                            <textarea name="faqs[${faqIndex}][answer]" rows="5" placeholder="پاسخ کامل سوال را بنویسید..." class="form-textarea" style="resize: vertical;"></textarea>
+                        </div>
+                    `;
+                container.appendChild(item);
+                faqIndex++;
             });
         });
     </script>

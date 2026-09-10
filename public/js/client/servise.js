@@ -154,3 +154,21 @@ if (window.matchMedia("(pointer:fine)").matches) {
       el.addEventListener("mouseleave", () => ring.classList.remove("hover"));
     });
 }
+document.querySelectorAll(".acc-item").forEach(item => {
+    const btn = item.querySelector(".acc-btn");
+    const panelEl = item.querySelector(".acc-panel");
+    if (!btn || !panelEl) return;
+    if (item.classList.contains("open")) panelEl.style.maxHeight = panelEl.scrollHeight + "px";
+    btn.addEventListener("click", () => {
+        const isOpen = item.classList.contains("open");
+        document.querySelectorAll(".acc-item").forEach(i => {
+            i.classList.remove("open");
+            const p = i.querySelector(".acc-panel");
+            if (p) p.style.maxHeight = null;
+        });
+        if (!isOpen) {
+            item.classList.add("open");
+            panelEl.style.maxHeight = panelEl.scrollHeight + "px";
+        }
+    });
+});

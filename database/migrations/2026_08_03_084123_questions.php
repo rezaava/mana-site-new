@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('title', 200)->default('default title');
             $table->text('answer');
             $table->tinyInteger('number')->comment('برای مرتب سازی');
+            $table->integer('service_id')->nullable();
             $table->timestamps();
         });
     }

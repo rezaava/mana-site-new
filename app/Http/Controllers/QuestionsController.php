@@ -22,12 +22,18 @@ class QuestionsController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'number'   => 'required|integer|min:1',
+            'number' => 'required|integer|min:1',
             'title' => 'required|string|max:255',
-            'answer'   => 'required|string',
+            'answer' => 'required|string',
         ]);
 
-        Questions::create($validated);
+        $questions = new Questions();
+
+        $questions->number = $validated['number'];
+        $questions->title = $validated['title'];
+        $questions->answer = $validated['answer'];
+
+        $questions->save();
 
         return redirect()->route('questions.index')->with('success', 'سوال جدید با موفقیت اضافه شد.');
     }
@@ -43,9 +49,9 @@ class QuestionsController extends Controller
         $question = Questions::findOrFail($id);
 
         $validated = $request->validate([
-            'number'   => 'required|integer|min:1',
+            'number' => 'required|integer|min:1',
             'title' => 'required|string|max:255',
-            'answer'   => 'required|string',
+            'answer' => 'required|string',
         ]);
 
         $question->update($validated);
