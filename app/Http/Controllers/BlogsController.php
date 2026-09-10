@@ -24,8 +24,8 @@ class BlogsController extends Controller
     public function blog()
     {
         $blogs = Blogs::with(['category', 'tags'])->latest()->get();
-
-        return view('blog.all_blogs', compact('blogs'));
+$popularTags = BlogTag::get();
+        return view('blog.all_blogs', compact('blogs','popularTags'));
     }
 
     public function index()

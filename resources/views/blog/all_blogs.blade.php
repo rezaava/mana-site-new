@@ -313,7 +313,7 @@
                 @forelse($blogs as $index => $blog)
 
                     <a
-                        href="{{ route('blogs.singleBlog', $blog->id) }}"
+                        href="{{ route('singleBlog', ['id' => $blog->id, 'slug' => $blog->slug])  }}"
                         class="art-card"
                         data-cat="{{ $blog->category?->id ?? 'all' }}"
                         data-title="{{ $blog->title }}"
@@ -656,15 +656,6 @@
 
 
                         <div class="tag-cloud">
-
-                            @php
-                                $popularTags = \App\Models\BlogTag::query()
-                                    ->select('text')
-                                    ->distinct()
-                                    ->limit(12)
-                                    ->get();
-                            @endphp
-
 
                             @foreach($popularTags as $tag)
 

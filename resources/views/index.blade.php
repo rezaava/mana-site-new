@@ -461,7 +461,7 @@
                 </div>
 
                 <div class="blog-more reveal">
-                    <a href="{{ url('/blog.html') }}"
+                    <a href="{{ route('blog') }}"
                         class="btn-ghost">{{ $siteTexts['blog_all']->value ?? 'مشاهده همه مقالات' }} <i
                             class="fa-solid fa-arrow-left"></i></a>
                 </div>
