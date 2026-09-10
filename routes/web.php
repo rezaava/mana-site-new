@@ -56,12 +56,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     // متن‌های سایت
     Route::get('/site-texts', [SiteTextController::class, 'index'])->name('site-texts.index');
     Route::post('/site-texts', [SiteTextController::class, 'update'])->name('site-texts.update');
-
-    //->middleware(['role:admin'])
-    Route::get('/1', function () {
-        return view('admin.panel'); })->name('admin_panel');
-    Route::get('/2', function () {
-        return view('admin.dashboard'); })->name('admin_dashboard');
+    Route::get('/', [SiteController::class, 'index_admin'])->name('home');
 
     // صفحات
     Route::get('/pages', [ServiceController::class, 'index'])->name('pages.index');

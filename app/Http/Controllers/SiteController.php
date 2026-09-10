@@ -11,6 +11,7 @@ use App\Models\Comments;
 use App\Models\ServiceState;
 use App\Models\ServiceTech;
 use App\Models\ServiceWhatReceive;
+use App\Models\Ticket;
 use App\Models\Images;
 use App\Models\Features;
 use App\Models\SiteText;
@@ -58,7 +59,21 @@ class SiteController extends Controller
             'stats',
         ));
     }
+        
+    public function index_admin()
+    {
+        $projectsCount = Projects::count();
+        $blogsCount = Blogs::count();
+        $servicesCount = Services::count();
+        $ticketsCount = Ticket::count();
 
+        return view('admin.dashboard', compact(
+            'projectsCount',
+            'blogsCount',
+            'servicesCount',
+            'ticketsCount'
+        ));
+    }
     /**
      * صفحه لیست وبلاگ‌ها
      */
