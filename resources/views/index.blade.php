@@ -469,7 +469,7 @@
                 <div class="blog-layout">
                     <div class="blog-list reveal">
                         @foreach($blogs as $blog)
-                            <a href="/blog/{{ $blog->id }}/{{ $blog->slug }}" class="blog-list-item">{{ $blog->title }} <span
+                            <a href="/blog/{{ $blog->slug }}" class="blog-list-item">{{ $blog->title }} <span
                                     class="arr"><i class="fa-solid fa-arrow-up-left"></i></span></a>
                         @endforeach
                     </div>
@@ -486,7 +486,7 @@
                                         class="fa-regular fa-clock"></i>{{ $featuredBlog->read_time ?? $siteTexts['blog_read_time']->value ?? 'زمان مطالعه: ۵ دقیقه' }}
                                 </div>
                                 <h5>{{ $featuredBlog->title }}</h5>
-                                <a href="{{ url('/singleblog/' . $featuredBlog->id, $featuredBlog->slug) }}"
+                                <a href="{{ url('/blog/' . $featuredBlog->slug) }}"
                                     class="pill">{{ $siteTexts['blog_read_more']->value ?? 'مطالعه مقاله' }} <i
                                         class="fa-solid fa-arrow-up-left"></i></a>
                             </div>
@@ -498,7 +498,7 @@
                             <div class="blog-side-card reveal reveal-delay-{{ $loop->iteration + 1 }}">
                                 <div class="thumb {{ $loop->first ? 'a' : 'b' }}"><i
                                         class="fa-solid {{ $loop->first ? 'fa-robot' : 'fa-mobile-screen' }}"></i></div>
-                                <a href="{{ url('/blog/' . $blog->id, $blog->slug) }}">
+                                <a href="{{ url('/blog' ,$blog->slug) }}">
                                     <div>
                                         <span class="tag">{{ $blog->category->name ?? 'مقاله' }}</span>
                                         <h6>{{ $blog->title }}</h6>

@@ -197,7 +197,7 @@
                         <!-- مشاهده -->
 
                         <a
-                            href="{{ route('blogs.singleBlog', $featured->id) }}"
+                            href="{{ route('singleBlog', $featured->slug) }}"
                             class="btn-flow"
                         >
 
@@ -313,7 +313,7 @@
                 @forelse($blogs as $index => $blog)
 
                     <a
-                        href="{{ route('singleBlog', ['id' => $blog->id, 'slug' => $blog->slug])  }}"
+                        href="{{ route('singleBlog', ['slug' => $blog->slug])  }}"
                         class="art-card"
                         data-cat="{{ $blog->category?->id ?? 'all' }}"
                         data-title="{{ $blog->title }}"

@@ -321,7 +321,7 @@ class ProjectController extends Controller
                 $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
                 $file->move(
-                    public_path('projects'),
+                    ('projects'),
                     $fileName
                 );
 
@@ -486,7 +486,7 @@ class ProjectController extends Controller
                     $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
                     $file->move(
-                        public_path('projects'),
+                        ('projects'),
                         $fileName
                     );
 
@@ -514,7 +514,7 @@ class ProjectController extends Controller
             DB::rollBack();
 
             foreach ($uploadedFiles as $file) {
-                $fullPath = public_path($file);
+                $fullPath = ($file);
 
                 if (file_exists($fullPath)) {
                     @unlink($fullPath);
@@ -627,7 +627,7 @@ class ProjectController extends Controller
                 $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
                 $file->move(
-                    public_path('projects'),
+                    ('projects'),
                     $fileName
                 );
 
@@ -843,7 +843,7 @@ class ProjectController extends Controller
 
                 foreach ($oldGalleries as $oldGallery) {
                     if ($oldGallery->image_url) {
-                        $oldPath = public_path(
+                        $oldPath = (
                             $oldGallery->image_url
                         );
 
@@ -863,7 +863,7 @@ class ProjectController extends Controller
                     $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
                     $file->move(
-                        public_path('projects'),
+                        ('projects'),
                         $fileName
                     );
 
@@ -892,7 +892,7 @@ class ProjectController extends Controller
                 $oldImage &&
                 $oldImage !== 'default.jpg'
             ) {
-                $oldImagePath = public_path($oldImage);
+                $oldImagePath = ($oldImage);
 
                 if (file_exists($oldImagePath)) {
                     @unlink($oldImagePath);
@@ -910,7 +910,7 @@ class ProjectController extends Controller
             DB::rollBack();
 
             foreach ($uploadedFiles as $file) {
-                $fullPath = public_path($file);
+                $fullPath = ($file);
 
                 if (file_exists($fullPath)) {
                     @unlink($fullPath);
@@ -945,7 +945,7 @@ class ProjectController extends Controller
                 $project->image_url &&
                 $project->image_url !== 'default.jpg'
             ) {
-                $imagePath = public_path(
+                $imagePath = (
                     $project->image_url
                 );
 
@@ -999,7 +999,7 @@ class ProjectController extends Controller
 
             foreach ($galleries as $gallery) {
                 if ($gallery->image_url) {
-                    $galleryPath = public_path(
+                    $galleryPath = (
                         $gallery->image_url
                     );
 
@@ -1164,7 +1164,7 @@ class ProjectController extends Controller
         $gallery = ProjectGallery::findOrFail($galleryId);
 
         if ($gallery->image_url) {
-            $galleryPath = public_path(
+            $galleryPath = (
                 $gallery->image_url
             );
 

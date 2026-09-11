@@ -10,7 +10,7 @@ class QuestionsController extends Controller
     public function index()
     {
         // مرتب‌سازی بر اساس فیلد number
-        $questions = Questions::orderBy('number', 'asc')->paginate(10);
+        $questions = Questions::where('service_id',null)->orderBy('number', 'asc')->paginate(10);
         return view('admin.questions.questions', compact('questions'));
     }
 

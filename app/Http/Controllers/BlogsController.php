@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Storage;
 
 class BlogsController extends Controller
 {
-    public function singleBlog($id)
+    public function singleBlog($slug)
     {
-        $blog = Blogs::with([
+        $blog = Blogs::where('slug',$slug)->with([
             'category',
             'tags'
-        ])->findOrFail($id);
+        ])->firstOrFail();
 
         return view('blog.singleblog', compact('blog'));
     }
@@ -24,7 +24,7 @@ class BlogsController extends Controller
     public function blog()
     {
         $blogs = Blogs::with(['category', 'tags'])->latest()->get();
-$popularTags = BlogTag::get();
+        $popularTags = BlogTag::get();
         return view('blog.all_blogs', compact('blogs','popularTags'));
     }
 

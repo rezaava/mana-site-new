@@ -188,7 +188,7 @@
 
     @if($state)
 
-        <div class="stat-strip-outer">
+        <div class="stat-strip-outer mt-5">
 
             <div class="container-x">
 

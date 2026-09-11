@@ -63,7 +63,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     // متن‌های سایت
     Route::get('/site-texts', [SiteTextController::class, 'index'])->name('site-texts.index');
     Route::post('/site-texts', [SiteTextController::class, 'update'])->name('site-texts.update');
-    Route::get('/', [SiteController::class, 'index_admin'])->name('home');
+    Route::get('/', [SiteController::class, 'index_admin'])->name('admin_dashboard');
 
     // صفحات
     Route::get('/pages', [ServiceController::class, 'index'])->name('pages.index');
