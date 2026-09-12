@@ -136,12 +136,12 @@
                         @if($service->image_url)
 
                             <img src="{{ asset('storage/' . $service->image_url) }}" alt="{{ $service->title }}" style="
-                                                                                max-width:100%;
-                                                                                max-height:400px;
-                                                                                object-fit:contain;
-                                                                                position:relative;
-                                                                                z-index:5;
-                                                                            ">
+                                                                                                max-width:100%;
+                                                                                                max-height:400px;
+                                                                                                object-fit:contain;
+                                                                                                position:relative;
+                                                                                                z-index:5;
+                                                                                            ">
 
                         @else
 
@@ -451,9 +451,9 @@
                 </div>
 
 
-            {{-- ===================================================== --}}
-            {{-- اگر نقل قول وجود نداشته باشد --}}
-            {{-- ===================================================== --}}
+                {{-- ===================================================== --}}
+                {{-- اگر نقل قول وجود نداشته باشد --}}
+                {{-- ===================================================== --}}
 
             @else
 
@@ -590,7 +590,7 @@
 
                 <h2 class="section-title">
 
-                    در این خدمت، چه چیزی دریافت می‌کنید
+                    {{ $service->receives_title }}
 
                 </h2>
 
@@ -661,7 +661,7 @@
 
                 <h2 class="section-title">
 
-                    با چه ابزارهایی کار می‌کنیم
+                    {{ $service->techs_title }}
 
                 </h2>
 
@@ -710,7 +710,7 @@
 
                 <h2 class="section-title">
 
-                    این خدمت به‌طور خلاصه
+                    {{ $service->information_title }}
 
                 </h2>
 

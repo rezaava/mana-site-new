@@ -442,6 +442,20 @@
                     @endfor
                 </div>
 
+                {{--عنوان بخش چه چیزی دریافت میکنید --}}
+                <h6 class="form-section-title">
+                    <i class="fa-solid fa-box-open"></i> عنوان بخش چه چیزی دریافت میکنید
+                </h6>
+
+                <div id="whatReceiveContainer">
+                    <div class="dynamic-item">
+                        <div class="form-grid form-grid-3">
+                            <input type="text" name="receives_title" placeholder="عنوان" class="form-input">
+                        </div>
+                    </div>
+                </div>
+
+
                 {{-- چه چیزی دریافت می‌کنید --}}
                 <h6 class="form-section-title">
                     <i class="fa-solid fa-box-open"></i> چه چیزی دریافت می‌کنید
@@ -464,6 +478,20 @@
                     <i class="fa-solid fa-plus"></i> افزودن مورد
                 </button>
 
+
+                {{--عنوان بخش ابزار ها و تکنولوژی ها --}}
+                <h6 class="form-section-title">
+                    <i class="fa-solid fa-toolbox"></i> عنوان بخش ابزار ها و تکنولوژی ها
+                </h6>
+
+                <div id="whatReceiveContainer">
+                    <div class="dynamic-item">
+                        <div class="form-grid form-grid-3">
+                            <input type="text" name="techs_title" placeholder="عنوان" class="form-input">
+                        </div>
+                    </div>
+                </div>
+
                 {{-- ابزارها و تکنولوژی‌ها --}}
                 <h6 class="form-section-title">
                     <i class="fa-solid fa-toolbox"></i> ابزارها و تکنولوژی‌ها
@@ -482,6 +510,20 @@
                 <button type="button" id="addTech" class="btn-add-dynamic" style="margin-bottom:25px;">
                     <i class="fa-solid fa-plus"></i> افزودن تکنولوژی
                 </button>
+
+
+                {{--عنوان بخش اصلاعات خدمت --}}
+                <h6 class="form-section-title">
+                    <i class="fa-solid fa-layer-group"></i> عنوان بخش اصلاعات خدمت
+                </h6>
+
+                <div id="whatReceiveContainer">
+                    <div class="dynamic-item">
+                        <div class="form-grid form-grid-3">
+                            <input type="text" name="information_title" placeholder="عنوان" class="form-input">
+                        </div>
+                    </div>
+                </div>
 
 
                 {{-- سوالات متداول --}}
@@ -707,19 +749,19 @@
                 item.className = 'dynamic-item';
                 whatReceiveIndex++;
                 item.innerHTML = `
-                                            <div class="dynamic-item-header">
-                                                <strong>مورد ${whatReceiveIndex}</strong>
-                                                <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
-                                                    <i class="fa-solid fa-trash"></i> حذف
-                                                </button>
-                                            </div>
-                                            <div class="form-grid form-grid-3">
-                                                <input type="text" name="what_receive[${whatReceiveIndex}][title]" placeholder="عنوان" class="form-input">
-                                                <input type="text" name="what_receive[${whatReceiveIndex}][icon]" placeholder="fa-comments" class="form-input">
-                                                <input type="number" name="what_receive[${whatReceiveIndex}][number]" value="${whatReceiveIndex}" placeholder="اولویت" class="form-input">
-                                            </div>
-                                            <textarea name="what_receive[${whatReceiveIndex}][text]" rows="3" placeholder="توضیحات" class="form-textarea" style="margin-top:10px;"></textarea>
-                                        `;
+                                                                            <div class="dynamic-item-header">
+                                                                                <strong>مورد ${whatReceiveIndex}</strong>
+                                                                                <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
+                                                                                    <i class="fa-solid fa-trash"></i> حذف
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="form-grid form-grid-3">
+                                                                                <input type="text" name="what_receive[${whatReceiveIndex}][title]" placeholder="عنوان" class="form-input">
+                                                                                <input type="text" name="what_receive[${whatReceiveIndex}][icon]" placeholder="fa-comments" class="form-input">
+                                                                                <input type="number" name="what_receive[${whatReceiveIndex}][number]" value="${whatReceiveIndex}" placeholder="اولویت" class="form-input">
+                                                                            </div>
+                                                                            <textarea name="what_receive[${whatReceiveIndex}][text]" rows="3" placeholder="توضیحات" class="form-textarea" style="margin-top:10px;"></textarea>
+                                                                        `;
                 container.appendChild(item);
             });
 
@@ -731,18 +773,18 @@
                 item.className = 'dynamic-item';
                 techIndex++;
                 item.innerHTML = `
-                                            <div class="dynamic-item-header">
-                                                <strong>تکنولوژی ${techIndex}</strong>
-                                                <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
-                                                    <i class="fa-solid fa-trash"></i> حذف
-                                                </button>
-                                            </div>
-                                            <div class="form-grid form-grid-3">
-                                                <input type="text" name="techs[${techIndex}][text]" placeholder="مثلاً Laravel" class="form-input">
-                                                <input type="text" name="techs[${techIndex}][icon]" placeholder="fa-code" class="form-input">
-                                                <input type="number" name="techs[${techIndex}][number]" value="${techIndex}" placeholder="اولویت" class="form-input">
-                                            </div>
-                                        `;
+                                                                            <div class="dynamic-item-header">
+                                                                                <strong>تکنولوژی ${techIndex}</strong>
+                                                                                <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
+                                                                                    <i class="fa-solid fa-trash"></i> حذف
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="form-grid form-grid-3">
+                                                                                <input type="text" name="techs[${techIndex}][text]" placeholder="مثلاً Laravel" class="form-input">
+                                                                                <input type="text" name="techs[${techIndex}][icon]" placeholder="fa-code" class="form-input">
+                                                                                <input type="number" name="techs[${techIndex}][number]" value="${techIndex}" placeholder="اولویت" class="form-input">
+                                                                            </div>
+                                                                        `;
                 container.appendChild(item);
             });
 
@@ -754,27 +796,27 @@
                 item.className = 'dynamic-item';
                 faqIndex++;
                 item.innerHTML = `
-                                            <div class="dynamic-item-header">
-                                                <strong>سوال ${faqIndex}</strong>
-                                                <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
-                                                    <i class="fa-solid fa-trash"></i> حذف
-                                                </button>
-                                            </div>
-                                            <div class="faq-row">
-                                                <div class="form-group">
-                                                    <label class="form-label">شماره ترتیب</label>
-                                                    <input type="number" name="faqs[${faqIndex}][number]" value="${faqIndex}" required min="1" class="form-input">
-                                                </div>
-                                                <div class="form-group">
-                                                    <label class="form-label">صورت سوال</label>
-                                                    <input type="text" name="faqs[${faqIndex}][question]" placeholder="مثلاً نحوه ثبت‌نام به چه صورت است؟" class="form-input">
-                                                </div>
-                                            </div>
-                                            <div class="form-group" style="margin-top:15px;">
-                                                <label class="form-label">پاسخ سوال</label>
-                                                <textarea name="faqs[${faqIndex}][answer]" rows="5" placeholder="پاسخ کامل سوال را بنویسید..." class="form-textarea" style="resize: vertical;"></textarea>
-                                            </div>
-                                        `;
+                                                                            <div class="dynamic-item-header">
+                                                                                <strong>سوال ${faqIndex}</strong>
+                                                                                <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
+                                                                                    <i class="fa-solid fa-trash"></i> حذف
+                                                                                </button>
+                                                                            </div>
+                                                                            <div class="faq-row">
+                                                                                <div class="form-group">
+                                                                                    <label class="form-label">شماره ترتیب</label>
+                                                                                    <input type="number" name="faqs[${faqIndex}][number]" value="${faqIndex}" required min="1" class="form-input">
+                                                                                </div>
+                                                                                <div class="form-group">
+                                                                                    <label class="form-label">صورت سوال</label>
+                                                                                    <input type="text" name="faqs[${faqIndex}][question]" placeholder="مثلاً نحوه ثبت‌نام به چه صورت است؟" class="form-input">
+                                                                                </div>
+                                                                            </div>
+                                                                            <div class="form-group" style="margin-top:15px;">
+                                                                                <label class="form-label">پاسخ سوال</label>
+                                                                                <textarea name="faqs[${faqIndex}][answer]" rows="5" placeholder="پاسخ کامل سوال را بنویسید..." class="form-textarea" style="resize: vertical;"></textarea>
+                                                                            </div>
+                                                                        `;
                 container.appendChild(item);
             });
         });

@@ -71,7 +71,9 @@ class ServiceController extends Controller
             'meta' => 'nullable',
             'title_head' => 'nullable|string|max:255',
 
-
+            'receives_title' => 'required',
+            'techs_title' => 'required',
+            'information_title' => 'required',
 
             /*
             | فقط یک فیلد برای معرفی
@@ -204,7 +206,11 @@ class ServiceController extends Controller
             $service->title_head = $validated['title_head'] ?? null;
 
 
+            $service->receives_title = $validated['receives_title'];
 
+            $service->information_title = $validated['information_title'];
+
+            $service->techs_title = $validated['techs_title'];
             /*
             | معرفی خدمت
             */
@@ -474,6 +480,10 @@ class ServiceController extends Controller
             'meta' => 'nullable',
             'title_head' => 'nullable|string|max:255',
 
+            'receives_title' => 'required',
+            'techs_title' => 'required',
+            'information_title' => 'required',
+
 
             'faqs' => 'nullable|array',
             'faqs.*.number' => 'nullable|integer',
@@ -621,6 +631,12 @@ class ServiceController extends Controller
                 $validated['meta'];
 
             $service->title_head = $validated['title_head'] ?? null;
+
+            $service->receives_title = $validated['receives_title'];
+
+            $service->information_title = $validated['information_title'];
+
+            $service->techs_title = $validated['techs_title'];
 
 
             $service->price_text =
