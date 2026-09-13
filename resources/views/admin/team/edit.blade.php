@@ -161,7 +161,7 @@
 
             <form action="{{ route('update_team', $team->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                @method('PUT')
+               
 
                 <div class="form-grid form-grid-2">
                     <div class="form-group">
