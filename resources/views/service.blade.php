@@ -135,7 +135,7 @@
 
                         @if($service->image_url)
 
-                            <img src="{{ asset('storage/' . $service->image_url) }}" alt="{{ $service->title }}" style="
+                            <img src="{{ asset( $service->image_url) }}" alt="{{ $service->title }}" style="
                                                                                                 max-width:100%;
                                                                                                 max-height:400px;
                                                                                                 object-fit:contain;
@@ -840,7 +840,7 @@
                                 <div class="acc-item {{ $index === 0 ? 'open' : '' }} reveal reveal-delay-{{ ($index % 4) + 1 }}">
 
                                     <button type="button" class="acc-btn">
-                                        <span>{{ $question->title }}</span>
+                                        <h3 class="h5">{{ $question->title }}</h3>
                                         <i class="fa-solid fa-plus"></i>
                                     </button>
 

@@ -347,7 +347,7 @@
                             accept="image/jpeg,image/png,image/jpg,image/webp,image/svg+xml" class="form-file">
                         @if($service->image_url)
                             <div style="margin-top:10px;">
-                                <img src="{{ asset('storage/' . $service->image_url) }}" alt="{{ $service->title }}"
+                                <img src="{{ asset( $service->image_url) }}" alt="{{ $service->title }}"
                                     style="width:100px; height:100px; object-fit:cover; border-radius:8px; border:1px solid var(--line);">
                             </div>
                         @endif

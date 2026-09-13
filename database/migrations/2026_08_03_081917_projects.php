@@ -17,6 +17,7 @@ return new class extends Migration {
             $table->text('desc')->nullable();
             $table->tinyInteger('cat_id')->nullable();
             $table->string('image_url')->nullable();
+            $table->string('image_mobile_url')->nullable();
             $table->text('challenge')->nullable();
             $table->text('solution')->nullable();
             $table->integer('number')->comment('This column is used to determine the order of the projects');

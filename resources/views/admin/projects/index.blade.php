@@ -357,7 +357,7 @@
                                 <td>{{ $projects->firstItem() + $index }}</td>
                                 <td>
                                     @if($project->image_url)
-                                        <img src="{{ asset('storage/' . $project->image_url) }}" alt="{{ $project->title }}"
+                                        <img src="{{ asset( $project->image_url) }}" alt="{{ $project->title }}"
                                             class="project-thumb">
                                     @else
                                         <span style="color: var(--text-dimmer); font-size: 0.8rem;">بدون تصویر</span>

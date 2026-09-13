@@ -290,7 +290,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
                                     @if($member->image_url)
-                                        <img src="{{ asset('storage/' . $member->image_url) }}" alt="{{ $member->name }}" class="team-thumb">
+                                        <img src="{{ asset( $member->image_url) }}" alt="{{ $member->name }}" class="team-thumb">
                                     @else
                                         <span style="color: var(--text-dimmer);">بدون تصویر</span>
                                     @endif

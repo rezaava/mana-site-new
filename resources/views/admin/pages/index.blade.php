@@ -325,7 +325,7 @@
                                 <td>{{ $services->firstItem() + $index }}</td>
                                 <td>
                                     @if($service->image_url)
-                                        <img src="{{asset('storage/' . $service->image_url)}}" alt="{{ $service->title }}"
+                                        <img src="{{asset( $service->image_url)}}" alt="{{ $service->title }}"
                                             class="service-thumb">
                                     @else
                                         <span style="color: var(--text-dimmer);">بدون تصویر</span>

@@ -178,7 +178,7 @@
                     <label class="form-label">تصویر</label>
                     <input type="file" name="image" class="form-file">
                     @if($team->image_url)
-                        <img src="{{ asset('storage/' . $team->image_url) }}"
+                        <img src="{{ asset( $team->image_url) }}"
                             style="width: 70px; margin-top: 10px; border-radius: 8px;">
                     @endif
                 </div>

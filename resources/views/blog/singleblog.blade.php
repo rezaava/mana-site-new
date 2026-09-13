@@ -119,7 +119,7 @@
 
                             <div class="post-img">
 
-                                <img src="{{ asset('storage/' . $blog->image_url) }}" alt="{{ $blog->title }}">
+                                <img src="{{ asset( $blog->image_url) }}" alt="{{ $blog->title }}">
 
                                 <div class="caption">
                                     <i class="fa-regular fa-image"></i>
@@ -340,7 +340,7 @@
 
                                                         @if($relatedBlog->image_url)
 
-                                                            <img src="{{ asset('storage/' . $relatedBlog->image_url) }}"
+                                                            <img src="{{ asset( $relatedBlog->image_url) }}"
                                                                 alt="{{ $relatedBlog->title }}">
 
                                                         @else

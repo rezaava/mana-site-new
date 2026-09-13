@@ -485,7 +485,7 @@ This section contains the contents of the repository's files.
                         <input type="file" name="image" accept="image/*">
                         @if($project->image_url)
                             <div class="existing-image-preview">
-                                <img src="{{ asset('storage/' . $project->image_url) }}" alt="تصویر فعلی">
+                                <img src="{{ asset( $project->image_url) }}" alt="تصویر فعلی">
                                 <span style="font-size:0.85rem;color:var(--text-dimmer);align-self:center;">تصویر فعلی</span>
                             </div>
                         @endif
@@ -528,7 +528,7 @@ This section contains the contents of the repository's files.
                                 <input type="file" name="gallery_images[{{ $catKey }}][]" accept="image/*">
                                 @if(!empty($img['image_url']))
                                     <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
-                                        <img src="{{ asset('storage/' . $img['image_url']) }}" class="preview-img" alt="تصویر موجود">
+                                        <img src="{{ asset( $img['image_url']) }}" class="preview-img" alt="تصویر موجود">
                                         <input type="hidden" name="gallery_existing[{{ $catKey }}][]" value="{{ $img['id'] ?? '' }}">
                                     </div>
                                 @endif

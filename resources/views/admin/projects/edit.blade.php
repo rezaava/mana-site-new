@@ -168,6 +168,10 @@
             color: var(--accent-2);
         }
 
+        .technology-item {
+            position: relative;
+        }
+
         .technology-remove {
             width: 42px;
             height: 42px;
@@ -190,6 +194,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            margin-top: 8px;
         }
 
         .gallery-category {
@@ -260,6 +265,13 @@
             border-top: 1px solid var(--line);
         }
 
+        .image-upload-box {
+            border: 1px solid var(--line);
+            border-radius: 10px;
+            padding: 15px;
+            background: var(--surface-2);
+        }
+
         @media (max-width: 992px) {
             .stats-grid,
             .services-grid {
@@ -292,7 +304,10 @@
                 ویرایش پروژه
             </h5>
 
-            <form action="{{ route('projects.update', $project->id) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('projects.update', $project->id) }}"
+                method="POST"
+                enctype="multipart/form-data">
+
                 @csrf
 
                 <div class="form-section-title">
@@ -304,6 +319,7 @@
 
                     <div class="col-md-6">
                         <label class="form-label">عنوان پروژه <span style="color:#ef4444;">*</span></label>
+
                         <input type="text"
                             name="title"
                             value="{{ old('title', $project->title) }}"
@@ -313,6 +329,7 @@
 
                     <div class="col-md-6">
                         <label class="form-label">زیرعنوان</label>
+
                         <input type="text"
                             name="subtitle"
                             value="{{ old('subtitle', $project->subtitle) }}"
@@ -322,14 +339,18 @@
 
                     <div class="col-md-6">
                         <label class="form-label">دسته‌بندی</label>
+
                         <select name="cat_id" class="form-select">
+
                             <option value="">انتخاب دسته‌بندی...</option>
 
                             @foreach($categories as $category)
+
                                 <option value="{{ $category->id }}"
                                     {{ old('cat_id', $project->cat_id) == $category->id ? 'selected' : '' }}>
                                     {{ $category->name }}
                                 </option>
+
                             @endforeach
 
                         </select>
@@ -337,6 +358,7 @@
 
                     <div class="col-md-6">
                         <label class="form-label">نام کارفرما</label>
+
                         <input type="text"
                             name="client_name"
                             value="{{ old('client_name', $project->client_name) }}"
@@ -346,6 +368,7 @@
 
                     <div class="col-md-6">
                         <label class="form-label">سمت کارفرما</label>
+
                         <input type="text"
                             name="client_role"
                             value="{{ old('client_role', $project->client_role) }}"
@@ -355,6 +378,7 @@
 
                     <div class="col-md-6">
                         <label class="form-label">سال اجرا</label>
+
                         <input type="text"
                             name="launch_year"
                             value="{{ old('launch_year', $project->launch_year) }}"
@@ -364,6 +388,7 @@
 
                     <div class="col-md-6">
                         <label class="form-label">مدت زمان</label>
+
                         <input type="text"
                             name="duration"
                             value="{{ old('duration', $project->duration) }}"
@@ -373,6 +398,7 @@
 
                     <div class="col-md-6">
                         <label class="form-label">لینک پروژه</label>
+
                         <input type="url"
                             name="project_link"
                             value="{{ old('project_link', $project->project_link) }}"
@@ -383,77 +409,136 @@
 
                     <div class="col-12">
                         <label class="form-label">توضیح کوتاه (Brief)</label>
-                        <textarea name="brief" rows="2" class="form-textarea">{{ old('brief', $project->brief) }}</textarea>
+
+                        <textarea name="brief"
+                            rows="2"
+                            class="form-textarea">{{ old('brief', $project->brief) }}</textarea>
                     </div>
 
                     <div class="col-12">
                         <label class="form-label">توضیحات کامل پروژه</label>
-                        <textarea name="desc" rows="4" class="form-textarea">{{ old('desc', $project->desc) }}</textarea>
+
+                        <textarea name="desc"
+                            rows="4"
+                            class="form-textarea">{{ old('desc', $project->desc) }}</textarea>
                     </div>
 
                     <div class="col-12">
                         <label class="form-label">هدف پروژه</label>
-                        <textarea name="project_goal" rows="3" class="form-textarea"
+
+                        <textarea name="project_goal"
+                            rows="3"
+                            class="form-textarea"
                             placeholder="هدف از انجام این پروژه چه بود؟">{{ old('project_goal', $project->project_goal) }}</textarea>
                     </div>
 
                     <div class="col-md-6">
+
                         <label class="form-label" style="color:#f5a623;">
                             <i class="fa-solid fa-triangle-exclamation"></i>
                             چالش اصلی
                         </label>
 
-                        <textarea name="challenge" rows="4" class="form-textarea"
+                        <textarea name="challenge"
+                            rows="4"
+                            class="form-textarea"
                             placeholder="چالش‌های اصلی پروژه را بنویسید...">{{ old('challenge', $project->challenge) }}</textarea>
+
                     </div>
 
                     <div class="col-md-6">
+
                         <label class="form-label" style="color:#00d1b2;">
                             <i class="fa-solid fa-lightbulb"></i>
                             راه‌حل ما
                         </label>
 
-                        <textarea name="solution" rows="4" class="form-textarea"
+                        <textarea name="solution"
+                            rows="4"
+                            class="form-textarea"
                             placeholder="راه‌حل‌های پیاده‌سازی‌شده را بنویسید...">{{ old('solution', $project->solution) }}</textarea>
+
                     </div>
 
                     <div class="col-12">
+
                         <label class="form-label">نقل قول از کارفرما (Testimonial)</label>
 
                         <textarea name="testimonial"
                             rows="3"
                             class="form-textarea"
                             placeholder="نظر کارفرما درباره پروژه...">{{ old('testimonial', $project->testimonial) }}</textarea>
-                    </div>
-
-                    <div class="col-12">
-
-                        <label class="form-label">تصویر شاخص پروژه</label>
-
-                        <input type="file"
-                            name="image"
-                            accept="image/*"
-                            class="form-file">
-
-                        @if($project->image_url)
-
-                            <div class="existing-image-preview" style="margin-top:8px;">
-
-                                <img src="{{ asset('storage/' . $project->image_url) }}"
-                                    alt="تصویر فعلی"
-                                    style="width:70px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--line);">
-
-                                <span style="font-size:0.85rem;color:var(--text-dimmer);">
-                                    تصویر فعلی
-                                </span>
-
-                            </div>
-
-                        @endif
 
                     </div>
 
                     <div class="col-md-6">
+
+                        <div class="image-upload-box">
+
+                            <label class="form-label">
+                                تصویر شاخص پروژه
+                            </label>
+
+                            <input type="file"
+                                name="image"
+                                accept="image/*"
+                                class="form-file">
+
+                            @if($project->image_url)
+
+                                <div class="existing-image-preview">
+
+                                    <img src="{{ asset($project->image_url) }}"
+                                        alt="تصویر فعلی"
+                                        style="width:70px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--line);">
+
+                                    <span style="font-size:0.85rem;color:var(--text-dimmer);">
+                                        تصویر فعلی
+                                    </span>
+
+                                </div>
+
+                            @endif
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
+                        <div class="image-upload-box">
+
+                            <label class="form-label">
+                                تصویر موبایل پروژه
+                            </label>
+
+                            <input type="file"
+                                name="image_mobile"
+                                accept="image/*"
+                                class="form-file">
+
+                            @if($project->image_mobile_url)
+
+                                <div class="existing-image-preview">
+
+                                    <img src="{{ asset($project->image_mobile_url) }}"
+                                        alt="تصویر موبایل فعلی"
+                                        style="width:70px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--line);">
+
+                                    <span style="font-size:0.85rem;color:var(--text-dimmer);">
+                                        تصویر موبایل فعلی
+                                    </span>
+
+                                </div>
+
+                            @endif
+
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+
                         <label class="form-label">Slug</label>
 
                         <input type="text"
@@ -461,11 +546,11 @@
                             value="{{ old('slug', $project->slug) }}"
                             class="form-input"
                             placeholder="slug">
+
                     </div>
 
                 </div>
 
-                {{-- فیچرها --}}
                 <div class="form-section-title">
                     <i class="fa-solid fa-star"></i>
                     ویژگی‌ها و فیچرهای پروژه
@@ -498,26 +583,37 @@
                                 </div>
 
                                 <div style="margin-bottom:10px;">
-                                    <label class="form-label">عنوان فیچر</label>
+
+                                    <label class="form-label">
+                                        عنوان فیچر
+                                    </label>
 
                                     <input type="text"
                                         name="feature_title[]"
                                         value="{{ old('feature_title.' . $index, $feature['title'] ?? '') }}"
                                         class="form-input"
                                         placeholder="مثلاً پنل مدیریت هوشمند">
+
                                 </div>
 
                                 <div style="margin-bottom:10px;">
-                                    <label class="form-label">متن فیچر</label>
+
+                                    <label class="form-label">
+                                        متن فیچر
+                                    </label>
 
                                     <textarea name="feature_text[]"
                                         rows="3"
                                         class="form-textarea"
                                         placeholder="توضیح این ویژگی را وارد کنید...">{{ old('feature_text.' . $index, $feature['text'] ?? '') }}</textarea>
+
                                 </div>
 
                                 <div>
-                                    <label class="form-label">کلاس CSS آیکون</label>
+
+                                    <label class="form-label">
+                                        کلاس CSS آیکون
+                                    </label>
 
                                     <input type="text"
                                         name="feature_icon[]"
@@ -525,6 +621,7 @@
                                         class="form-input"
                                         placeholder="مثلاً fa-solid fa-chart-line"
                                         dir="ltr">
+
                                 </div>
 
                             </div>
@@ -535,7 +632,6 @@
 
                 </div>
 
-                {{-- آمارها --}}
                 <div class="form-section-title">
                     <i class="fa-solid fa-chart-simple"></i>
                     آمارهای پروژه
@@ -564,23 +660,31 @@
                             </span>
 
                             <div style="margin-top:8px;">
-                                <label class="form-label">مقدار</label>
+
+                                <label class="form-label">
+                                    مقدار
+                                </label>
 
                                 <input type="text"
                                     name="stats_value[]"
                                     value="{{ old('stats_value.' . $index, $stat['value'] ?? '') }}"
                                     class="form-input"
                                     placeholder="مثلاً ۴۵%">
+
                             </div>
 
                             <div style="margin-top:8px;">
-                                <label class="form-label">برچسب</label>
+
+                                <label class="form-label">
+                                    برچسب
+                                </label>
 
                                 <input type="text"
                                     name="stats_label[]"
                                     value="{{ old('stats_label.' . $index, $stat['label'] ?? '') }}"
                                     class="form-input"
                                     placeholder="مثلاً افزایش نرخ تبدیل">
+
                             </div>
 
                         </div>
@@ -589,7 +693,6 @@
 
                 </div>
 
-                {{-- گالری --}}
                 <div class="form-section-title">
                     <i class="fa-solid fa-images"></i>
                     گالری تصاویر
@@ -613,8 +716,6 @@
                         )->values();
 
                         $images = $images->take(3);
-
-                        $imageCount = $images->count();
                     @endphp
 
                     <div class="gallery-category">
@@ -641,14 +742,10 @@
 
                                     @if(isset($images[$i]) && $images[$i]->image_url)
 
-                                        <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
-
-                                            <img
-                                                src="{{ asset('storage/' . $images[$i]->image_url) }}"
-                                                class="preview-img"
-                                                alt="{{ $galleryCategory->title }}">
-
-                                        </div>
+                                        <img
+                                            src="{{ asset($images[$i]->image_url) }}"
+                                            class="preview-img"
+                                            alt="{{ $galleryCategory->title }}">
 
                                     @endif
 
@@ -662,7 +759,6 @@
 
                 @endforeach
 
-                {{-- تکنولوژی‌ها --}}
                 <div class="form-section-title">
                     <i class="fa-solid fa-code"></i>
                     تکنولوژی‌های استفاده‌شده
@@ -681,17 +777,24 @@
                             <div class="row g-3 align-items-end">
 
                                 <div class="col-md-5">
-                                    <label class="form-label">نام تکنولوژی</label>
+
+                                    <label class="form-label">
+                                        نام تکنولوژی
+                                    </label>
 
                                     <input type="text"
                                         name="technology_name[]"
                                         value="{{ old('technology_name.' . $loop->index, $technology->name) }}"
                                         class="form-input"
                                         placeholder="مثلاً React">
+
                                 </div>
 
                                 <div class="col-md-5">
-                                    <label class="form-label">کلاس CSS آیکون</label>
+
+                                    <label class="form-label">
+                                        کلاس CSS آیکون
+                                    </label>
 
                                     <input type="text"
                                         name="technology_icon[]"
@@ -699,10 +802,14 @@
                                         class="form-input"
                                         placeholder="مثلاً fa-brands fa-react"
                                         dir="ltr">
+
                                 </div>
 
                                 <div class="col-md-2">
-                                    <label class="form-label">Order</label>
+
+                                    <label class="form-label">
+                                        Order
+                                    </label>
 
                                     <div style="display:flex;gap:8px;">
 
@@ -715,7 +822,9 @@
                                         <button type="button"
                                             class="technology-remove remove-technology"
                                             title="حذف تکنولوژی">
+
                                             <i class="fa-solid fa-trash"></i>
+
                                         </button>
 
                                     </div>
@@ -733,32 +842,44 @@
                             <div class="row g-3 align-items-end">
 
                                 <div class="col-md-5">
-                                    <label class="form-label">نام تکنولوژی</label>
+
+                                    <label class="form-label">
+                                        نام تکنولوژی
+                                    </label>
 
                                     <input type="text"
                                         name="technology_name[]"
                                         class="form-input"
                                         placeholder="مثلاً React">
+
                                 </div>
 
                                 <div class="col-md-5">
-                                    <label class="form-label">کلاس CSS آیکون</label>
+
+                                    <label class="form-label">
+                                        کلاس CSS آیکون
+                                    </label>
 
                                     <input type="text"
                                         name="technology_icon[]"
                                         class="form-input"
                                         placeholder="مثلاً fa-brands fa-react"
                                         dir="ltr">
+
                                 </div>
 
                                 <div class="col-md-2">
-                                    <label class="form-label">Order</label>
+
+                                    <label class="form-label">
+                                        Order
+                                    </label>
 
                                     <input type="number"
                                         name="technology_order[]"
                                         class="form-input"
                                         value="0"
                                         min="0">
+
                                 </div>
 
                             </div>
@@ -773,11 +894,12 @@
                     class="btn-back-form"
                     id="add-technology"
                     style="margin-top:5px;">
+
                     <i class="fa-solid fa-plus"></i>
                     افزودن تکنولوژی
+
                 </button>
 
-                {{-- خدمات --}}
                 <div class="form-section-title">
                     <i class="fa-solid fa-list-check"></i>
                     خدمات ارائه‌شده در پروژه
@@ -801,7 +923,9 @@
 
                         <div>
 
-                            <label class="form-label">نام خدمت</label>
+                            <label class="form-label">
+                                نام خدمت
+                            </label>
 
                             <input type="text"
                                 name="service_name[]"
@@ -818,18 +942,24 @@
                 <div class="inline-actions">
 
                     <button type="submit" class="btn-submit-form">
+
                         <i class="fa-solid fa-save"></i>
                         بروزرسانی پروژه
+
                     </button>
 
-                    <a href="{{ route('projects.index') }}" class="btn-back-form">
+                    <a href="{{ route('projects.index') }}"
+                        class="btn-back-form">
+
                         <i class="fa-solid fa-arrow-right"></i>
                         بازگشت به لیست
+
                     </a>
 
                 </div>
 
             </form>
+
         </div>
     </div>
 
@@ -850,6 +980,7 @@
 
                         <div class="col-md-5">
                             <label class="form-label">نام تکنولوژی</label>
+
                             <input
                                 type="text"
                                 name="technology_name[]"
@@ -859,6 +990,7 @@
 
                         <div class="col-md-5">
                             <label class="form-label">کلاس CSS آیکون</label>
+
                             <input
                                 type="text"
                                 name="technology_icon[]"
@@ -883,10 +1015,13 @@
                                     type="button"
                                     class="technology-remove remove-technology"
                                     title="حذف تکنولوژی">
+
                                     <i class="fa-solid fa-trash"></i>
+
                                 </button>
 
                             </div>
+
                         </div>
 
                     </div>

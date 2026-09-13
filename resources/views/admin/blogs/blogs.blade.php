@@ -326,7 +326,7 @@
                                 <td>{{ $blogs->firstItem() + $index }}</td>
                                 <td>
                                     @if($blog->image_url)
-                                        <img src="{{ asset('storage/' . $blog->image_url) }}" alt="{{ $blog->title }}"
+                                        <img src="{{ asset( $blog->image_url) }}" alt="{{ $blog->title }}"
                                             class="blog-thumb">
                                     @else
                                         <span style="color: var(--text-dimmer);">بدون تصویر</span>

@@ -107,7 +107,7 @@
                         @if($featured->image_url)
 
                             <img
-                                src="{{ asset('storage/' . $featured->image_url) }}"
+                                src="{{ asset( $featured->image_url) }}"
                                 alt="{{ $featured->title }}"
                             >
 
@@ -346,7 +346,7 @@
                             @if($blog->image_url)
 
                                 <img
-                                    src="{{ asset('storage/' . $blog->image_url) }}"
+                                    src="{{ asset( $blog->image_url) }}"
                                     alt="{{ $blog->title }}"
                                 >
 

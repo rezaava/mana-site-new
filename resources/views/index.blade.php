@@ -1,11 +1,19 @@
 @extends('layout.master')
 
 @section('title')
-    مانا
+شرکت مانا | طراحی سایت،سئو و هوش مصنوعی
 @endsection
 
 @section('head')
     <link rel="stylesheet" href="{{ asset('css/index.css') }}">
+    <style>
+        .svc-card p {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
 @endsection
 
 @section('main')
@@ -235,6 +243,7 @@
                                 data-category="{{ $project->category->id ?? '' }}" data-project="{{ $project->id }}"
                                 data-description="{{ $project->description }}" data-from="{{ $project->from ?? '#1d2a6b' }}"
                                 data-to="{{ $project->to ?? '#0b1030' }}"
+                                data-image="{{ asset($project->image_url) }}"
                                 data-url="{{ route('projects.show', ['slug' => $project->slug]) }}">
                                 <div class="ft-ic"><i class="{{ $project->icon ?? 'fa-solid fa-briefcase' }}"></i></div>
                                 <div>
@@ -256,9 +265,9 @@
                         $firstProject = $projects->first();
                     @endphp
                     @if($firstProject)
-                        <div class="fp-bg" id="fpBg"
-                            style="background:linear-gradient(150deg,{{ $firstProject->from ?? '#1d2a6b' }},{{ $firstProject->to ?? '#0b1030' }})">
-                        </div>
+                        <img class="fp-bg" id="fpBg"
+                            src="{{ asset('storage/' . $firstProject->image) }}"
+                            alt="{{ $firstProject->title }}">
                         <div class="fp-content" id="fpContent">
                             <span class="tag">{{ $firstProject->category->name ?? 'پروژه' }}</span>
                             <h4>{{ $firstProject->title }}</h4>

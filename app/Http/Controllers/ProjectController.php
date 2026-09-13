@@ -36,7 +36,7 @@ class ProjectController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'errors'  => $validator->errors(),
+                'errors' => $validator->errors(),
                 'success' => false
             ], 422);
         }
@@ -83,7 +83,7 @@ class ProjectController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                'errors'  => $validator->errors(),
+                'errors' => $validator->errors(),
                 'success' => false
             ], 422);
         }
@@ -116,6 +116,7 @@ class ProjectController extends Controller
             'brief',
             'cat_id',
             'image_url',
+            'image_mobile_url',
             'number',
             'challenge',
             'solution'
@@ -246,7 +247,9 @@ class ProjectController extends Controller
             'duration' => 'nullable|string|max:50',
             'project_link' => 'nullable|string|max:255',
             'testimonial' => 'nullable|string',
+
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image_mobile' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
 
             'feature_title' => 'nullable|array',
             'feature_title.*' => 'nullable|string|max:255',
@@ -316,12 +319,13 @@ class ProjectController extends Controller
              */
 
             if ($request->hasFile('image')) {
+
                 $file = $request->file('image');
 
                 $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
                 $file->move(
-                    ('projects'),
+                    'projects',
                     $fileName
                 );
 
@@ -330,8 +334,40 @@ class ProjectController extends Controller
                 $project->image_url = $imagePath;
 
                 $uploadedFiles[] = $imagePath;
+
             } else {
+
                 $project->image_url = 'default.jpg';
+
+            }
+
+            /*
+             * ==========================
+             * MOBILE IMAGE
+             * ==========================
+             */
+
+            if ($request->hasFile('image_mobile')) {
+
+                $file = $request->file('image_mobile');
+
+                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+                $file->move(
+                    'projects',
+                    $fileName
+                );
+
+                $imageMobilePath = 'projects/' . $fileName;
+
+                $project->image_mobile_url = $imageMobilePath;
+
+                $uploadedFiles[] = $imageMobilePath;
+
+            } else {
+
+                $project->image_mobile_url = null;
+
             }
 
             $project->save();
@@ -347,6 +383,7 @@ class ProjectController extends Controller
             $featureIcons = $request->input('feature_icon', []);
 
             foreach ($featureTitles as $index => $title) {
+
                 $title = trim($title);
 
                 $text = isset($featureTexts[$index])
@@ -381,6 +418,7 @@ class ProjectController extends Controller
             $statsLabels = $request->input('stats_label', []);
 
             foreach ($statsValues as $index => $value) {
+
                 $value = trim($value);
 
                 $label = isset($statsLabels[$index])
@@ -411,6 +449,7 @@ class ProjectController extends Controller
             $technologyOrders = $request->input('technology_order', []);
 
             foreach ($technologyNames as $index => $name) {
+
                 $name = trim($name);
 
                 $icon = isset($technologyIcons[$index])
@@ -444,6 +483,7 @@ class ProjectController extends Controller
             $serviceNames = $request->input('service_name', []);
 
             foreach ($serviceNames as $index => $name) {
+
                 $name = trim($name);
 
                 if ($name === '') {
@@ -468,6 +508,7 @@ class ProjectController extends Controller
             $galleryImages = $request->file('gallery_images', []);
 
             foreach ($galleryImages as $catImgId => $files) {
+
                 if (!is_array($files)) {
                     $files = [$files];
                 }
@@ -479,6 +520,7 @@ class ProjectController extends Controller
                 }
 
                 foreach ($files as $file) {
+
                     if (!$file || !$file->isValid()) {
                         continue;
                     }
@@ -486,7 +528,7 @@ class ProjectController extends Controller
                     $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
                     $file->move(
-                        ('projects'),
+                        'projects',
                         $fileName
                     );
 
@@ -511,13 +553,13 @@ class ProjectController extends Controller
                 ->with('success', 'پروژه با موفقیت ایجاد شد.');
 
         } catch (\Throwable $e) {
+
             DB::rollBack();
 
             foreach ($uploadedFiles as $file) {
-                $fullPath = ($file);
 
-                if (file_exists($fullPath)) {
-                    @unlink($fullPath);
+                if (file_exists($file)) {
+                    @unlink($file);
                 }
             }
 
@@ -572,7 +614,9 @@ class ProjectController extends Controller
             'duration' => 'nullable|string|max:50',
             'project_link' => 'nullable|string|max:255',
             'testimonial' => 'nullable|string',
+
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image_mobile' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
 
             'feature_title' => 'nullable|array',
             'feature_title.*' => 'nullable|string|max:255',
@@ -611,8 +655,10 @@ class ProjectController extends Controller
         $uploadedFiles = [];
 
         $oldImage = $project->image_url;
+        $oldMobileImage = $project->image_mobile_url;
 
         try {
+
             DB::beginTransaction();
 
             /*
@@ -622,23 +668,70 @@ class ProjectController extends Controller
              */
 
             if ($request->hasFile('image')) {
+
                 $file = $request->file('image');
 
                 $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
                 $file->move(
-                    ('projects'),
+                    'projects',
                     $fileName
                 );
 
                 $imagePath = 'projects/' . $fileName;
 
-                $validated['image_url'] = $imagePath;
+                $project->image_url = $imagePath;
 
                 $uploadedFiles[] = $imagePath;
             }
 
-            $project->update($validated);
+            /*
+             * ==========================
+             * MOBILE IMAGE
+             * ==========================
+             */
+
+            if ($request->hasFile('image_mobile')) {
+
+                $file = $request->file('image_mobile');
+
+                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+                $file->move(
+                    'projects',
+                    $fileName
+                );
+
+                $imageMobilePath = 'projects/' . $fileName;
+
+                $project->image_mobile_url = $imageMobilePath;
+
+                $uploadedFiles[] = $imageMobilePath;
+            }
+
+            /*
+             * ==========================
+             * PROJECT DATA
+             * ==========================
+             */
+
+            $project->title = $validated['title'];
+            $project->subtitle = $validated['subtitle'] ?? null;
+            $project->brief = $validated['brief'] ?? null;
+            $project->desc = $validated['desc'] ?? null;
+            $project->project_goal = $validated['project_goal'] ?? null;
+            $project->challenge = $validated['challenge'] ?? null;
+            $project->solution = $validated['solution'] ?? null;
+            $project->cat_id = $validated['cat_id'] ?? null;
+            $project->client_name = $validated['client_name'] ?? null;
+            $project->client_role = $validated['client_role'] ?? null;
+            $project->launch_year = $validated['launch_year'] ?? null;
+            $project->duration = $validated['duration'] ?? null;
+            $project->project_link = $validated['project_link'] ?? null;
+            $project->testimonial = $validated['testimonial'] ?? null;
+            $project->slug = $validated['slug'];
+
+            $project->save();
 
             /*
              * ==========================
@@ -656,6 +749,7 @@ class ProjectController extends Controller
             $featureIcons = $request->input('feature_icon', []);
 
             foreach ($featureTitles as $index => $title) {
+
                 $title = trim($title);
 
                 $text = isset($featureTexts[$index])
@@ -692,6 +786,7 @@ class ProjectController extends Controller
             $statsLabels = $request->input('stats_label', []);
 
             foreach ($statsValues as $index => $value) {
+
                 $value = trim($value);
 
                 $label = isset($statsLabels[$index])
@@ -735,6 +830,7 @@ class ProjectController extends Controller
             );
 
             foreach ($technologyNames as $index => $name) {
+
                 $name = trim($name);
 
                 $icon = isset($technologyIcons[$index])
@@ -775,6 +871,7 @@ class ProjectController extends Controller
             );
 
             foreach ($serviceNames as $index => $name) {
+
                 $name = trim($name);
 
                 if ($name === '') {
@@ -794,17 +891,12 @@ class ProjectController extends Controller
              * ==========================
              * GALLERY
              * ==========================
-             *
-             * اگر برای یک دسته تصویر جدید آپلود شود،
-             * تصاویر قبلی همان دسته حذف و تصاویر جدید جایگزین می‌شوند.
-             *
-             * اگر برای یک دسته هیچ تصویر جدیدی انتخاب نشود،
-             * تصاویر قبلی آن دسته باقی می‌مانند.
              */
 
             $galleryImages = $request->file('gallery_images', []);
 
             foreach ($galleryImages as $catImgId => $files) {
+
                 if (!is_array($files)) {
                     $files = [$files];
                 }
@@ -818,6 +910,7 @@ class ProjectController extends Controller
                 $validFiles = [];
 
                 foreach ($files as $file) {
+
                     if ($file && $file->isValid()) {
                         $validFiles[] = $file;
                     }
@@ -826,10 +919,6 @@ class ProjectController extends Controller
                 if (count($validFiles) === 0) {
                     continue;
                 }
-
-                /*
-                 * حذف تصاویر قبلی همین دسته
-                 */
 
                 $oldGalleries = ProjectGallery::where(
                     'project_id',
@@ -842,10 +931,10 @@ class ProjectController extends Controller
                     ->get();
 
                 foreach ($oldGalleries as $oldGallery) {
+
                     if ($oldGallery->image_url) {
-                        $oldPath = (
-                            $oldGallery->image_url
-                        );
+
+                        $oldPath = $oldGallery->image_url;
 
                         if (file_exists($oldPath)) {
                             @unlink($oldPath);
@@ -855,15 +944,12 @@ class ProjectController extends Controller
                     $oldGallery->delete();
                 }
 
-                /*
-                 * ذخیره تصاویر جدید
-                 */
-
                 foreach ($validFiles as $file) {
+
                     $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
                     $file->move(
-                        ('projects'),
+                        'projects',
                         $fileName
                     );
 
@@ -884,7 +970,9 @@ class ProjectController extends Controller
             DB::commit();
 
             /*
-             * حذف تصویر شاخص قبلی بعد از موفقیت
+             * ==========================
+             * DELETE OLD MAIN IMAGE
+             * ==========================
              */
 
             if (
@@ -892,10 +980,25 @@ class ProjectController extends Controller
                 $oldImage &&
                 $oldImage !== 'default.jpg'
             ) {
-                $oldImagePath = ($oldImage);
 
-                if (file_exists($oldImagePath)) {
-                    @unlink($oldImagePath);
+                if (file_exists($oldImage)) {
+                    @unlink($oldImage);
+                }
+            }
+
+            /*
+             * ==========================
+             * DELETE OLD MOBILE IMAGE
+             * ==========================
+             */
+
+            if (
+                $request->hasFile('image_mobile') &&
+                $oldMobileImage
+            ) {
+
+                if (file_exists($oldMobileImage)) {
+                    @unlink($oldMobileImage);
                 }
             }
 
@@ -907,13 +1010,13 @@ class ProjectController extends Controller
                 );
 
         } catch (\Throwable $e) {
+
             DB::rollBack();
 
             foreach ($uploadedFiles as $file) {
-                $fullPath = ($file);
 
-                if (file_exists($fullPath)) {
-                    @unlink($fullPath);
+                if (file_exists($file)) {
+                    @unlink($file);
                 }
             }
 
@@ -933,6 +1036,7 @@ class ProjectController extends Controller
         $project = Projects::findOrFail($id);
 
         try {
+
             DB::beginTransaction();
 
             /*
@@ -945,12 +1049,26 @@ class ProjectController extends Controller
                 $project->image_url &&
                 $project->image_url !== 'default.jpg'
             ) {
-                $imagePath = (
-                    $project->image_url
-                );
+
+                $imagePath = $project->image_url;
 
                 if (file_exists($imagePath)) {
                     @unlink($imagePath);
+                }
+            }
+
+            /*
+             * ==========================
+             * MOBILE IMAGE
+             * ==========================
+             */
+
+            if ($project->image_mobile_url) {
+
+                $mobileImagePath = $project->image_mobile_url;
+
+                if (file_exists($mobileImagePath)) {
+                    @unlink($mobileImagePath);
                 }
             }
 
@@ -998,10 +1116,10 @@ class ProjectController extends Controller
             $galleries = $project->galleries()->get();
 
             foreach ($galleries as $gallery) {
+
                 if ($gallery->image_url) {
-                    $galleryPath = (
-                        $gallery->image_url
-                    );
+
+                    $galleryPath = $gallery->image_url;
 
                     if (file_exists($galleryPath)) {
                         @unlink($galleryPath);
@@ -1029,6 +1147,7 @@ class ProjectController extends Controller
                 );
 
         } catch (\Throwable $e) {
+
             DB::rollBack();
 
             return redirect()
@@ -1164,9 +1283,8 @@ class ProjectController extends Controller
         $gallery = ProjectGallery::findOrFail($galleryId);
 
         if ($gallery->image_url) {
-            $galleryPath = (
-                $gallery->image_url
-            );
+
+            $galleryPath = $gallery->image_url;
 
             if (file_exists($galleryPath)) {
                 @unlink($galleryPath);

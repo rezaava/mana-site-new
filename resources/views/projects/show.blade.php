@@ -149,7 +149,7 @@
 
                             <div class="browser-screen">
                                 @if($project->image_url)
-                                    <img src="{{ asset('storage/' . $project->image_url) }}" alt="{{ $project->title }}">
+                                    <img src="{{ asset( $project->image_url) }}" alt="{{ $project->title }}">
                                 @else
                                     <i class="fa-solid fa-chart-pie"></i>
                                 @endif
@@ -157,8 +157,8 @@
                         </div>
 
                         <div class="phone-frame">
-                            @if($project->image_url)
-                                <img src="{{ asset('storage/' . $project->image_url) }}" alt="{{ $project->title }}">
+                            @if($project->image_mobile_url)
+                                <img src="{{ asset( $project->image_mobile_url) }}" alt="{{ $project->title }}">
                             @else
                                 <i class="fa-solid fa-mobile-screen"></i>
                             @endif
@@ -331,6 +331,7 @@
                                     <img
                                         src="{{ asset($image->image_url) }}"
                                         alt="{{ $category->title }}"
+                                        class="object-fit-cover w-100 h-100"
                                     >
 
                                 </div>
@@ -504,7 +505,7 @@
                         <div class="sim-card reveal reveal-delay-{{ ($index % 3) + 1 }}">
                             <div class="sim-thumb t{{ ($index % 3) + 1 }}">
                                 @if($rel->image_url)
-                                    <img src="{{ asset('storage/' . $rel->image_url) }}" alt="{{ $rel->title }}">
+                                    <img src="{{ asset( $rel->image_url) }}" alt="{{ $rel->title }}">
                                 @else
                                     <i class="fa-solid fa-briefcase"></i>
                                 @endif

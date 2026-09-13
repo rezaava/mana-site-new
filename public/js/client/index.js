@@ -138,7 +138,10 @@ function setFolio(i) {
     }
     if (fpBg) fpBg.style.opacity = 0;
     setTimeout(() => {
-        if (fpBg) fpBg.style.background = `linear-gradient(150deg,${tab.from},${tab.to})`;
+        if (fpBg) {
+            fpBg.src = tab.image;
+            fpBg.alt = tab.title;
+        }
         if (fpContent) {
             fpContent.innerHTML = `<span class="tag">${tab.tag}</span><h4>${tab.title}</h4><p>${tab.desc}</p><a href="${tab.url}" class="pill">مشاهده جزئیات <i class="fa-solid fa-arrow-up-left"></i></a>`;
             fpContent.style.opacity = 1;
@@ -162,6 +165,7 @@ if (folioTabs) {
             desc: tab.dataset.description || "",
             from: tab.dataset.from || "#1d2a6b",
             to: tab.dataset.to || "#0b1030",
+            image: tab.dataset.image || "",
             url: tab.dataset.url || "#",
             icon: icon,
             id: projectId
