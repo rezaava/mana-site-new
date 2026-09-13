@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blogs;
+use App\Models\Categories;
 use App\Models\Projects;
 use App\Models\Services;
 use App\Models\Team;
@@ -27,6 +28,10 @@ class SiteController extends Controller
         $projects = Projects::orderBy('number', 'asc')
             ->limit(6)
             ->get();
+        
+        foreach( $projects as $project){
+            $project['category']=Categories::where('id' , $project->cat_id)->first();
+        }
 
         $teams = Team::orderBy('id', 'desc')->get();
 
@@ -57,7 +62,7 @@ class SiteController extends Controller
             'blogs',
             'comments',
             'stats',
-        ));
+        )); 
     }
 
     public function index_admin()

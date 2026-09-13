@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-مانا
+    مانا
 @endsection
 
 @section('head')
@@ -219,28 +219,33 @@
                 </div>
             </div>
             <div class="folio-shell reveal">
-                <div class="folio-tabs" id="folioTabs">
-                    @foreach($projects as $index => $project)
-                        <div class="folio-tab {{ $index === 0 ? 'active' : '' }}" data-index="{{ $index }}"
-                            data-project="{{ $project->id }}" data-description="{{ $project->description }}"
-                            data-from="{{ $project->from ?? '#1d2a6b' }}" data-to="{{ $project->to ?? '#0b1030' }}"
-                            data-url="{{ route('projects.show', ['slug' => $project->slug]) }}">
-                            <div class="ft-ic"><i class="{{ $project->icon ?? 'fa-solid fa-briefcase' }}"></i></div>
-                            <div>
-                                <h5>{{ $project->title }}</h5>
-                                <span>{{ $project->category->name ?? 'پروژه' }}</span>
+                <div class="folio-side">
+                    <div class="folio-mobile-tabs" id="folioMobileTabs">
+                        @foreach($projects as $i => $project)
+                            <div class="fmt-chip {{ $i === 0 ? 'active' : '' }}" data-category="{{ $project->category->id }}">
+                                {{ $project->category->name }}
                             </div>
-                            <div class="bar"></div>
-                        </div>
-                    @endforeach
+                        @endforeach
+                    </div>
+
+                    {{-- لیست پروژه‌ها --}}
+                    <div class="folio-tabs" id="folioTabs">
+                        @foreach($projects as $index => $project)
+                            <div class="folio-tab {{ $index === 0 ? 'active' : '' }}" data-index="{{ $index }}"
+                                data-category="{{ $project->category->id ?? '' }}" data-project="{{ $project->id }}"
+                                data-description="{{ $project->description }}" data-from="{{ $project->from ?? '#1d2a6b' }}"
+                                data-to="{{ $project->to ?? '#0b1030' }}"
+                                data-url="{{ route('projects.show', ['slug' => $project->slug]) }}">
+                                <div class="ft-ic"><i class="{{ $project->icon ?? 'fa-solid fa-briefcase' }}"></i></div>
+                                <div>
+                                    <h5>{{ $project->title }}</h5>
+                                    <span>{{ $project->category->name ?? 'پروژه' }}</span>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
-                <div class="folio-mobile-tabs" id="folioMobileTabs">
-                    @foreach($projects as $index => $project)
-                        <div class="fmt-chip {{ $index === 0 ? 'active' : '' }}" data-index="{{ $index }}">
-                            {{ $project->category->name ?? $project->title }}
-                        </div>
-                    @endforeach
-                </div>
+
                 <div class="folio-preview" id="folioPreview">
                     <div class="fp-dots" id="fpDots">
                         @foreach($projects as $index => $project)
@@ -258,8 +263,8 @@
                             <span class="tag">{{ $firstProject->category->name ?? 'پروژه' }}</span>
                             <h4>{{ $firstProject->title }}</h4>
                             <p>{{ $firstProject->description }}</p>
-                            <a href="{{ route('projects.show', ['slug' => $firstProject->slug]) }}"
-                                class="pill">مشاهده جزئیات <i class="fa-solid fa-arrow-up-left"></i></a>
+                            <a href="{{ route('projects.show', ['slug' => $firstProject->slug]) }}" class="pill">مشاهده جزئیات
+                                <i class="fa-solid fa-arrow-up-left"></i></a>
                         </div>
                     @else
                         <div class="fp-bg" id="fpBg"></div>
@@ -383,47 +388,26 @@
 
                             <div class="row">
                                 <div class="col-sm-6">
-                                    <input
-                                        type="text"
-                                        name="user_name"
-                                        class="form-control-x"
+                                    <input type="text" name="user_name" class="form-control-x"
                                         placeholder="{{ $siteTexts['contact_name_placeholder']->value ?? 'نام و نام‌خانوادگی' }}"
-                                        required
-                                    >
+                                        required>
                                 </div>
 
                                 <div class="col-sm-6">
-                                    <input
-                                        type="text"
-                                        name="email"
-                                        class="form-control-x"
+                                    <input type="text" name="email" class="form-control-x"
                                         placeholder="{{ $siteTexts['contact_email_placeholder']->value ?? 'ایمیل' }}"
-                                        required
-                                    >
+                                        required>
                                 </div>
                             </div>
 
-                            <input
-                                type="text"
-                                name="subject"
-                                class="form-control-x"
-                                placeholder="موضوع پیام"
-                                required
-                            >
+                            <input type="text" name="subject" class="form-control-x" placeholder="موضوع پیام" required>
 
-                            <textarea
-                                name="message"
-                                class="form-control-x"
+                            <textarea name="message" class="form-control-x"
                                 placeholder="{{ $siteTexts['contact_message_placeholder']->value ?? 'شرح پروژه شما' }}"
-                                required
-                            ></textarea>
+                                required></textarea>
 
-                            <button
-                                type="submit"
-                                id="ticketSubmit"
-                                class="btn-flow w-100 justify-content-center"
-                                style="border:none"
-                            >
+                            <button type="submit" id="ticketSubmit" class="btn-flow w-100 justify-content-center"
+                                style="border:none">
                                 <span id="ticketSubmitText">
                                     {{ $siteTexts['contact_button']->value ?? 'ارسال پیام' }}
                                     <i class="fa-solid fa-paper-plane"></i>
@@ -435,10 +419,8 @@
                                 </span>
                             </button>
 
-                            <div
-                                id="ticketMessage"
-                                style="display:none;margin-top:15px;padding:12px 15px;border-radius:10px;"
-                            ></div>
+                            <div id="ticketMessage"
+                                style="display:none;margin-top:15px;padding:12px 15px;border-radius:10px;"></div>
                         </form>
                     </div>
                 </div>
@@ -469,8 +451,8 @@
                 <div class="blog-layout">
                     <div class="blog-list reveal">
                         @foreach($blogs as $blog)
-                            <a href="/blog/{{ $blog->slug }}" class="blog-list-item">{{ $blog->title }} <span
-                                    class="arr"><i class="fa-solid fa-arrow-up-left"></i></span></a>
+                            <a href="/blog/{{ $blog->slug }}" class="blog-list-item">{{ $blog->title }} <span class="arr"><i
+                                        class="fa-solid fa-arrow-up-left"></i></span></a>
                         @endforeach
                     </div>
 
@@ -498,7 +480,7 @@
                             <div class="blog-side-card reveal reveal-delay-{{ $loop->iteration + 1 }}">
                                 <div class="thumb {{ $loop->first ? 'a' : 'b' }}"><i
                                         class="fa-solid {{ $loop->first ? 'fa-robot' : 'fa-mobile-screen' }}"></i></div>
-                                <a href="{{ url('/blog' ,$blog->slug) }}">
+                                <a href="{{ url('/blog', $blog->slug) }}">
                                     <div>
                                         <span class="tag">{{ $blog->category->name ?? 'مقاله' }}</span>
                                         <h6>{{ $blog->title }}</h6>
@@ -741,53 +723,53 @@
                     },
                     body: formData
                 })
-                .then(async response => {
+                    .then(async response => {
 
-                    const data = await response.json();
+                        const data = await response.json();
 
-                    if (!response.ok) {
-                        throw {
-                            status: response.status,
-                            data: data
-                        };
-                    }
-
-                    return data;
-                })
-                .then(data => {
-
-                    form.reset();
-
-                    showTicketToast(
-                        data.message || 'تیکت شما با موفقیت ثبت شد.'
-                    );
-                })
-                .catch(error => {
-
-                    let errorMessage =
-                        'ارسال پیام با خطا مواجه شد. لطفاً دوباره تلاش کنید.';
-
-                    if (
-                        error.data &&
-                        error.data.errors
-                    ) {
-                        const firstError =
-                            Object.values(error.data.errors)[0];
-
-                        if (firstError && firstError.length) {
-                            errorMessage = firstError[0];
+                        if (!response.ok) {
+                            throw {
+                                status: response.status,
+                                data: data
+                            };
                         }
-                    }
 
-                    alert(errorMessage);
-                })
-                .finally(() => {
+                        return data;
+                    })
+                    .then(data => {
 
-                    submitButton.disabled = false;
-                    submitText.style.display = 'inline';
-                    submitLoading.style.display = 'none';
+                        form.reset();
 
-                });
+                        showTicketToast(
+                            data.message || 'تیکت شما با موفقیت ثبت شد.'
+                        );
+                    })
+                    .catch(error => {
+
+                        let errorMessage =
+                            'ارسال پیام با خطا مواجه شد. لطفاً دوباره تلاش کنید.';
+
+                        if (
+                            error.data &&
+                            error.data.errors
+                        ) {
+                            const firstError =
+                                Object.values(error.data.errors)[0];
+
+                            if (firstError && firstError.length) {
+                                errorMessage = firstError[0];
+                            }
+                        }
+
+                        alert(errorMessage);
+                    })
+                    .finally(() => {
+
+                        submitButton.disabled = false;
+                        submitText.style.display = 'inline';
+                        submitLoading.style.display = 'none';
+
+                    });
 
             });
 

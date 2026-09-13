@@ -169,10 +169,38 @@ if (folioTabs) {
         tab.addEventListener("click", () => setFolio(index));
     });
 }
-if (folioMobileTabs) {
-    [...folioMobileTabs.children].forEach((chip, index) => {
-        chip.addEventListener("click", () => setFolio(index));
+if (folioMobileTabs && folioMobileTabs.children.length > 0) {
+
+    const applyCategoryFilter = (chip) => {
+        // فعال‌سازی چیپ کلیک‌شده
+        [...folioMobileTabs.children].forEach(c => c.classList.remove("active"));
+        chip.classList.add("active");
+
+        const cat = chip.dataset.category;
+        let firstVisibleIndex = null;
+
+        // فیلتر کردن تب‌های پروژه بر اساس دسته‌بندی
+        [...folioTabs.children].forEach((tab, i) => {
+            if (tab.dataset.category === cat) {
+                tab.style.display = "";
+                if (firstVisibleIndex === null) firstVisibleIndex = i;
+            } else {
+                tab.style.display = "none";
+            }
+        });
+
+        // نمایش اولین پروژه از دسته انتخاب‌شده در پیش‌نمایش
+        if (firstVisibleIndex !== null) {
+            setFolio(firstVisibleIndex);
+        }
+    };
+
+    [...folioMobileTabs.children].forEach((chip) => {
+        chip.addEventListener("click", () => applyCategoryFilter(chip));
     });
+
+    // اعمال فیلتر اولین دسته‌بندی در بارگذاری اولیه
+    applyCategoryFilter(folioMobileTabs.children[0]);
 }
 if (fpDots) {
     [...fpDots.children].forEach((dot, index) => {
@@ -204,3 +232,4 @@ if (window.matchMedia("(pointer:fine)").matches) {
         });
     }
 }
+
