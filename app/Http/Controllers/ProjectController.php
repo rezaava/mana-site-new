@@ -888,10 +888,10 @@ class ProjectController extends Controller
             }
 
             /*
-             * ==========================
-             * GALLERY
-             * ==========================
-             */
+            * ==========================
+            * GALLERY
+            * ==========================
+            */
 
             $galleryImages = $request->file('gallery_images', []);
 
@@ -907,44 +907,11 @@ class ProjectController extends Controller
                     continue;
                 }
 
-                $validFiles = [];
-
                 foreach ($files as $file) {
 
-                    if ($file && $file->isValid()) {
-                        $validFiles[] = $file;
+                    if (!$file || !$file->isValid()) {
+                        continue;
                     }
-                }
-
-                if (count($validFiles) === 0) {
-                    continue;
-                }
-
-                $oldGalleries = ProjectGallery::where(
-                    'project_id',
-                    $project->id
-                )
-                    ->where(
-                        'cat_img_id',
-                        $category->id
-                    )
-                    ->get();
-
-                foreach ($oldGalleries as $oldGallery) {
-
-                    if ($oldGallery->image_url) {
-
-                        $oldPath = $oldGallery->image_url;
-
-                        if (file_exists($oldPath)) {
-                            @unlink($oldPath);
-                        }
-                    }
-
-                    $oldGallery->delete();
-                }
-
-                foreach ($validFiles as $file) {
 
                     $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
 
