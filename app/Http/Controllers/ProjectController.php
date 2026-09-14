@@ -221,7 +221,7 @@ class ProjectController extends Controller
 
     public function create()
     {
-        $categories = Categories::all();
+        $categories = Categories::where('type',1)->get();
 
         $galleryCategories = CatImg::orderBy('number')
             ->orderBy('id')
@@ -585,7 +585,7 @@ class ProjectController extends Controller
             'features'
         ])->findOrFail($id);
 
-        $categories = Categories::all();
+        $categories = Categories::where('type',1)->get();
 
         $galleryCategories = CatImg::orderBy('number')
             ->orderBy('id')

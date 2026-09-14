@@ -105,6 +105,29 @@
                 padding: 15px;
             }
         }
+        .form-select {
+    width: 100%;
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--text);
+    transition: all 0.3s var(--ease);
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: var(--brand);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 20%, transparent);
+    background: var(--card-hover);
+}
+
+.form-select option {
+    background-color: var(--surface);
+    color: var(--text);
+}
     </style>
 
     <div style="padding:20px;">
@@ -113,6 +136,7 @@
                 <h5 class="category-form-title">
                     <i class="fa-solid fa-pen-to-square"></i> ویرایش دسته‌بندی
                 </h5>
+
                 <a href="{{ route('categories.index') }}" class="btn-back-form">
                     <i class="fa-solid fa-arrow-right"></i> بازگشت
                 </a>
@@ -120,12 +144,30 @@
 
             <form action="{{ route('categories.update', $category->id) }}" method="POST">
                 @csrf
-              
 
                 <div class="form-group">
                     <label class="form-label">نام</label>
-                    <input type="text" name="name" value="{{ $category->name ?? $category->title }}" required
-                        class="form-input" placeholder="نام دسته‌بندی">
+
+                    <input type="text"
+                        name="name"
+                        value="{{ $category->name ?? $category->title }}"
+                        required
+                        class="form-input"
+                        placeholder="نام دسته‌بندی">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">نوع</label>
+
+                    <select name="type" class="form-select" required>
+                        <option value="1" {{ $category->type == 1 ? 'selected' : '' }}>
+                            پروژه
+                        </option>
+
+                        <option value="2" {{ $category->type == 2 ? 'selected' : '' }}>
+                            بلاگ
+                        </option>
+                    </select>
                 </div>
 
                 <button type="submit" class="btn-submit-form">

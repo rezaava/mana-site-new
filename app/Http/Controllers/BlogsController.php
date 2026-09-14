@@ -39,7 +39,7 @@ class BlogsController extends Controller
 
     public function create()
     {
-        $categories = Categories::all();
+        $categories = Categories::where('type',2)->get();
 
         return view(
             'admin.blogs.create',
@@ -127,7 +127,7 @@ class BlogsController extends Controller
 
         $blogTags = BlogTag::where('blog_id', $blog->id)->get();
 
-        $categories = Categories::all();
+        $categories = Categories::where('type',2)->get();
 
         return view(
             'admin.blogs.edit',

@@ -71,10 +71,6 @@
                 </span>
             </button>
             <div class="sub-menu" id="contentSub">
-                <a href="{{ url('/admin/categories') }}" class="nav-item">
-                    <i class="fa-solid fa-tags"></i>
-                    دسته‌بندی‌ها
-                </a>
 
                 <!-- مدیریت پروژه‌ها -->
                 <a href="{{ url('/admin/projects') }}" class="nav-item">
@@ -87,6 +83,10 @@
                 </a>
             </div>
 
+            <a href="{{ url('/admin/categories') }}" class="nav-item">
+                <i class="fa-solid fa-tags"></i>
+                دسته‌بندی‌ها
+            </a>
 
             <a href="{{ url('/admin/questions') }}" class="nav-item">
                 <i class="fa-solid fa-question-circle"></i>

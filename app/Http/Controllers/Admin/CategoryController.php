@@ -21,13 +21,19 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'name' => 'required|string|max:255',
+            'type' => 'required|in:1,2',
         ]);
 
-        Categories::create($validated);
+        $category = new Categories();
+        $category->name = $request->name;
+        $category->type = $request->type;
+        $category->save();
 
-        return redirect()->route('categories.index')->with('success', 'دسته‌بندی اضافه شد.');
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'دسته‌بندی اضافه شد.');
     }
 
     public function edit($id)
@@ -39,13 +45,9 @@ class CategoryController extends Controller
     public function update(Request $request, $id)
     {
         $category = Categories::findOrFail($id);
-
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-
-        $category->update($validated);
-
+        $category->name = $request->name;
+        $category->type = $request->type;
+        $category->save();
         return redirect()->route('categories.index')->with('success', 'دسته‌بندی بروزرسانی شد.');
     }
 

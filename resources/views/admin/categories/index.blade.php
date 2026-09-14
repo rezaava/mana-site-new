@@ -1,4 +1,3 @@
-```blade
 @extends('admin.panel')
 
 @section('content')
@@ -255,6 +254,7 @@
                         <tr>
                             <th>#</th>
                             <th>نام</th>
+                            <th>نوع</th>
                             <th>عملیات</th>
                         </tr>
                     </thead>
@@ -263,6 +263,13 @@
                             <tr>
                                 <td>{{ $categories->firstItem() + $i }}</td>
                                 <td>{{ $category->name ?? $category->title }}</td>
+                                <td>
+                                    @if ($category->type==1)
+                                        پروژه
+                                    @else
+                                        بلاگ
+                                    @endif
+                                </td>
                                 <td>
                                     <div class="category-actions">
                                         <a href="{{ route('categories.edit', $category->id) }}" class="btn-icon btn-icon-edit"
@@ -310,4 +317,3 @@
         });
     </script>
 @endsection
-```
