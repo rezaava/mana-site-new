@@ -175,11 +175,14 @@ class ProjectController extends Controller
 
     public function deleteImageFromProject($imageId)
     {
-        $image = Images::findOrFail($imageId);
+        $image = ProjectGallery::findOrFail($imageId);
 
         $image->delete();
 
-        return redirect()->back()->with('success', true);
+        return response()->json([
+            'success' => true,
+            'message' => 'تصویر با موفقیت حذف شد.'
+        ]);
     }
 
     public function changeNumberOfProject(Request $request, $projectId)

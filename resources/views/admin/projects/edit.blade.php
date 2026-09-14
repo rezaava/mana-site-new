@@ -244,6 +244,31 @@
             background: var(--bg);
         }
 
+        .gallery-delete-btn {
+            width: 42px;
+            height: 42px;
+            flex-shrink: 0;
+            border: 1px solid #ef4444;
+            border-radius: 8px;
+            background: transparent;
+            color: #ef4444;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .gallery-delete-btn:hover {
+            background: #ef4444;
+            color: #fff;
+        }
+
+        .gallery-delete-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         .stats-grid,
         .services-grid {
             display: grid;
@@ -304,7 +329,8 @@
                 ویرایش پروژه
             </h5>
 
-            <form action="{{ route('projects.update', $project->id) }}"
+            <form
+                action="{{ route('projects.update', $project->id) }}"
                 method="POST"
                 enctype="multipart/form-data">
 
@@ -318,9 +344,12 @@
                 <div class="row g-3">
 
                     <div class="col-md-6">
-                        <label class="form-label">عنوان پروژه <span style="color:#ef4444;">*</span></label>
+                        <label class="form-label">
+                            عنوان پروژه <span style="color:#ef4444;">*</span>
+                        </label>
 
-                        <input type="text"
+                        <input
+                            type="text"
                             name="title"
                             value="{{ old('title', $project->title) }}"
                             required
@@ -330,7 +359,8 @@
                     <div class="col-md-6">
                         <label class="form-label">زیرعنوان</label>
 
-                        <input type="text"
+                        <input
+                            type="text"
                             name="subtitle"
                             value="{{ old('subtitle', $project->subtitle) }}"
                             class="form-input"
@@ -341,25 +371,23 @@
                         <label class="form-label">دسته‌بندی</label>
 
                         <select name="cat_id" class="form-select">
-
                             <option value="">انتخاب دسته‌بندی...</option>
 
                             @foreach($categories as $category)
-
-                                <option value="{{ $category->id }}"
+                                <option
+                                    value="{{ $category->id }}"
                                     {{ old('cat_id', $project->cat_id) == $category->id ? 'selected' : '' }}>
                                     {{ $category->name }}
                                 </option>
-
                             @endforeach
-
                         </select>
                     </div>
 
                     <div class="col-md-6">
                         <label class="form-label">نام کارفرما</label>
 
-                        <input type="text"
+                        <input
+                            type="text"
                             name="client_name"
                             value="{{ old('client_name', $project->client_name) }}"
                             class="form-input"
@@ -369,7 +397,8 @@
                     <div class="col-md-6">
                         <label class="form-label">سمت کارفرما</label>
 
-                        <input type="text"
+                        <input
+                            type="text"
                             name="client_role"
                             value="{{ old('client_role', $project->client_role) }}"
                             class="form-input"
@@ -379,7 +408,8 @@
                     <div class="col-md-6">
                         <label class="form-label">سال اجرا</label>
 
-                        <input type="text"
+                        <input
+                            type="text"
                             name="launch_year"
                             value="{{ old('launch_year', $project->launch_year) }}"
                             class="form-input"
@@ -389,7 +419,8 @@
                     <div class="col-md-6">
                         <label class="form-label">مدت زمان</label>
 
-                        <input type="text"
+                        <input
+                            type="text"
                             name="duration"
                             value="{{ old('duration', $project->duration) }}"
                             class="form-input"
@@ -399,7 +430,8 @@
                     <div class="col-md-6">
                         <label class="form-label">لینک پروژه</label>
 
-                        <input type="url"
+                        <input
+                            type="url"
                             name="project_link"
                             value="{{ old('project_link', $project->project_link) }}"
                             class="form-input"
@@ -410,7 +442,8 @@
                     <div class="col-12">
                         <label class="form-label">توضیح کوتاه (Brief)</label>
 
-                        <textarea name="brief"
+                        <textarea
+                            name="brief"
                             rows="2"
                             class="form-textarea">{{ old('brief', $project->brief) }}</textarea>
                     </div>
@@ -418,7 +451,8 @@
                     <div class="col-12">
                         <label class="form-label">توضیحات کامل پروژه</label>
 
-                        <textarea name="desc"
+                        <textarea
+                            name="desc"
                             rows="4"
                             class="form-textarea">{{ old('desc', $project->desc) }}</textarea>
                     </div>
@@ -426,49 +460,49 @@
                     <div class="col-12">
                         <label class="form-label">هدف پروژه</label>
 
-                        <textarea name="project_goal"
+                        <textarea
+                            name="project_goal"
                             rows="3"
                             class="form-textarea"
                             placeholder="هدف از انجام این پروژه چه بود؟">{{ old('project_goal', $project->project_goal) }}</textarea>
                     </div>
 
                     <div class="col-md-6">
-
                         <label class="form-label" style="color:#f5a623;">
                             <i class="fa-solid fa-triangle-exclamation"></i>
                             چالش اصلی
                         </label>
 
-                        <textarea name="challenge"
+                        <textarea
+                            name="challenge"
                             rows="4"
                             class="form-textarea"
                             placeholder="چالش‌های اصلی پروژه را بنویسید...">{{ old('challenge', $project->challenge) }}</textarea>
-
                     </div>
 
                     <div class="col-md-6">
-
                         <label class="form-label" style="color:#00d1b2;">
                             <i class="fa-solid fa-lightbulb"></i>
                             راه‌حل ما
                         </label>
 
-                        <textarea name="solution"
+                        <textarea
+                            name="solution"
                             rows="4"
                             class="form-textarea"
                             placeholder="راه‌حل‌های پیاده‌سازی‌شده را بنویسید...">{{ old('solution', $project->solution) }}</textarea>
-
                     </div>
 
                     <div class="col-12">
+                        <label class="form-label">
+                            نقل قول از کارفرما (Testimonial)
+                        </label>
 
-                        <label class="form-label">نقل قول از کارفرما (Testimonial)</label>
-
-                        <textarea name="testimonial"
+                        <textarea
+                            name="testimonial"
                             rows="3"
                             class="form-textarea"
                             placeholder="نظر کارفرما درباره پروژه...">{{ old('testimonial', $project->testimonial) }}</textarea>
-
                     </div>
 
                     <div class="col-md-6">
@@ -479,7 +513,8 @@
                                 تصویر شاخص پروژه
                             </label>
 
-                            <input type="file"
+                            <input
+                                type="file"
                                 name="image"
                                 accept="image/*"
                                 class="form-file">
@@ -488,7 +523,8 @@
 
                                 <div class="existing-image-preview">
 
-                                    <img src="{{ asset($project->image_url) }}"
+                                    <img
+                                        src="{{ asset($project->image_url) }}"
                                         alt="تصویر فعلی"
                                         style="width:70px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--line);">
 
@@ -512,7 +548,8 @@
                                 تصویر موبایل پروژه
                             </label>
 
-                            <input type="file"
+                            <input
+                                type="file"
                                 name="image_mobile"
                                 accept="image/*"
                                 class="form-file">
@@ -521,7 +558,8 @@
 
                                 <div class="existing-image-preview">
 
-                                    <img src="{{ asset($project->image_mobile_url) }}"
+                                    <img
+                                        src="{{ asset($project->image_mobile_url) }}"
                                         alt="تصویر موبایل فعلی"
                                         style="width:70px;height:70px;object-fit:cover;border-radius:8px;border:1px solid var(--line);">
 
@@ -539,9 +577,12 @@
 
                     <div class="col-md-6">
 
-                        <label class="form-label">Slug</label>
+                        <label class="form-label">
+                            Slug
+                        </label>
 
-                        <input type="text"
+                        <input
+                            type="text"
                             name="slug"
                             value="{{ old('slug', $project->slug) }}"
                             class="form-input"
@@ -564,6 +605,7 @@
 
                     @php
                         $features = $project->features->toArray();
+
                         $features = array_pad($features, 6, [
                             'title' => '',
                             'text' => '',
@@ -588,7 +630,8 @@
                                         عنوان فیچر
                                     </label>
 
-                                    <input type="text"
+                                    <input
+                                        type="text"
                                         name="feature_title[]"
                                         value="{{ old('feature_title.' . $index, $feature['title'] ?? '') }}"
                                         class="form-input"
@@ -602,7 +645,8 @@
                                         متن فیچر
                                     </label>
 
-                                    <textarea name="feature_text[]"
+                                    <textarea
+                                        name="feature_text[]"
                                         rows="3"
                                         class="form-textarea"
                                         placeholder="توضیح این ویژگی را وارد کنید...">{{ old('feature_text.' . $index, $feature['text'] ?? '') }}</textarea>
@@ -615,7 +659,8 @@
                                         کلاس CSS آیکون
                                     </label>
 
-                                    <input type="text"
+                                    <input
+                                        type="text"
                                         name="feature_icon[]"
                                         value="{{ old('feature_icon.' . $index, $feature['icon'] ?? '') }}"
                                         class="form-input"
@@ -645,6 +690,7 @@
 
                     @php
                         $stats = $project->stats->toArray();
+
                         $stats = array_pad($stats, 4, [
                             'value' => '',
                             'label' => ''
@@ -665,7 +711,8 @@
                                     مقدار
                                 </label>
 
-                                <input type="text"
+                                <input
+                                    type="text"
                                     name="stats_value[]"
                                     value="{{ old('stats_value.' . $index, $stat['value'] ?? '') }}"
                                     class="form-input"
@@ -679,7 +726,8 @@
                                     برچسب
                                 </label>
 
-                                <input type="text"
+                                <input
+                                    type="text"
                                     name="stats_label[]"
                                     value="{{ old('stats_label.' . $index, $stat['label'] ?? '') }}"
                                     class="form-input"
@@ -735,10 +783,29 @@
                                         تصویر {{ $i + 1 }}
                                     </span>
 
-                                    <input
-                                        type="file"
-                                        name="gallery_images[{{ $galleryCategory->id }}][]"
-                                        accept="image/jpeg,image/png,image/jpg,image/webp">
+                                    <div style="display:flex;gap:8px;align-items:center;">
+
+                                        <input
+                                            type="file"
+                                            name="gallery_images[{{ $galleryCategory->id }}][]"
+                                            accept="image/jpeg,image/png,image/jpg,image/webp"
+                                            style="flex:1;">
+
+                                        @if(isset($images[$i]) && $images[$i]->image_url)
+
+                                            <button
+                                                type="button"
+                                                class="gallery-delete-btn"
+                                                data-id="{{ $images[$i]->id }}"
+                                                title="حذف تصویر">
+
+                                                <i class="fa-solid fa-trash"></i>
+
+                                            </button>
+
+                                        @endif
+
+                                    </div>
 
                                     @if(isset($images[$i]) && $images[$i]->image_url)
 
@@ -782,7 +849,8 @@
                                         نام تکنولوژی
                                     </label>
 
-                                    <input type="text"
+                                    <input
+                                        type="text"
                                         name="technology_name[]"
                                         value="{{ old('technology_name.' . $loop->index, $technology->name) }}"
                                         class="form-input"
@@ -796,7 +864,8 @@
                                         کلاس CSS آیکون
                                     </label>
 
-                                    <input type="text"
+                                    <input
+                                        type="text"
                                         name="technology_icon[]"
                                         value="{{ old('technology_icon.' . $loop->index, $technology->icon) }}"
                                         class="form-input"
@@ -813,13 +882,15 @@
 
                                     <div style="display:flex;gap:8px;">
 
-                                        <input type="number"
+                                        <input
+                                            type="number"
                                             name="technology_order[]"
                                             value="{{ old('technology_order.' . $loop->index, $technology->order) }}"
                                             class="form-input"
                                             min="0">
 
-                                        <button type="button"
+                                        <button
+                                            type="button"
                                             class="technology-remove remove-technology"
                                             title="حذف تکنولوژی">
 
@@ -847,7 +918,8 @@
                                         نام تکنولوژی
                                     </label>
 
-                                    <input type="text"
+                                    <input
+                                        type="text"
                                         name="technology_name[]"
                                         class="form-input"
                                         placeholder="مثلاً React">
@@ -860,7 +932,8 @@
                                         کلاس CSS آیکون
                                     </label>
 
-                                    <input type="text"
+                                    <input
+                                        type="text"
                                         name="technology_icon[]"
                                         class="form-input"
                                         placeholder="مثلاً fa-brands fa-react"
@@ -874,7 +947,8 @@
                                         Order
                                     </label>
 
-                                    <input type="number"
+                                    <input
+                                        type="number"
                                         name="technology_order[]"
                                         class="form-input"
                                         value="0"
@@ -890,7 +964,8 @@
 
                 </div>
 
-                <button type="button"
+                <button
+                    type="button"
                     class="btn-back-form"
                     id="add-technology"
                     style="margin-top:5px;">
@@ -927,7 +1002,8 @@
                                 نام خدمت
                             </label>
 
-                            <input type="text"
+                            <input
+                                type="text"
                                 name="service_name[]"
                                 value="{{ $service['name'] ?? '' }}"
                                 class="form-input"
@@ -941,14 +1017,17 @@
 
                 <div class="inline-actions">
 
-                    <button type="submit" class="btn-submit-form">
+                    <button
+                        type="submit"
+                        class="btn-submit-form">
 
                         <i class="fa-solid fa-save"></i>
                         بروزرسانی پروژه
 
                     </button>
 
-                    <a href="{{ route('projects.index') }}"
+                    <a
+                        href="{{ route('projects.index') }}"
                         class="btn-back-form">
 
                         <i class="fa-solid fa-arrow-right"></i>
@@ -969,80 +1048,175 @@
             const container = document.getElementById('technologies-container');
             const addButton = document.getElementById('add-technology');
 
-            addButton.addEventListener('click', function () {
+            if (addButton && container) {
 
-                const item = document.createElement('div');
+                addButton.addEventListener('click', function () {
 
-                item.className = 'technology-item field-group-box';
+                    const item = document.createElement('div');
 
-                item.innerHTML = `
-                    <div class="row g-3 align-items-end">
+                    item.className = 'technology-item field-group-box';
 
-                        <div class="col-md-5">
-                            <label class="form-label">نام تکنولوژی</label>
+                    item.innerHTML = `
+                        <div class="row g-3 align-items-end">
 
-                            <input
-                                type="text"
-                                name="technology_name[]"
-                                class="form-input"
-                                placeholder="مثلاً Laravel">
-                        </div>
+                            <div class="col-md-5">
 
-                        <div class="col-md-5">
-                            <label class="form-label">کلاس CSS آیکون</label>
-
-                            <input
-                                type="text"
-                                name="technology_icon[]"
-                                class="form-input"
-                                placeholder="مثلاً fa-brands fa-laravel"
-                                dir="ltr">
-                        </div>
-
-                        <div class="col-md-2">
-                            <label class="form-label">Order</label>
-
-                            <div style="display:flex;gap:8px;">
+                                <label class="form-label">
+                                    نام تکنولوژی
+                                </label>
 
                                 <input
-                                    type="number"
-                                    name="technology_order[]"
+                                    type="text"
+                                    name="technology_name[]"
                                     class="form-input"
-                                    value="0"
-                                    min="0">
+                                    placeholder="مثلاً Laravel">
 
-                                <button
-                                    type="button"
-                                    class="technology-remove remove-technology"
-                                    title="حذف تکنولوژی">
+                            </div>
 
-                                    <i class="fa-solid fa-trash"></i>
+                            <div class="col-md-5">
 
-                                </button>
+                                <label class="form-label">
+                                    کلاس CSS آیکون
+                                </label>
+
+                                <input
+                                    type="text"
+                                    name="technology_icon[]"
+                                    class="form-input"
+                                    placeholder="مثلاً fa-brands fa-laravel"
+                                    dir="ltr">
+
+                            </div>
+
+                            <div class="col-md-2">
+
+                                <label class="form-label">
+                                    Order
+                                </label>
+
+                                <div style="display:flex;gap:8px;">
+
+                                    <input
+                                        type="number"
+                                        name="technology_order[]"
+                                        class="form-input"
+                                        value="0"
+                                        min="0">
+
+                                    <button
+                                        type="button"
+                                        class="technology-remove remove-technology"
+                                        title="حذف تکنولوژی">
+
+                                        <i class="fa-solid fa-trash"></i>
+
+                                    </button>
+
+                                </div>
 
                             </div>
 
                         </div>
+                    `;
 
-                    </div>
-                `;
+                    container.appendChild(item);
+                });
 
-                container.appendChild(item);
-            });
+                container.addEventListener('click', function (event) {
 
-            container.addEventListener('click', function (event) {
+                    const button = event.target.closest('.remove-technology');
 
-                const button = event.target.closest('.remove-technology');
+                    if (!button) {
+                        return;
+                    }
 
-                if (!button) {
-                    return;
-                }
+                    const item = button.closest('.technology-item');
 
-                const item = button.closest('.technology-item');
+                    if (item) {
+                        item.remove();
+                    }
+                });
+            }
 
-                if (item) {
-                    item.remove();
-                }
+            /*
+             * حذف تصویر گالری
+             */
+            document.querySelectorAll('.gallery-delete-btn').forEach(function (button) {
+
+                button.addEventListener('click', function () {
+
+                    const imageId = this.dataset.id;
+
+                    console.log('DELETE IMAGE ID:', imageId);
+
+                    if (!imageId) {
+                        console.error('Image ID not found.');
+                        return;
+                    }
+
+                    const deleteButton = this;
+                    const fileItem = deleteButton.closest('.file-item');
+
+                    const url = '/admin/projects/images/' + imageId;
+
+                    console.log('REQUEST URL:', url);
+
+                    deleteButton.disabled = true;
+
+                    fetch(url, {
+                        method: 'GET',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json'
+                        }
+                    })
+                    .then(function (response) {
+
+                        console.log('RESPONSE STATUS:', response.status);
+
+                        if (!response.ok) {
+                            throw new Error('HTTP Error: ' + response.status);
+                        }
+
+                        return response.json();
+                    })
+                    .then(function (data) {
+
+                        console.log('RESPONSE DATA:', data);
+
+                        if (data.success) {
+
+                            const preview = fileItem.querySelector('.preview-img');
+
+                            if (preview) {
+                                preview.remove();
+                            }
+
+                            deleteButton.remove();
+
+                        } else {
+
+                            deleteButton.disabled = false;
+
+                            alert(
+                                data.message ||
+                                'حذف تصویر انجام نشد.'
+                            );
+                        }
+
+                    })
+                    .catch(function (error) {
+
+                        console.error('DELETE IMAGE ERROR:', error);
+
+                        deleteButton.disabled = false;
+
+                        alert('خطایی در ارسال درخواست رخ داد.');
+
+                    });
+
+                });
+
             });
 
         });
