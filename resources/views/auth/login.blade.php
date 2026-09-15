@@ -90,7 +90,7 @@
                             'X-Requested-With': 'XMLHttpRequest'
                         },
                         body: JSON.stringify({
-                            identifier: identifier,   // یا email بسته به بک‌اند
+                            email: identifier,   // یا email بسته به بک‌اند
                             password: password
                         })
                     });

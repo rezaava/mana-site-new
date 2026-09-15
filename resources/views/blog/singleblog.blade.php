@@ -1,12 +1,19 @@
 @extends('layout.master')
 
 @section('title')
-    {{ $blog->head_title  }}
+    {{ $blog->title_head  }}
 @endsection
 
 @section('head')
-    <link rel="stylesheet" href="{{ asset('css/singleblog.css') }}"><a>
+    <link rel="stylesheet" href="{{ asset('css/singleblog.css') }}"><link>
+    <link rel="stylesheet" href="{{ asset('css/blog.css') }}"><link>
     {!! $blog->meta !!}
+    <style>
+        .svc-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        @media (max-width: 768px) { .svc-grid { grid-template-columns: 1fr; } }
+    </style>
 @endsection
 
 @section('main')
@@ -186,7 +193,22 @@
                             </div>
         
                         </div>
-        
+
+                        <div class="flow-wrap">
+                            <div class="svc-grid">
+                                @foreach($blog->services as $index => $service)
+                                    <a href="{{ route('servise', ['slug' => $service->slug]) }}">
+                                        <div class="svc-card reveal reveal-delay-{{ ($index % 3) + 1 }}" data-tilt>
+                                            <span class="svc-num">{{ str_pad($index + 1, 2, '0', STR_PAD_LEFT) }}</span>
+                                            <div class="svc-icon"><i class="fa-solid {!! $service->icon !!}"></i></div>
+                                            <h3>{{ $service->title }}</h3>
+                                            <p>{{ $service->text }}</p>
+                                        </div>
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+  
         
                         <!-- ===== نظرات ===== -->
                         <div class="comments-section" id="comments">
