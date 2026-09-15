@@ -25,24 +25,34 @@ class AuthController extends Controller
 
     public function loginPost(Request $request)
     {
-        $credentials = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required'],
+        $request->validate([
+            'identifier' => 'required',
+            'password' => 'required',
         ]);
 
-        if (Auth::attempt($credentials, $request->remember)) {
+        // تلاش برای ورود با ایمیل یا نام کاربری
+        $field = filter_var($request->identifier, FILTER_VALIDATE_EMAIL) ? 'email' : 'name';
+
+        if (Auth::attempt([$field => $request->identifier, 'password' => $request->password])) {
             $request->session()->regenerate();
 
-            if (Auth::user()->hasRole('admin')) {
-                return redirect()->intended(route('admin_dashboard'));
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'redirect' => route('home'),
+                ]);
             }
 
-            return redirect()->intended(route('home'));
+            return redirect()->intended('/admin/2');
         }
 
-        return back()->withErrors([
-            'email' => 'اطلاعات وارد شده با اطلاعات ما مطابقت ندارد.',
-        ])->onlyInput('email');
+        if ($request->wantsJson()) {
+            return response()->json([
+                'errors' => ['identifier' => ['نام کاربری یا رمز عبور اشتباه است.']],
+            ], 422);
+        }
+
+        return back()->withErrors(['identifier' => 'نام کاربری یا رمز عبور اشتباه است.']);
     }
 
     public function logout(Request $request)
