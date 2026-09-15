@@ -22,5 +22,5 @@
       />
     <link rel="stylesheet" href="/css/index.css" />
     <meta name="google-site-verification" content="SV1Ox0Izkm5EIZiqiZXR2VW_vC97bxoLqxV0nAhvdt8" />
-     @yield('head')
+    @yield('head')
 </head>

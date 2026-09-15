@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('type')->comment('1 proj 2 blogs');
+            $table->integer('type')->comment('1 proj 2 blogs')->default(1);
             $table->timestamps();
         });
     }
