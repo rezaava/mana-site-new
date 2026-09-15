@@ -94,6 +94,13 @@
                 <span class="badge-dot"></span>
             </a>
 
+            <a href="{{ url('/admin/orders') }}" class="nav-item">
+                <i class="fa-solid fa-question-circle"></i>
+               سفارش پروژه ها
+                <span class="badge-dot"></span>
+            </a>
+
+
             <a href="{{ url('/admin/team') }}" class="nav-item">
                 <i class="fa-solid fa-users"></i>
                 تیم

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\StudentSiteController;
 use App\Http\Controllers\TeacherSiteController;
@@ -23,7 +24,7 @@ use App\Http\Controllers\Admin\TicketController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SiteTextController;
 use App\Http\Controllers\SiteController;
-use App\Http\Controllers\UploadController;  
+use App\Http\Controllers\UploadController;
 
 
 Route::get('/', [SiteController::class, 'index'])->name('home');
@@ -127,6 +128,12 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::post('/change-project-number/{projectId}/number', [ProjectController::class, 'changeNumberOfProject'])->name('change_project_number');
     });
 
+    // orders
+    Route::prefix('/orders')->group(function () {
+        Route::get('/', [OrderController::class, 'index'])->name('orders.index');
+        Route::get('/{id}', [OrderController::class, 'show'])->name('orders.show');
+        Route::delete('/{id}', [OrderController::class, 'destroy'])->name('orders.delete');
+    });
 
 
     // Questions Routes

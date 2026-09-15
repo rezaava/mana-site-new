@@ -110,7 +110,7 @@
 
                     <div class="case-hero-btns reveal in reveal-delay-3">
 
-                        <a href="{{ url('/#contact') }}" class="btn-flow">
+                        <a href="/order/{{$service->id}}" class="btn-flow">
                             دریافت مشاوره رایگان
 
                             <i class="fa-solid fa-arrow-left"></i>
@@ -135,13 +135,13 @@
 
                         @if($service->image_url)
 
-                            <img src="{{ asset( $service->image_url) }}" alt="{{ $service->title }}" style="
-                                                                                                max-width:100%;
-                                                                                                max-height:400px;
-                                                                                                object-fit:contain;
-                                                                                                position:relative;
-                                                                                                z-index:5;
-                                                                                            ">
+                            <img src="{{ asset($service->image_url) }}" alt="{{ $service->title }}" style="
+                                                                                                                max-width:100%;
+                                                                                                                max-height:400px;
+                                                                                                                object-fit:contain;
+                                                                                                                position:relative;
+                                                                                                                z-index:5;
+                                                                                                            ">
 
                         @else
 

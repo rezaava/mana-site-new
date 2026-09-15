@@ -2,8 +2,8 @@
 
 @section('content')
     <style>
-        /* استایل‌های جدول تیکت‌های پشتیبانی - هماهنگ با تم و ریسپانسیو */
-        .support-manage-card {
+        /* استایل‌های جدول سفارشات - هماهنگ با جدول‌های قبلی */
+        .order-manage-card {
             background: var(--surface);
             border: 1px solid var(--line);
             border-radius: 14px;
@@ -11,7 +11,7 @@
             padding: 20px;
         }
 
-        .support-manage-header {
+        .order-manage-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -20,7 +20,7 @@
             gap: 10px;
         }
 
-        .support-manage-title {
+        .order-manage-title {
             margin: 0;
             font-size: 1.15rem;
             font-weight: 700;
@@ -30,7 +30,7 @@
             gap: 10px;
         }
 
-        .open-count {
+        .orders-count {
             min-width: 27px;
             height: 27px;
             padding: 0 10px;
@@ -44,7 +44,7 @@
             font-weight: 700;
         }
 
-        .alert-success-support {
+        .alert-success-order {
             background: rgba(16, 185, 129, 0.1);
             border: 1px solid #10b981;
             color: #10b981;
@@ -57,20 +57,20 @@
             gap: 8px;
         }
 
-        .support-table-wrapper {
+        .order-table-wrapper {
             overflow-x: auto;
             border: 1px solid var(--line);
             border-radius: 10px;
             background: var(--surface);
         }
 
-        .support-table {
+        .order-table {
             width: 100%;
             border-collapse: collapse;
             min-width: 800px;
         }
 
-        .support-table th {
+        .order-table th {
             background: var(--surface-2);
             color: var(--text-dim);
             font-weight: 700;
@@ -82,11 +82,11 @@
             white-space: nowrap;
         }
 
-        .support-table th:last-child {
+        .order-table th:last-child {
             border-left: none;
         }
 
-        .support-table td {
+        .order-table td {
             padding: 12px 14px;
             border-bottom: 1px solid var(--line);
             border-left: 1px solid var(--line);
@@ -95,20 +95,20 @@
             vertical-align: middle;
         }
 
-        .support-table td:last-child {
+        .order-table td:last-child {
             border-left: none;
         }
 
-        .support-table tbody tr:last-child td {
+        .order-table tbody tr:last-child td {
             border-bottom: none;
         }
 
-        .support-table tbody tr:hover td {
+        .order-table tbody tr:hover td {
             background: var(--card-hover);
             transition: background 0.2s ease;
         }
 
-        .ticket-number {
+        .order-number {
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -152,54 +152,32 @@
             font-size: 0.75rem;
         }
 
-        .ticket-subject {
-            max-width: 280px;
+        .order-phone {
+            direction: ltr;
+            text-align: right;
+            display: inline-block;
             color: var(--text-dim);
             font-weight: 500;
         }
 
-        .ticket-status {
+        .service-badge {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 4px 11px;
+            padding: 5px 12px;
             border-radius: 99px;
-            font-size: 0.75rem;
-            font-weight: 700;
-        }
-
-        .ticket-status::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-        }
-
-        .ticket-status.open {
-            background: rgba(16, 185, 129, 0.15);
-            color: #10b981;
-        }
-
-        .ticket-status.open::before {
-            background: #10b981;
-        }
-
-        .ticket-status.closed {
-            background: rgba(107, 114, 128, 0.15);
-            color: #6b7280;
-        }
-
-        .ticket-status.closed::before {
-            background: #6b7280;
-        }
-
-        .ticket-date {
-            color: var(--text-dimmer);
-            font-size: 0.8rem;
+            background: color-mix(in srgb, var(--brand) 12%, transparent);
+            color: var(--brand);
+            font-size: 0.78rem;
+            font-weight: 600;
             white-space: nowrap;
         }
 
-        .ticket-actions {
+        .service-badge i {
+            font-size: 0.75rem;
+        }
+
+        .order-actions {
             display: flex;
             align-items: center;
             gap: 6px;
@@ -229,22 +207,12 @@
             color: #fff;
         }
 
-        .btn-icon-close {
-            background: rgba(245, 158, 11, 0.1);
-            color: #f59e0b;
-            border-color: #f59e0b;
-        }
-
-        .btn-icon-close:hover {
-            background: #f59e0b;
-            color: #fff;
-        }
-
         .btn-icon-delete {
             background: rgba(220, 38, 38, 0.1);
             color: #dc2626;
             border-color: #dc2626;
             border: none;
+            cursor: pointer;
         }
 
         .btn-icon-delete:hover {
@@ -278,18 +246,18 @@
             font-size: 0.85rem;
         }
 
-        .support-pagination {
+        .order-pagination {
             margin-top: 20px;
             display: flex;
             justify-content: center;
         }
 
-        .support-pagination nav {
+        .order-pagination nav {
             display: flex;
             gap: 5px;
         }
 
-        .support-pagination .page-link {
+        .order-pagination .page-link {
             color: var(--brand);
             border: 1px solid var(--line);
             padding: 6px 12px;
@@ -299,43 +267,43 @@
             transition: all 0.2s;
         }
 
-        .support-pagination .page-link:hover {
+        .order-pagination .page-link:hover {
             background: var(--card-hover);
         }
 
-        .support-pagination .page-item.active .page-link {
+        .order-pagination .page-item.active .page-link {
             background: var(--brand);
             color: var(--oncta);
             border-color: var(--brand);
         }
 
-        .support-pagination .page-item.disabled .page-link {
+        .order-pagination .page-item.disabled .page-link {
             opacity: 0.5;
             pointer-events: none;
         }
 
         /* ===== ریسپانسیو موبایل: تبدیل جدول به کارت ===== */
         @media (max-width: 768px) {
-            .support-table-wrapper {
+            .order-table-wrapper {
                 overflow-x: visible;
                 border: none;
                 background: transparent;
             }
 
-            .support-table {
+            .order-table {
                 min-width: 0;
                 display: block;
             }
 
-            .support-table thead {
+            .order-table thead {
                 display: none;
             }
 
-            .support-table tbody {
+            .order-table tbody {
                 display: block;
             }
 
-            .support-table tr {
+            .order-table tr {
                 display: block;
                 background: var(--surface);
                 border: 1px solid var(--line);
@@ -345,7 +313,7 @@
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
             }
 
-            .support-table td {
+            .order-table td {
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
@@ -357,11 +325,11 @@
                 text-align: left;
             }
 
-            .support-table td:last-child {
+            .order-table td:last-child {
                 border-bottom: none;
             }
 
-            .support-table td::before {
+            .order-table td::before {
                 content: attr(data-label);
                 font-weight: 700;
                 color: var(--text-dim);
@@ -369,26 +337,21 @@
                 white-space: nowrap;
             }
 
-            .support-table td[data-label="کاربر"] {
+            .order-table td[data-label="کاربر"] {
                 justify-content: flex-start;
             }
 
-            .support-table td[data-label="کاربر"]::before {
+            .order-table td[data-label="کاربر"]::before {
                 margin-left: 0;
                 margin-right: auto;
             }
 
-            .support-table .ticket-actions {
+            .order-table .order-actions {
                 justify-content: flex-start;
             }
 
-            .support-table .ticket-actions::before {
+            .order-table .order-actions::before {
                 display: none;
-            }
-
-            .ticket-subject {
-                max-width: 100%;
-                text-align: left;
             }
 
             .empty-state {
@@ -398,43 +361,42 @@
     </style>
 
     <div style="padding: 20px;">
-        <div class="support-manage-card">
-            <div class="support-manage-header">
-                <h5 class="support-manage-title">
-                    <i class="fa-solid fa-headset"></i> تیکت‌های پشتیبانی
+        <div class="order-manage-card">
+            <div class="order-manage-header">
+                <h5 class="order-manage-title">
+                    <i class="fa-solid fa-file-invoice"></i> مدیریت سفارشات
 
-                    @if($openCount > 0)
-                        <span class="open-count">{{ $openCount }}</span>
+                    @if($orders->count() > 0)
+                        <span class="orders-count">{{ $orders->count() }}</span>
                     @endif
                 </h5>
             </div>
 
             @if(session('success'))
-                <div class="alert-success-support">
+                <div class="alert-success-order">
                     <i class="fa-solid fa-circle-check"></i>
                     {{ session('success') }}
                 </div>
             @endif
 
-            <div class="support-table-wrapper">
-                <table class="support-table" id="supportTable">
+            <div class="order-table-wrapper">
+                <table class="order-table" id="orderTable">
                     <thead>
                         <tr>
                             <th>#</th>
                             <th>کاربر</th>
-                            <th>موضوع</th>
-                            <th>وضعیت</th>
-                            <th>تاریخ</th>
+                            <th>شماره تماس</th>
+                            <th>خدمت</th>
                             <th>عملیات</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        @forelse($tickets as $index => $ticket)
+                        @forelse($orders as $index => $order)
                             <tr>
                                 <td>
-                                    <span class="ticket-number">
-                                        {{ $tickets->firstItem() + $index }}
+                                    <span class="order-number">
+                                        {{ $orders->firstItem() + $index }}
                                     </span>
                                 </td>
 
@@ -444,50 +406,37 @@
                                             <i class="fa-solid fa-user"></i>
                                         </div>
                                         <div>
-                                            <div class="user-name">{{ $ticket->user_name }}</div>
-                                            <div class="user-email">{{ $ticket->email }}</div>
+                                            <div class="user-name">{{ $order->fullname }}</div>
+                                            <div class="user-email">{{ $order->email ?? 'بدون ایمیل' }}</div>
                                         </div>
                                     </div>
                                 </td>
 
                                 <td>
-                                    <div class="ticket-subject">
-                                        {{ Str::limit($ticket->subject, 40) }}
-                                    </div>
+                                    <span class="order-phone">{{ $order->phone }}</span>
                                 </td>
 
                                 <td>
-                                    @if($ticket->status === 'open')
-                                        <span class="ticket-status open">باز</span>
+                                    @if($order->service)
+                                        <span class="service-badge">
+                                            <i class="fa-solid {{ $order->service->icon ?? 'fa-layer-group' }}"></i>
+                                            {{ $order->service->title }}
+                                        </span>
                                     @else
-                                        <span class="ticket-status closed">بسته</span>
+                                        <span style="color: var(--text-dimmer);">-</span>
                                     @endif
                                 </td>
 
                                 <td>
-                                    <span class="ticket-date">
-                                        <i class="fa-regular fa-calendar" style="margin-left: 5px;"></i>
-                                        {{ $ticket->created_at->format('Y/m/d H:i') }}
-                                    </span>
-                                </td>
-
-                                <td>
-                                    <div class="ticket-actions">
-                                        <a href="{{ route('support.show', $ticket->id) }}" class="btn-icon btn-icon-view"
+                                    <div class="order-actions">
+                                        <a href="{{ route('orders.show', $order->id) }}" class="btn-icon btn-icon-view"
                                             title="مشاهده">
                                             <i class="fa-solid fa-eye"></i>
                                         </a>
 
-                                        @if($ticket->status === 'open')
-                                            <a href="{{ route('support.close', $ticket->id) }}" class="btn-icon btn-icon-close"
-                                                title="بستن" onclick="return confirm('آیا می‌خواهید این تیکت را ببندید؟');">
-                                                <i class="fa-solid fa-lock"></i>
-                                            </a>
-                                        @endif
-
-                                        <form action="{{ route('support.destroy', $ticket->id) }}" method="POST"
+                                        <form action="{{ route('orders.delete', $order->id) }}" method="POST"
                                             style="display: inline-block;"
-                                            onsubmit="return confirm('آیا از حذف این تیکت اطمینان دارید؟');">
+                                            onsubmit="return confirm('آیا از حذف این سفارش اطمینان دارید؟');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn-icon btn-icon-delete" title="حذف">
@@ -499,10 +448,10 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="empty-state">
-                                    <i class="fa-regular fa-envelope-open"></i>
-                                    <strong>هیچ تیکتی وجود ندارد</strong>
-                                    <span>در حال حاضر هیچ درخواست پشتیبانی ثبت نشده است.</span>
+                                <td colspan="5" class="empty-state">
+                                    <i class="fa-solid fa-inbox"></i>
+                                    <strong>هیچ سفارشی ثبت نشده</strong>
+                                    <span>در حال حاضر هیچ سفارشی وجود ندارد.</span>
                                 </td>
                             </tr>
                         @endforelse
@@ -510,9 +459,9 @@
                 </table>
             </div>
 
-            @if($tickets->hasPages())
-                <div class="support-pagination">
-                    {{ $tickets->links() }}
+            @if($orders->hasPages())
+                <div class="order-pagination">
+                    {{ $orders->links() }}
                 </div>
             @endif
         </div>
@@ -520,7 +469,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            const table = document.getElementById('supportTable');
+            const table = document.getElementById('orderTable');
             if (!table) return;
 
             const headers = [];
