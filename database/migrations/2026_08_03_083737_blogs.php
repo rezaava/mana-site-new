@@ -12,6 +12,8 @@ return new class extends Migration
             $table->id();
             $table->string('title', 200);
             $table->text('text');
+            $table->text('meta')->nullable();
+            $table->text('title_head')->nullable();
             $table->string('image_url')->nullable();
             $table->tinyInteger('reading-time')->nullable();
             $table->tinyInteger('number')->comment('برای مرتب سازی');

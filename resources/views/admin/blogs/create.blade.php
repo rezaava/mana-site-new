@@ -352,6 +352,20 @@
                             <small class="blog-form-error">{{ $message }}</small>
                         @enderror
                     </div>
+                    <h6 class="form-section-title">
+                        <i class="fa-solid fa-tags"></i> meta tag
+                    </h6>
+                    <div class="form-group" style="margin-bottom:10px;">
+                        <input type="text" name="meta" value="{{ old('meta') }}" placeholder="افزودن meta" class="form-input">
+                    </div>
+
+                    <h6 class="form-section-title">
+                        <i class="fa-solid fa-tags"></i> title_head
+                    </h6>
+                    <div class="form-group" style="margin-bottom:10px;">
+                        <input type="text" name="title_head" value="{{ old('title_head') }}" placeholder="افزودن title_head"
+                            class="form-input">
+                    </div>
 
                     <div class="blog-form-group">
                         <label class="blog-form-label">زمان مطالعه (دقیقه)</label>
@@ -431,7 +445,7 @@
                     <button type="submit" class="btn-submit-form">
                         <i class="fa-solid fa-check"></i> ذخیره خدمت
                     </button>
-                    <a href="{{ route('pages.index') }}" class="btn-back-form">
+                    <a href="{{ route('blogs.index') }}" class="btn-back-form">
                         بازگشت
                     </a>
                 </div>

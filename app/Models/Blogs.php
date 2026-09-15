@@ -17,7 +17,10 @@ class Blogs extends Model
         'image_url',
         'reading-time',
         'number',
+        'meta',
+        'head_title',
         'cat_id',
+        'slug',
     ];
 
     public function category()

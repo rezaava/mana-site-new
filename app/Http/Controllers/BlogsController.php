@@ -8,6 +8,8 @@ use App\Models\Categories;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 
 class BlogsController extends Controller
 {
@@ -17,7 +19,7 @@ class BlogsController extends Controller
             'category',
             'tags'
         ])->firstOrFail();
-
+return $blog;
         return view('blog.singleblog', compact('blog'));
     }
 
@@ -49,24 +51,33 @@ class BlogsController extends Controller
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'title' => 'required|string|max:255',
-            'text' => 'required|string',
-            'cat_id' => 'required|integer|exists:categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'reading-time' => 'nullable|integer|min:1',
-            'number' => 'nullable|integer',
-            'tags' => 'nullable|array',
-            'tags.*' => 'nullable|string|max:255',
-            'slug' => 'required',
-        ]);
-
         $uploadedFiles = [];
 
         try {
+
+            $validated = $request->validate([
+                'title' => 'required|string|max:255',
+                'text' => 'required|string',
+                'cat_id' => 'required|integer|exists:categories,id',
+
+                'meta' => 'nullable|string',
+                'title_head' => 'nullable|string|max:255',
+
+                'slug' => 'required|string|max:255|unique:blogs,slug',
+
+                'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+
+                'reading-time' => 'nullable|integer|min:1',
+                'number' => 'nullable|integer',
+
+                'tags' => 'nullable|array',
+                'tags.*' => 'nullable|string|max:255',
+            ]);
+
             DB::beginTransaction();
 
             if ($request->hasFile('image')) {
+
                 $imagePath = $request
                     ->file('image')
                     ->store('blogs', 'public');
@@ -82,10 +93,13 @@ class BlogsController extends Controller
             $blog = Blogs::create($validated);
 
             if ($request->has('tags') && is_array($request->tags)) {
+
                 foreach ($request->tags as $tag) {
+
                     $tag = trim($tag);
 
                     if (!empty($tag)) {
+
                         BlogTag::create([
                             'blog_id' => $blog->id,
                             'text' => $tag,
@@ -102,20 +116,53 @@ class BlogsController extends Controller
                     'success',
                     "مقاله «{$blog->title}» با موفقیت ثبت شد."
                 );
+
+        } catch (ValidationException $e) {
+
+            Log::warning('BLOG VALIDATION ERROR', [
+                'errors' => $e->errors(),
+                'input' => $request->except([
+                    '_token',
+                    'image',
+                ]),
+                'user_id' => auth()->id(),
+                'ip' => $request->ip(),
+            ]);
+
+            throw $e;
+
         } catch (\Throwable $e) {
+
             DB::rollBack();
 
             foreach ($uploadedFiles as $file) {
+
                 if (Storage::disk('public')->exists($file)) {
                     Storage::disk('public')->delete($file);
                 }
             }
 
+            Log::error('BLOG STORE ERROR', [
+                'message' => $e->getMessage(),
+                'exception' => get_class($e),
+                'file' => $e->getFile(),
+                'line' => $e->getLine(),
+                'trace' => $e->getTraceAsString(),
+
+                'input' => $request->except([
+                    '_token',
+                    'image',
+                ]),
+
+                'user_id' => auth()->id(),
+                'ip' => $request->ip(),
+            ]);
+
             return redirect()
                 ->back()
                 ->withInput()
                 ->withErrors([
-                    'error' => 'خطا در ثبت مقاله: ' . $e->getMessage()
+                    'error' => 'خطا در ثبت مقاله: ' . $e->getMessage(),
                 ]);
         }
     }
