@@ -27,7 +27,7 @@
 
                 <i class="fa-solid fa-chevron-left"></i>
 
-                <a href="{{ url('/services') }}">خدمات</a>
+                <a href="{{ url('/') }}#services">خدمات</a>
 
                 <i class="fa-solid fa-chevron-left"></i>
 

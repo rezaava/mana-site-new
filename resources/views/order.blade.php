@@ -9,10 +9,6 @@
 @endsection
 
 @section('main')
-    <div class="cur-dot" id="curDot"></div>
-    <div class="cur-ring" id="curRing"></div>
-    <div class="scroll-progress" id="scrollProgress"></div>
-
     <div class="mnav-backdrop" id="mnavBackdrop"></div>
     <!-- ============ SIDE QUICK NAV ============ -->
     <div class="side-nav" id="sideNav">
@@ -33,7 +29,7 @@
     <section class="case-hero" id="top">
         <div class="container-x">
             <div class="breadcrumb-x reveal in">
-                <a href="index.html">خانه</a>
+                <a href="/">خانه</a>
                 <i class="fa-solid fa-chevron-left"></i>
                 <span class="cur">سفارش پروژه</span>
             </div>
@@ -69,7 +65,7 @@
                         <a href="#order-form" class="btn-flow">شروع ثبت سفارش
                             <i class="fa-solid fa-arrow-down"></i>
                         </a>
-                        <a href="services.html" class="btn-ghost">
+                        <a href="{{ url('/') }}#services" class="btn-ghost">
                             <i class="fa-solid fa-layer-group"></i> مشاهده خدمات
                         </a>
                     </div>

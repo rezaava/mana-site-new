@@ -36,7 +36,7 @@ class SiteController extends Controller
 
         $teams = Team::orderBy('id', 'desc')->get();
 
-        $questions = Questions::orderBy('number', 'asc')->get();
+        $questions = Questions::where('service_id',null)->orderBy('number', 'asc')->get();
 
         $blogs = Blogs::orderBy('number', 'asc')
             ->limit(4)
