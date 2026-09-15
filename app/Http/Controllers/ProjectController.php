@@ -618,8 +618,8 @@ class ProjectController extends Controller
             'project_link' => 'nullable|string|max:255',
             'testimonial' => 'nullable|string',
 
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'image_mobile' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image' => 'nullable',
+            'image_mobile' => 'nullable',
 
             'feature_title' => 'nullable|array',
             'feature_title.*' => 'nullable|string|max:255',

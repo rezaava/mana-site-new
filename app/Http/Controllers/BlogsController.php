@@ -15,19 +15,31 @@ class BlogsController extends Controller
 {
     public function singleBlog($slug)
     {
-        $blog = Blogs::where('slug',$slug)->with([
-            'category',
-            'tags'
-        ])->firstOrFail();
-return $blog;
+        $blog = Blogs::where('slug', $slug)
+            ->with([
+                'category',
+                'tags'
+            ])
+            ->firstOrFail();
+
         return view('blog.singleblog', compact('blog'));
     }
 
     public function blog()
     {
-        $blogs = Blogs::with(['category', 'tags'])->latest()->get();
+        $blogs = Blogs::with([
+            'category',
+            'tags'
+        ])
+            ->latest()
+            ->get();
+
         $popularTags = BlogTag::get();
-        return view('blog.all_blogs', compact('blogs','popularTags'));
+
+        return view(
+            'blog.all_blogs',
+            compact('blogs', 'popularTags')
+        );
     }
 
     public function index()
@@ -36,12 +48,15 @@ return $blog;
             ->latest()
             ->paginate(10);
 
-        return view('admin.blogs.blogs', compact('blogs'));
+        return view(
+            'admin.blogs.blogs',
+            compact('blogs')
+        );
     }
 
     public function create()
     {
-        $categories = Categories::where('type',2)->get();
+        $categories = Categories::where('type', 2)->get();
 
         return view(
             'admin.blogs.create',
@@ -65,7 +80,7 @@ return $blog;
 
                 'slug' => 'required|string|max:255|unique:blogs,slug',
 
-                'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+                'image' => 'nullable',
 
                 'reading-time' => 'nullable|integer|min:1',
                 'number' => 'nullable|integer',
@@ -76,11 +91,28 @@ return $blog;
 
             DB::beginTransaction();
 
+            /*
+            |--------------------------------------------------------------------------
+            | آپلود تصویر
+            |--------------------------------------------------------------------------
+            */
+
             if ($request->hasFile('image')) {
 
-                $imagePath = $request
-                    ->file('image')
-                    ->store('blogs', 'public');
+                $file = $request->file('image');
+
+                $fileName = time()
+                    . '_'
+                    . uniqid()
+                    . '.'
+                    . $file->getClientOriginalExtension();
+
+                $file->move(
+                    'blogs',
+                    $fileName
+                );
+
+                $imagePath = 'blogs/' . $fileName;
 
                 $validated['image_url'] = $imagePath;
 
@@ -91,6 +123,12 @@ return $blog;
             unset($validated['tags']);
 
             $blog = Blogs::create($validated);
+
+            /*
+            |--------------------------------------------------------------------------
+            | ثبت تگ‌ها
+            |--------------------------------------------------------------------------
+            */
 
             if ($request->has('tags') && is_array($request->tags)) {
 
@@ -121,10 +159,12 @@ return $blog;
 
             Log::warning('BLOG VALIDATION ERROR', [
                 'errors' => $e->errors(),
+
                 'input' => $request->except([
                     '_token',
                     'image',
                 ]),
+
                 'user_id' => auth()->id(),
                 'ip' => $request->ip(),
             ]);
@@ -135,10 +175,16 @@ return $blog;
 
             DB::rollBack();
 
+            /*
+            |--------------------------------------------------------------------------
+            | حذف فایل آپلود شده در صورت خطا
+            |--------------------------------------------------------------------------
+            */
+
             foreach ($uploadedFiles as $file) {
 
-                if (Storage::disk('public')->exists($file)) {
-                    Storage::disk('public')->delete($file);
+                if (file_exists($file)) {
+                    unlink($file);
                 }
             }
 
@@ -172,9 +218,15 @@ return $blog;
         $blog = Blogs::with('tags')
             ->findOrFail($id);
 
-        $blogTags = BlogTag::where('blog_id', $blog->id)->get();
+        $blogTags = BlogTag::where(
+            'blog_id',
+            $blog->id
+        )->get();
 
-        $categories = Categories::where('type',2)->get();
+        $categories = Categories::where(
+            'type',
+            2
+        )->get();
 
         return view(
             'admin.blogs.edit',
@@ -186,7 +238,6 @@ return $blog;
         );
     }
 
-
     public function update(Request $request, $id)
     {
         $blog = Blogs::findOrFail($id);
@@ -195,38 +246,92 @@ return $blog;
             'title' => 'required|string|max:255',
             'text' => 'required|string',
             'cat_id' => 'required|integer|exists:categories,id',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+
+            'meta' => 'nullable|string',
+            'title_head' => 'nullable|string|max:255',
+
+            'image' => 'nullable',
+
             'reading-time' => 'nullable|integer|min:1',
             'number' => 'nullable|integer',
+
             'tags' => 'nullable|array',
             'tags.*' => 'nullable|string|max:255',
-            'slug' => 'required',
+
+            'slug' => 'required|string|max:255|unique:blogs,slug,' . $blog->id,
         ]);
 
         $oldImage = $blog->image_url;
 
+        /*
+        |--------------------------------------------------------------------------
+        | اطلاعات مقاله
+        |--------------------------------------------------------------------------
+        */
+
         $blog->title = $validated['title'];
         $blog->text = $validated['text'];
         $blog->cat_id = $validated['cat_id'];
-        $blog->{'reading-time'} = $validated['reading-time'] ?? null;
-        $blog->number = $validated['number'] ?? null;
+
+        $blog->{'reading-time'} =
+            $validated['reading-time'] ?? null;
+
+        $blog->number =
+            $validated['number'] ?? null;
+
         $blog->slug = $validated['slug'];
+
+        $blog->meta =
+            $validated['meta'] ?? null;
+
+        $blog->title_head =
+            $validated['title_head'] ?? null;
+
+        /*
+        |--------------------------------------------------------------------------
+        | آپلود تصویر جدید
+        |--------------------------------------------------------------------------
+        */
 
         if ($request->hasFile('image')) {
 
-            $imagePath = $request
-                ->file('image')
-                ->store('blogs', 'public');
+            $file = $request->file('image');
+
+            $fileName = time()
+                . '_'
+                . uniqid()
+                . '.'
+                . $file->getClientOriginalExtension();
+
+            $file->move(
+                'blogs',
+                $fileName
+            );
+
+            $imagePath = 'blogs/' . $fileName;
 
             $blog->image_url = $imagePath;
         }
 
         $blog->save();
 
-        // حذف تگ‌های قبلی
-        BlogTag::where('blog_id', $blog->id)->delete();
+        /*
+        |--------------------------------------------------------------------------
+        | حذف تگ‌های قبلی
+        |--------------------------------------------------------------------------
+        */
 
-        // ثبت تگ‌های جدید
+        BlogTag::where(
+            'blog_id',
+            $blog->id
+        )->delete();
+
+        /*
+        |--------------------------------------------------------------------------
+        | ثبت تگ‌های جدید
+        |--------------------------------------------------------------------------
+        */
+
         if ($request->has('tags') && is_array($request->tags)) {
 
             foreach ($request->tags as $tag) {
@@ -234,6 +339,7 @@ return $blog;
                 $tag = trim($tag);
 
                 if (!empty($tag)) {
+
                     BlogTag::create([
                         'blog_id' => $blog->id,
                         'text' => $tag,
@@ -242,13 +348,20 @@ return $blog;
             }
         }
 
-        // حذف تصویر قبلی در صورت آپلود تصویر جدید
+        /*
+        |--------------------------------------------------------------------------
+        | حذف تصویر قبلی
+        |--------------------------------------------------------------------------
+        */
+
         if (
             $request->hasFile('image') &&
-            $oldImage &&
-            Storage::disk('public')->exists($oldImage)
+            $oldImage
         ) {
-            Storage::disk('public')->delete($oldImage);
+
+            if (file_exists($oldImage)) {
+                unlink($oldImage);
+            }
         }
 
         return redirect()
@@ -259,8 +372,6 @@ return $blog;
             );
     }
 
-
-
     public function destroy($id)
     {
         $blog = Blogs::findOrFail($id);
@@ -269,19 +380,39 @@ return $blog;
         $deletedId = $blog->id;
 
         try {
+
             DB::beginTransaction();
+
+            /*
+            |--------------------------------------------------------------------------
+            | حذف تصویر مقاله
+            |--------------------------------------------------------------------------
+            */
 
             if (
                 $blog->image_url &&
-                Storage::disk('public')->exists($blog->image_url)
+                file_exists($blog->image_url)
             ) {
-                Storage::disk('public')->delete($blog->image_url);
+
+                unlink($blog->image_url);
             }
+
+            /*
+            |--------------------------------------------------------------------------
+            | حذف تگ‌ها
+            |--------------------------------------------------------------------------
+            */
 
             BlogTag::where(
                 'blog_id',
                 $blog->id
             )->delete();
+
+            /*
+            |--------------------------------------------------------------------------
+            | حذف مقاله
+            |--------------------------------------------------------------------------
+            */
 
             $blog->delete();
 
@@ -293,13 +424,17 @@ return $blog;
                     'success',
                     "مقاله «{$title}» (شناسه: {$deletedId}) با موفقیت حذف شد."
                 );
+
         } catch (\Throwable $e) {
+
             DB::rollBack();
 
             return redirect()
                 ->back()
                 ->withErrors([
-                    'error' => 'خطا در حذف مقاله: ' . $e->getMessage()
+                    'error' =>
+                        'خطا در حذف مقاله: '
+                        . $e->getMessage()
                 ]);
         }
     }
