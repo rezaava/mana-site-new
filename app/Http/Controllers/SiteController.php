@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Blogs;
 use App\Models\Categories;
+use App\Models\Order;
 use App\Models\Projects;
 use App\Models\Services;
 use App\Models\Team;
@@ -28,9 +29,9 @@ class SiteController extends Controller
         $projects = Projects::orderBy('number', 'asc')
             ->limit(6)
             ->get();
-        
-        foreach( $projects as $project){
-            $project['category']=Categories::where('id' , $project->cat_id)->first();
+
+        foreach ($projects as $project) {
+            $project['category'] = Categories::where('id', $project->cat_id)->first();
         }
 
         $teams = Team::orderBy('id', 'desc')->get();
@@ -49,10 +50,10 @@ class SiteController extends Controller
         $siteTexts = SiteText::get()->keyBy('key');
 
         $stats = [
-            'projects_count'  => $siteTexts->has('stat1_num') ? $siteTexts['stat1_num']->value : Projects::count(),
+            'projects_count' => $siteTexts->has('stat1_num') ? $siteTexts['stat1_num']->value : Projects::count(),
             'customers_count' => $siteTexts->has('stat3_num') ? $siteTexts['stat3_num']->value : '۵۰+',
-            'support_hours'   => $siteTexts->has('stat4_num') ? $siteTexts['stat4_num']->value : '۲۴/۷',
-            'satisfaction'    => $siteTexts->has('stat2_num') ? $siteTexts['stat2_num']->value : '۹۸%',
+            'support_hours' => $siteTexts->has('stat4_num') ? $siteTexts['stat4_num']->value : '۲۴/۷',
+            'satisfaction' => $siteTexts->has('stat2_num') ? $siteTexts['stat2_num']->value : '۹۸%',
         ];
 
         return view('index', compact(
@@ -62,7 +63,7 @@ class SiteController extends Controller
             'blogs',
             'comments',
             'stats',
-        )); 
+        ));
     }
 
     public function index_admin()
@@ -136,9 +137,9 @@ class SiteController extends Controller
 
     public function servise($slug)
     {
-        $service = Services::where('slug',$slug)->firstOrFail();
+        $service = Services::where('slug', $slug)->firstOrFail();
 
-        $questions = Questions::where('service_id' , $service->id) ->orderBy('number')->get();
+        $questions = Questions::where('service_id', $service->id)->orderBy('number')->get();
 
         $state = ServiceState::where('service_id', $service->id)->first();
 
@@ -157,5 +158,49 @@ class SiteController extends Controller
             'whatReceives',
             'questions',
         ));
+    }
+
+    public function orderForm($id)
+    {
+        $currentService = Services::findOrFail($id);
+        $services = Services::orderBy('number')->get();
+
+        return view('order', compact('currentService', 'services'));
+    }
+
+    public function orderStore(Request $request)
+    {
+        $validated = $request->validate([
+            'fullname' => 'required|string',
+            'phone' => 'required',
+            'email' => 'nullable',
+            'company' => 'nullable',
+            'service' => 'required|integer|exists:categories,id',
+            'budget' => 'nullable',
+            'timeline' => 'nullable',
+            'description' => 'required'
+        ]);
+
+        $order = new Order();
+
+        $order->fullname = $validated['fullname'];
+        $order->phone = $validated['phone'];
+        $order->email = $validated['email'];
+        $order->company = $validated['company'];
+        $order->service_id = $validated['service'];
+        $order->budget = $validated['budget'];
+        $order->timeline = $validated['timeline'];
+        $order->description = $validated['description'];
+
+        $order->save();
+
+        if ($request->ajax() || $request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'سفارش با موفقیت ثبت شد',
+            ], 200);
+        }
+
+        return redirect()->back()->with('success', 'سفارش با موفقیت ثبت شد');
     }
 }

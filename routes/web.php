@@ -23,11 +23,14 @@ use App\Http\Controllers\Admin\TicketController;
 use App\Http\Controllers\Admin\CategoryController;
 use App\Http\Controllers\Admin\SiteTextController;
 use App\Http\Controllers\SiteController;
-use App\Http\Controllers\UploadController;
+use App\Http\Controllers\UploadController;  
 
 
 Route::get('/', [SiteController::class, 'index'])->name('home');
 Route::get('/services/{slug}', [SiteController::class, 'servise'])->name('servise');
+
+Route::get('/order/{id}', [SiteController::class, 'orderForm'])->name('order');
+Route::post('/order', [SiteController::class, 'orderStore'])->name('order.store');
 
 Route::post('/upload/video', [UploadController::class, 'uploadVideo'])->name('upload.video');
 Route::post('/upload/image', [UploadController::class, 'uploadImage'])->name('upload.image');
