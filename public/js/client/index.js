@@ -237,3 +237,73 @@ if (window.matchMedia("(pointer:fine)").matches) {
     }
 }
 
+/* ---------- Team slider: auto-scroll (left direction) ---------- */
+(function () {
+    const slider = document.getElementById('teamSlider');
+    if (!slider) return;
+
+    const originals = Array.from(slider.children);
+    if (originals.length < 2) return;
+
+    const GAP = 22;
+    const COUNT = originals.length;
+
+    // اضافه کردن کلون‌ها به ابتدای اسلایدر (برای حلقه بی‌نهایت در جهت مخالف)
+    const fragment = document.createDocumentFragment();
+    originals.forEach(card => {
+        const clone = card.cloneNode(true);
+        clone.setAttribute('aria-hidden', 'true');
+        fragment.appendChild(clone);
+    });
+    slider.insertBefore(fragment, slider.firstChild);
+
+    let index = 0;
+    let step = 0;
+    let baseOffset = 0;
+    let paused = false;
+
+    function calcStep() {
+        step = originals[0].offsetWidth + GAP;
+        baseOffset = step * COUNT;
+    }
+
+    function reset() {
+        index = 0;
+        slider.style.transition = 'none';
+        slider.style.transform = `translateX(${baseOffset}px)`;
+    }
+
+    function move() {
+        if (paused) return;
+
+        index++;
+        const x = baseOffset - step * index;
+        slider.style.transition = 'transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)';
+        slider.style.transform = `translateX(${x}px)`;
+
+        if (index >= COUNT) {
+            setTimeout(reset, 850);
+        }
+    }
+
+    function init() {
+        calcStep();
+        reset();
+    }
+
+    // توقف روی hover
+    slider.addEventListener('mouseenter', () => paused = true);
+    slider.addEventListener('mouseleave', () => paused = false);
+
+    // توقف روی لمس
+    slider.addEventListener('touchstart', () => paused = true, { passive: true });
+    slider.addEventListener('touchend', () => {
+        setTimeout(() => paused = false, 1500);
+    });
+
+    window.addEventListener('resize', init);
+    init();
+
+    setInterval(move, 2000);
+})();
+

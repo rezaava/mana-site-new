@@ -1,7 +1,7 @@
 @extends('layout.master')
 
 @section('title')
-شرکت مانا | طراحی سایت،سئو و هوش مصنوعی
+    شرکت مانا | طراحی سایت،سئو و هوش مصنوعی
 @endsection
 
 @section('head')
@@ -242,8 +242,7 @@
                             <div class="folio-tab {{ $index === 0 ? 'active' : '' }}" data-index="{{ $index }}"
                                 data-category="{{ $project->category->id ?? '' }}" data-project="{{ $project->id }}"
                                 data-description="{{ $project->description }}" data-from="{{ $project->from ?? '#1d2a6b' }}"
-                                data-to="{{ $project->to ?? '#0b1030' }}"
-                                data-image="{{ asset($project->image_url) }}"
+                                data-to="{{ $project->to ?? '#0b1030' }}" data-image="{{ asset($project->image_url) }}"
                                 data-url="{{ route('projects.show', ['slug' => $project->slug]) }}">
                                 <div class="ft-ic"><i class="{{ $project->icon ?? 'fa-solid fa-briefcase' }}"></i></div>
                                 <div>
@@ -265,8 +264,7 @@
                         $firstProject = $projects->first();
                     @endphp
                     @if($firstProject)
-                        <img class="fp-bg" id="fpBg"
-                            src="{{ asset('storage/' . $firstProject->image) }}"
+                        <img class="fp-bg" id="fpBg" src="{{ asset('storage/' . $firstProject->image) }}"
                             alt="{{ $firstProject->title }}">
                         <div class="fp-content" id="fpContent">
                             <span class="tag">{{ $firstProject->category->name ?? 'پروژه' }}</span>
@@ -291,42 +289,60 @@
                         class="fa-solid fa-people-group"></i>{{ $siteTexts['team_badge']->value ?? 'تیم ما' }}</span>
                 <h2 class="section-title">{{ $siteTexts['team_title']->value ?? 'متخصصانی که ایده شما را می‌سازند' }}</h2>
             </div>
-            <div class="team-grid">
-                @foreach($teams as $index => $team)
-                    @if ($team->owner == 1)
-                        <div class="team-card reveal reveal-delay-{{ ($index % 4) + 1 }}" style="margin-top: -20px;">
+            <div class="team-layout">
+
+                {{-- ===== OWNER (ثابت در راست) ===== --}}
+                @php $owner = $teams->firstWhere('owner', 1); @endphp
+                @if($owner)
+                    <div class="team-owner reveal">
+                        <div class="team-card owner-card">
                             <div class="team-ring-1">
-                                <div class="team-avatar tc{{ ($index % 5) + 1 }}">
-                                    <img src="{{ asset($team->image) }}" alt="{{ $team->name }}">
+                                <div class="team-avatar tc1">
+                                    <img src="{{ asset($owner->image) }}" alt="{{ $owner->name }}">
                                     <div class="ov">
-                                        @if($team->linkedin)<a href="{{ $team->linkedin }}"><i
-                                        class="fa-brands fa-linkedin-in"></i></a>@endif
-                                        @if($team->instagram)<a href="{{ $team->instagram }}"><i
-                                        class="fa-brands fa-instagram"></i></a>@endif
+                                        @if($owner->linkedin)
+                                            <a href="{{ $owner->linkedin }}"><i class="fa-brands fa-linkedin-in"></i></a>
+                                        @endif
+                                        @if($owner->instagram)
+                                            <a href="{{ $owner->instagram }}"><i class="fa-brands fa-instagram"></i></a>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
-                            <h4>{{ $team->name }}</h4>
-                            <p>{{ $team->title }}</p>
+                            <h4>{{ $owner->name }}</h4>
+                            <p>{{ $owner->title }}</p>
                         </div>
-                    @else
-                        <div class="team-card reveal reveal-delay-{{ ($index % 4) + 1 }}">
-                            <div class="team-ring">
-                                <div class="team-avatar tc{{ ($index % 5) + 1 }}">
-                                    <img src="{{ asset($team->image) }}" alt="{{ $team->name }}">
-                                    <div class="ov">
-                                        @if($team->linkedin)<a href="{{ $team->linkedin }}"><i
-                                        class="fa-brands fa-linkedin-in"></i></a>@endif
-                                        @if($team->instagram)<a href="{{ $team->instagram }}"><i
-                                        class="fa-brands fa-instagram"></i></a>@endif
+                    </div>
+                @endif
+
+                {{-- ===== SLIDER (بقیه اعضا) ===== --}}
+                @php $others = $teams->where('owner', '!=', 1)->values(); @endphp
+                @if($others->count())
+                    <div class="team-slider-wrapper reveal reveal-delay-1">
+                        <div class="team-slider" id="teamSlider">
+                            @foreach($others as $index => $member)
+                                <div class="team-card slider-card">
+                                    <div class="team-ring">
+                                        <div class="team-avatar tc{{ ($index % 5) + 1 }}">
+                                            <img src="{{ asset($member->image) }}" alt="{{ $member->name }}">
+                                            <div class="ov">
+                                                @if($member->linkedin)
+                                                    <a href="{{ $member->linkedin }}"><i class="fa-brands fa-linkedin-in"></i></a>
+                                                @endif
+                                                @if($member->instagram)
+                                                    <a href="{{ $member->instagram }}"><i class="fa-brands fa-instagram"></i></a>
+                                                @endif
+                                            </div>
+                                        </div>
                                     </div>
+                                    <h4>{{ $member->name }}</h4>
+                                    <p>{{ $member->title }}</p>
                                 </div>
-                            </div>
-                            <h4>{{ $team->name }}</h4>
-                            <p>{{ $team->title }}</p>
+                            @endforeach
                         </div>
-                    @endif
-                @endforeach
+                    </div>
+                @endif
+
             </div>
         </div>
     </section>

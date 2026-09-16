@@ -1467,7 +1467,7 @@ header.site-header.scrolled .brand .mark {
   overflow-y: hidden;
   padding: 14px 16px 12px;
   border-bottom: 1px solid var(--line);
-  scrollbar-width:auto;
+  scrollbar-width: auto;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
   scroll-snap-type: x proximity;
@@ -1480,7 +1480,7 @@ header.site-header.scrolled .brand .mark {
 }
 
 .folio-mobile-tabs::-webkit-scrollbar {
-  height:8px;
+  height: 8px;
 }
 
 .folio-mobile-tabs::-webkit-scrollbar-track {
@@ -1699,6 +1699,98 @@ header.site-header.scrolled .brand .mark {
 
   .team-card:nth-child(3) {
     grid-column: 1 / -1;
+  }
+}
+
+/* ===== Team Layout: Owner + Slider ===== */
+.team-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 40px;
+  align-items: center;
+}
+
+/* ---- Owner Card (ثابت) ---- */
+.team-owner {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+
+.owner-card {
+  padding: 10px;
+  pointer-events: auto;
+}
+
+.owner-card:hover {
+  transform: none;
+}
+
+/* ---- Slider ---- */
+.team-slider-wrapper {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  padding: 10px 0;
+  -webkit-mask-image: linear-gradient(to left,
+      transparent 0%,
+      black 6%,
+      black 94%,
+      transparent 100%);
+  mask-image: linear-gradient(to left,
+      transparent 0%,
+      black 6%,
+      black 94%,
+      transparent 100%);
+}
+
+.team-slider {
+  display: flex;
+  gap: 22px;
+  will-change: transform;
+}
+
+.team-slider .slider-card {
+  flex: 0 0 200px;
+  width: 200px;
+  padding: 25px 14px;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 991px) {
+  .team-layout {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+
+  .team-owner {
+    justify-content: center;
+  }
+
+  .team-slider-wrapper {
+    -webkit-mask-image: linear-gradient(to left,
+        transparent 0%,
+        black 4%,
+        black 96%,
+        transparent 100%);
+    mask-image: linear-gradient(to left,
+        transparent 0%,
+        black 4%,
+        black 96%,
+        transparent 100%);
+  }
+
+  .team-slider .slider-card {
+    flex: 0 0 180px;
+    width: 180px;
+  }
+}
+
+@media (max-width: 576px) {
+  .team-slider .slider-card {
+    flex: 0 0 160px;
+    width: 160px;
+    padding: 20px 10px;
   }
 }
 
@@ -2765,7 +2857,7 @@ footer.site-footer::after {
     grid-template-columns: 1fr;
   }
 
-  .folio-tabs{
+  .folio-tabs {
     display: none;
   }
 
