@@ -20,17 +20,17 @@ class ProjectController extends Controller
     public function createProject(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'title'        => 'required|string|max:100',
-            'subtitle'     => 'nullable|string|max:255',
-            'brief'        => 'required|string|max:500',
-            'desc'         => 'required|string',
-            'challenge'    => 'nullable|string',
-            'solution'     => 'nullable|string',
-            'cat_id'       => 'required|integer',
-            'image_url'    => 'nullable|string|max:255',
-            'client_name'  => 'nullable|string|max:100',
-            'launch_year'  => 'nullable|string|max:50',
-            'duration'     => 'nullable|string|max:50',
+            'title' => 'required|string|max:100',
+            'subtitle' => 'nullable|string|max:255',
+            'brief' => 'required|string|max:500',
+            'desc' => 'required|string',
+            'challenge' => 'nullable|string',
+            'solution' => 'nullable|string',
+            'cat_id' => 'required|integer',
+            'image_url' => 'nullable|string|max:255',
+            'client_name' => 'nullable|string|max:100',
+            'launch_year' => 'nullable|string|max:50',
+            'duration' => 'nullable|string|max:50',
             'project_link' => 'nullable|string|max:255',
         ]);
 
@@ -67,17 +67,17 @@ class ProjectController extends Controller
     public function editeProject(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
-            'title'        => 'required|string|max:100',
-            'subtitle'     => 'nullable|string|max:255',
-            'brief'        => 'required|string|max:500',
-            'desc'         => 'required|string',
-            'challenge'    => 'nullable|string',
-            'solution'     => 'nullable|string',
-            'cat_id'       => 'required|integer',
-            'image_url'    => 'nullable|string|max:255',
-            'client_name'  => 'nullable|string|max:100',
-            'launch_year'  => 'nullable|string|max:50',
-            'duration'     => 'nullable|string|max:50',
+            'title' => 'required|string|max:100',
+            'subtitle' => 'nullable|string|max:255',
+            'brief' => 'required|string|max:500',
+            'desc' => 'required|string',
+            'challenge' => 'nullable|string',
+            'solution' => 'nullable|string',
+            'cat_id' => 'required|integer',
+            'image_url' => 'nullable|string|max:255',
+            'client_name' => 'nullable|string|max:100',
+            'launch_year' => 'nullable|string|max:50',
+            'duration' => 'nullable|string|max:50',
             'project_link' => 'nullable|string|max:255',
         ]);
 
@@ -221,7 +221,7 @@ class ProjectController extends Controller
 
     public function create()
     {
-        $categories = Categories::where('type',1)->get();
+        $categories = Categories::where('type', 1)->get();
 
         $galleryCategories = CatImg::orderBy('number')
             ->orderBy('id')
@@ -253,6 +253,7 @@ class ProjectController extends Controller
 
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'image_mobile' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image_index' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
 
             'feature_title' => 'nullable|array',
             'feature_title.*' => 'nullable|string|max:255',
@@ -286,6 +287,10 @@ class ProjectController extends Controller
             'gallery_images.*.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
 
             'slug' => 'required|string|max:255',
+
+            'number' => 'required|integer|min:0',
+
+
         ]);
 
         $uploadedFiles = [];
@@ -314,6 +319,7 @@ class ProjectController extends Controller
             $project->testimonial = $validated['testimonial'] ?? null;
             $project->number = $number;
             $project->slug = $validated['slug'];
+            $project->number = $validated['number'];
 
             /*
              * ==========================
@@ -370,6 +376,30 @@ class ProjectController extends Controller
             } else {
 
                 $project->image_mobile_url = null;
+
+            }
+
+
+            if ($request->hasFile('image_index')) {
+
+                $file = $request->file('image_index');
+
+                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+                $file->move(
+                    'projects',
+                    $fileName
+                );
+
+                $imageIndexPath = 'projects/' . $fileName;
+
+                $project->image_Index = $imageIndexPath;
+
+                $uploadedFiles[] = $imageIndexPath;
+
+            } else {
+
+                $project->image_Index = null;
 
             }
 
@@ -585,7 +615,7 @@ class ProjectController extends Controller
             'features'
         ])->findOrFail($id);
 
-        $categories = Categories::where('type',1)->get();
+        $categories = Categories::where('type', 1)->get();
 
         $galleryCategories = CatImg::orderBy('number')
             ->orderBy('id')
@@ -620,6 +650,7 @@ class ProjectController extends Controller
 
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'image_mobile' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'image_index' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
 
             'feature_title' => 'nullable|array',
             'feature_title.*' => 'nullable|string|max:255',
@@ -653,6 +684,8 @@ class ProjectController extends Controller
             'gallery_images.*.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
 
             'slug' => 'required|string|max:255',
+
+            'number' => 'required|integer|min:0',
         ]);
 
         $uploadedFiles = [];
@@ -712,6 +745,33 @@ class ProjectController extends Controller
                 $uploadedFiles[] = $imageMobilePath;
             }
 
+
+
+            /*
+             * ==========================
+             * index IMAGE
+             * ==========================
+             */
+
+            if ($request->hasFile('image_index')) {
+
+                $file = $request->file('image_index');
+
+                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+
+                $file->move(
+                    'projects',
+                    $fileName
+                );
+
+                $imageIndexPath = 'projects/' . $fileName;
+
+                $project->image_Index = $imageIndexPath;
+
+                $uploadedFiles[] = $imageIndexPath;
+            }
+
+
             /*
              * ==========================
              * PROJECT DATA
@@ -733,6 +793,7 @@ class ProjectController extends Controller
             $project->project_link = $validated['project_link'] ?? null;
             $project->testimonial = $validated['testimonial'] ?? null;
             $project->slug = $validated['slug'];
+            $project->number = $validated['number'];
 
             $project->save();
 
@@ -891,10 +952,10 @@ class ProjectController extends Controller
             }
 
             /*
-            * ==========================
-            * GALLERY
-            * ==========================
-            */
+             * ==========================
+             * GALLERY
+             * ==========================
+             */
 
             $galleryImages = $request->file('gallery_images', []);
 

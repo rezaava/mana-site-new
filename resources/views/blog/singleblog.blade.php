@@ -14,6 +14,22 @@
     <section class="single-hero">
         <div class="container-x">
 
+            <div class="breadcrumb-x reveal in">
+
+                <a href="{{ url('/') }}">خانه</a>
+
+                <i class="fa-solid fa-chevron-left"></i>
+
+                <a href="{{ url('/blogs') }}">مقالات</a>
+
+                <i class="fa-solid fa-chevron-left"></i>
+
+                <span class="cur">
+                    {{ $blog->title }}
+                </span>
+
+            </div>
+
             <!-- Meta -->
             <div class="post-meta-top reveal in">
 
@@ -119,7 +135,7 @@
 
                             <div class="post-img">
 
-                                <img src="{{ asset( $blog->image_url) }}" alt="{{ $blog->title }}">
+                                <img src="{{ asset($blog->image_url) }}" alt="{{ $blog->title }}">
 
                                 <div class="caption">
                                     <i class="fa-regular fa-image"></i>
@@ -206,12 +222,12 @@
                             <div class="comment-item">
 
                                 <div class="cav" style="
-                                                background: linear-gradient(
-                                                    135deg,
-                                                    var(--brand),
-                                                    var(--accent-2)
-                                                );
-                                            ">
+                                                            background: linear-gradient(
+                                                                135deg,
+                                                                var(--brand),
+                                                                var(--accent-2)
+                                                            );
+                                                        ">
                                     م
                                 </div>
 
@@ -278,11 +294,11 @@
 
 
                             <div id="commentSuccess" style="
-                                            display: none;
-                                            margin-top: 16px;
-                                            color: var(--accent-2);
-                                            font-weight: 600;
-                                        ">
+                                                        display: none;
+                                                        margin-top: 16px;
+                                                        color: var(--accent-2);
+                                                        font-weight: 600;
+                                                    ">
 
                                 <i class="fa-regular fa-circle-check"></i>
 
@@ -340,8 +356,7 @@
 
                                                         @if($relatedBlog->image_url)
 
-                                                            <img src="{{ asset( $relatedBlog->image_url) }}"
-                                                                alt="{{ $relatedBlog->title }}">
+                                                            <img src="{{ asset($relatedBlog->image_url) }}" alt="{{ $relatedBlog->title }}">
 
                                                         @else
 
@@ -432,23 +447,23 @@
 
 
                         <div class="tag-cloud" style="
-                                        display: flex;
-                                        flex-wrap: wrap;
-                                        gap: 8px;
-                                    ">
+                                                    display: flex;
+                                                    flex-wrap: wrap;
+                                                    gap: 8px;
+                                                ">
 
                             @forelse($blog->tags as $tag)
 
                                 <a href="#" style="
-                                                        padding: 8px 15px;
-                                                        border-radius: 99px;
-                                                        background: var(--surface-2);
-                                                        border: 1px solid var(--line);
-                                                        font-size: 0.78rem;
-                                                        color: var(--text-dim);
-                                                        text-decoration: none;
-                                                        transition: 0.3s;
-                                                    ">
+                                                                                padding: 8px 15px;
+                                                                                border-radius: 99px;
+                                                                                background: var(--surface-2);
+                                                                                border: 1px solid var(--line);
+                                                                                font-size: 0.78rem;
+                                                                                color: var(--text-dim);
+                                                                                text-decoration: none;
+                                                                                transition: 0.3s;
+                                                                            ">
                                     {{ $tag->text }}
                                 </a>
 
@@ -467,18 +482,18 @@
 
                     <!-- ===== خبرنامه ===== -->
                     <div class="sidebar-card reveal reveal-delay-3" style="
-                                    background: linear-gradient(
-                                        135deg,
-                                        color-mix(in srgb, var(--brand) 15%, transparent),
-                                        color-mix(in srgb, var(--accent-2) 10%, transparent)
-                                    );
+                                                background: linear-gradient(
+                                                    135deg,
+                                                    color-mix(in srgb, var(--brand) 15%, transparent),
+                                                    color-mix(in srgb, var(--accent-2) 10%, transparent)
+                                                );
 
-                                    border-color: color-mix(
-                                        in srgb,
-                                        var(--accent-2) 30%,
-                                        transparent
-                                    );
-                                ">
+                                                border-color: color-mix(
+                                                    in srgb,
+                                                    var(--accent-2) 30%,
+                                                    transparent
+                                                );
+                                            ">
 
                         <h5>
 
@@ -490,10 +505,10 @@
 
 
                         <p style="
-                                        font-size: 0.85rem;
-                                        color: var(--text-dim);
-                                        margin-bottom: 16px;
-                                    ">
+                                                    font-size: 0.85rem;
+                                                    color: var(--text-dim);
+                                                    margin-bottom: 16px;
+                                                ">
                             جدیدترین مقالات رو یک‌بار در هفته دریافت کن.
                         </p>
 
@@ -501,27 +516,27 @@
                         <form onsubmit="return false;" style="display: flex; gap: 8px">
 
                             <input type="email" placeholder="ایمیل شما" style="
-                                            flex: 1;
-                                            background: var(--bg);
-                                            border: 1px solid var(--line);
-                                            border-radius: 99px;
-                                            padding: 10px 16px;
-                                            color: var(--text);
-                                            font-family: inherit;
-                                            font-size: 0.82rem;
-                                        ">
+                                                        flex: 1;
+                                                        background: var(--bg);
+                                                        border: 1px solid var(--line);
+                                                        border-radius: 99px;
+                                                        padding: 10px 16px;
+                                                        color: var(--text);
+                                                        font-family: inherit;
+                                                        font-size: 0.82rem;
+                                                    ">
 
 
                             <button style="
-                                            background: var(--accent-2);
-                                            color: var(--oncta);
-                                            border: none;
-                                            border-radius: 99px;
-                                            padding: 10px 16px;
-                                            font-weight: 700;
-                                            font-size: 0.82rem;
-                                            white-space: nowrap;
-                                        ">
+                                                        background: var(--accent-2);
+                                                        color: var(--oncta);
+                                                        border: none;
+                                                        border-radius: 99px;
+                                                        padding: 10px 16px;
+                                                        font-weight: 700;
+                                                        font-size: 0.82rem;
+                                                        white-space: nowrap;
+                                                    ">
                                 عضویت
                             </button>
 
