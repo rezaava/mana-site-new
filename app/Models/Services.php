@@ -63,4 +63,8 @@ class Services extends Model
         public function images(){
         return $this->hasMany(Images::class);
     }
+    public function blogs()
+    {
+        return $this->belongsToMany(Blogs::class, 'blog_service', 'service_id', 'blog_id');
+    }
 }

@@ -108,7 +108,7 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
         Route::get('/create', [ProjectController::class, 'create'])->name('projects.create');
         Route::post('/', [ProjectController::class, 'store'])->name('projects.store');
         Route::get('/{id}/edit', [ProjectController::class, 'edit'])->name('projects.edit');
-        Route::post('/{id}', [ProjectController::class, 'update'])->name('projects.update');
+        Route::post('/{id}', [ProjectController::class, 'w'])->name('projects.update');
         Route::delete('/{id}', [ProjectController::class, 'destroy'])->name('projects.destroy');
 
         // API

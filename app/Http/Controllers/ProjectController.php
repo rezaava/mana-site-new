@@ -650,7 +650,6 @@ class ProjectController extends Controller
 
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'image_mobile' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'image_index' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
 
             'feature_title' => 'nullable|array',
             'feature_title.*' => 'nullable|string|max:255',
