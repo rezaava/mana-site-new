@@ -442,7 +442,7 @@
                         <div class="team-card owner-card">
                             <div class="team-ring-1">
                                 <div class="team-avatar tc1">
-                                    <img src="{{ asset($owner->image) }}" alt="{{ $owner->name }}">
+                                    <img src="{{ asset($owner->image_url) }}" alt="{{ $owner->name }}">
                                     <div class="ov">
                                         @if($owner->linkedin)
                                             <a href="{{ $owner->linkedin }}"><i class="fa-brands fa-linkedin-in"></i></a>
@@ -468,14 +468,38 @@
                                 <div class="team-card slider-card">
                                     <div class="team-ring">
                                         <div class="team-avatar tc{{ ($index % 5) + 1 }}">
-                                            <img src="{{ asset($member->image) }}" alt="{{ $member->name }}">
+                                            <img src="{{ asset($member->image_url) }}" alt="{{ $member->name }}">
                                             <div class="ov">
-                                                @if($member->linkedin)
-                                                    <a href="{{ $member->linkedin }}"><i class="fa-brands fa-linkedin-in"></i></a>
-                                                @endif
-                                                @if($member->instagram)
-                                                    <a href="{{ $member->instagram }}"><i class="fa-brands fa-instagram"></i></a>
-                                                @endif
+                                                @php
+                                                    $socialLinks = [];
+
+                                                    $addLink = function ($url, $icon) use (&$socialLinks) {
+                                                        if ($url) {
+                                                            if (!str_starts_with($url, 'http://') && !str_starts_with($url, 'https://')) {
+                                                                $url = 'https://' . $url;
+                                                            }
+
+                                                            $socialLinks[] = [
+                                                                'url' => $url,
+                                                                'icon' => $icon,
+                                                            ];
+                                                        }
+                                                    };
+
+                                                    $addLink($member->linkedin, 'fa-brands fa-linkedin-in');
+                                                    $addLink($member->instagram, 'fa-brands fa-instagram');
+                                                    $addLink($member->twitter, 'fa-brands fa-x-twitter');
+                                                    $addLink($member->github, 'fa-brands fa-github');
+                                                    $addLink($member->telegram, 'fa-brands fa-telegram');
+                                                    $addLink($member->whatsapp, 'fa-brands fa-whatsapp');
+                                                    $addLink($member->website, 'fa-solid fa-globe');
+                                                @endphp
+
+                                                @foreach(array_slice($socialLinks, 0, 2) as $social)
+                                                    <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer">
+                                                        <i class="{{ $social['icon'] }}"></i>
+                                                    </a>
+                                                @endforeach
                                             </div>
                                         </div>
                                     </div>

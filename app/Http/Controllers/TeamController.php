@@ -46,13 +46,13 @@ class TeamController extends Controller
             $team->image_url = $imagePath;
         }
 
-        $team->instagram = $validated['instagram'];
-        $team->twitter = $validated['twitter'];
-        $team->github = $validated['github'];
-        $team->telegram = $validated['telegram'];
-        $team->whatsapp = $validated['whatsapp'];
-        $team->linkedin = $validated['linkedin'];
-        $team->website = $validated['website'];
+        $team->instagram = $validated['instagram'] ?? null;
+        $team->twitter = $validated['twitter'] ?? null;
+        $team->github = $validated['github'] ?? null;
+        $team->telegram = $validated['telegram'] ?? null;
+        $team->whatsapp = $validated['whatsapp'] ?? null;
+        $team->linkedin = $validated['linkedin'] ?? null;
+        $team->website = $validated['website'] ?? null;
         $team->number = $validated['number'];
         $team->save();
 
@@ -98,13 +98,13 @@ class TeamController extends Controller
             $team->image_url = $request->file('image_url')->store('team', 'public');
         }
 
-        $team->instagram = $validated['instagram'];
-        $team->twitter = $validated['twitter'];
-        $team->github = $validated['github'];
-        $team->telegram = $validated['telegram'];
-        $team->whatsapp = $validated['whatsapp'];
-        $team->linkedin = $validated['linkedin'];
-        $team->website = $validated['website'];
+        $team->instagram = $validated['instagram'] ?? null;
+        $team->twitter = $validated['twitter'] ?? null;
+        $team->github = $validated['github'] ?? null;
+        $team->telegram = $validated['telegram'] ?? null;
+        $team->whatsapp = $validated['whatsapp'] ?? null;
+        $team->linkedin = $validated['linkedin'] ?? null;
+        $team->website = $validated['website'] ?? null;
         $team->number = $validated['number'];
 
         $team->save();
