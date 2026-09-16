@@ -161,7 +161,7 @@
 
             <form action="{{ route('update_team', $team->id) }}" method="POST" enctype="multipart/form-data">
                 @csrf
-               
+
 
                 <div class="form-grid form-grid-2">
                     <div class="form-group">
@@ -174,13 +174,21 @@
                     </div>
                 </div>
 
-                <div class="form-group" style="margin-bottom: 15px;">
-                    <label class="form-label">تصویر</label>
-                    <input type="file" name="image" class="form-file">
-                    @if($team->image_url)
-                        <img src="{{ asset( $team->image_url) }}"
-                            style="width: 70px; margin-top: 10px; border-radius: 8px;">
-                    @endif
+
+
+                <div class="form-grid form-grid-2">
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label class="form-label">تصویر</label>
+                        <input type="file" name="image_url" class="form-file">
+                        @if($team->image_url)
+                            <img src="{{ asset($team->image_url) }}" style="width: 70px; margin-top: 10px; border-radius: 8px;">
+                        @endif
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label class="form-label">number</label>
+                        <input type="number" name="number" class="form-file" value="{{ $team->number ?? 1 }}">
+                    </div>
                 </div>
 
                 <h6 class="form-section-title">
@@ -218,6 +226,11 @@
                             <label class="form-label">لینکدین</label>
                             <input type="text" name="linkedin" class="form-input social-input" value="{{ $team->linkedin }}"
                                 placeholder="https://linkedin.com/in/...">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">وبسایت</label>
+                            <input type="text" name="website" class="form-input social-input" value="{{ $team->website }}"
+                                placeholder="https://examples.com/...">
                         </div>
                     </div>
                 </div>

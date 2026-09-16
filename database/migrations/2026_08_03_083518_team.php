@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->string('telegram')->nullable();
             $table->string('whatsapp')->nullable();
             $table->string('linkedin')->nullable();
+             $table->string('website')->nullable();
             $table->tinyInteger('owner')->default(0);
             $table->timestamps();
         });
