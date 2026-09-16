@@ -408,7 +408,7 @@
                         $firstProject = $projects->first();
                     @endphp
                     @if($firstProject)
-                        <img class="fp-bg" id="fpBg" src="{{ asset('storage/' . $firstProject->image) }}"
+                        <img class="fp-bg" id="fpBg" src="{{ asset($firstProject->image) }}"
                             alt="{{ $firstProject->title }}">
                         <div class="fp-content" id="fpContent">
                             <span class="tag">{{ $firstProject->category->name ?? 'پروژه' }}</span>
@@ -631,7 +631,7 @@
 
                     @if($featuredBlog)
                         <div class="blog-feature reveal reveal-delay-1">
-                            <div class="deco"><img src="{{ asset('img/mana2.jpg') }}" alt="Blog"></div>
+                            <div class="deco"><img src="{{ asset($featuredBlog->image_url) }}" alt="Blog"></div>
                             <div class="blog-feature-inner">
                                 <div class="meta"><i
                                         class="fa-regular fa-clock"></i>{{ $featuredBlog->read_time ?? $siteTexts['blog_read_time']->value ?? 'زمان مطالعه: ۵ دقیقه' }}
