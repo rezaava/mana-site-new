@@ -23,22 +23,39 @@ class TeamController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'      => 'required|string|max:255',
-            'title'     => 'nullable|string|max:255',
-            'image'     => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'instagram' => 'nullable|url',
-            'twitter'   => 'nullable|url',
-            'github'    => 'nullable|url',
-            'telegram'  => 'nullable|url',
-            'whatsapp'  => 'nullable|url',
-            'linkedin'  => 'nullable|url',
+            'name' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'instagram' => 'nullable',
+            'twitter' => 'nullable',
+            'github' => 'nullable',
+            'telegram' => 'nullable',
+            'whatsapp' => 'nullable',
+            'linkedin' => 'nullable',
+            'website' => 'nullable',
+            'number' => 'required|integer|min:0',
         ]);
 
-        if ($request->hasFile('image')) {
-            $validated['image_url'] = $request->file('image')->store('team', 'public');
+        $team = new Team();
+
+        $team->name = $validated['name'];
+        $team->title = $validated['title'];
+
+        if ($request->hasFile('image_url')) {
+            $imagePath = $request->file('image_url')->store('team', 'public');
+            $team->image_url = $imagePath;
         }
 
-        Team::create($validated);
+        $team->instagram = $validated['instagram'];
+        $team->twitter = $validated['twitter'];
+        $team->github = $validated['github'];
+        $team->telegram = $validated['telegram'];
+        $team->whatsapp = $validated['whatsapp'];
+        $team->linkedin = $validated['linkedin'];
+        $team->website = $validated['website'];
+        $team->number = $validated['number'];
+        $team->save();
+
 
         return redirect()->route('team.index')->with('success', 'عضو تیم اضافه شد.');
     }
@@ -55,25 +72,42 @@ class TeamController extends Controller
         $team = Team::findOrFail($id);
 
         $validated = $request->validate([
-            'name'      => 'required|string|max:255',
-            'title'     => 'nullable|string|max:255',
-            'image'     => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-            'instagram' => 'nullable|url',
-            'twitter'   => 'nullable|url',
-            'github'    => 'nullable|url',
-            'telegram'  => 'nullable|url',
-            'whatsapp'  => 'nullable|url',
-            'linkedin'  => 'nullable|url',
+            'name' => 'required|string|max:255',
+            'title' => 'nullable|string|max:255',
+            'image_url' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
+            'instagram' => 'nullable',
+            'twitter' => 'nullable',
+            'github' => 'nullable',
+            'telegram' => 'nullable',
+            'whatsapp' => 'nullable',
+            'linkedin' => 'nullable',
+            'website' => 'nullable',
+            'number' => 'required|integer|min:0',
         ]);
 
-        if ($request->hasFile('image')) {
+        $team->name = $validated['name'];
+        $team->title = $validated['title'];
+
+
+        if ($request->hasFile('image_url')) {
+
             if ($team->image_url && Storage::disk('public')->exists($team->image_url)) {
                 Storage::disk('public')->delete($team->image_url);
             }
-            $validated['image_url'] = $request->file('image')->store('team', 'public');
+
+            $team->image_url = $request->file('image_url')->store('team', 'public');
         }
 
-        $team->update($validated);
+        $team->instagram = $validated['instagram'];
+        $team->twitter = $validated['twitter'];
+        $team->github = $validated['github'];
+        $team->telegram = $validated['telegram'];
+        $team->whatsapp = $validated['whatsapp'];
+        $team->linkedin = $validated['linkedin'];
+        $team->website = $validated['website'];
+        $team->number = $validated['number'];
+
+        $team->save();
 
         return redirect()->route('team.index')->with('success', 'عضو تیم بروزرسانی شد.');
     }
