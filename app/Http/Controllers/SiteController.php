@@ -34,7 +34,7 @@ class SiteController extends Controller
             $project['category'] = Categories::where('id', $project->cat_id)->first();
         }
 
-        $teams = Team::orderBy('id', 'desc')->get();
+        $teams = Team::inRandomOrder()->get();
 
         $questions = Questions::where('service_id', null)->orderBy('number')->get();
 

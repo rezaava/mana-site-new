@@ -444,12 +444,32 @@
                                 <div class="team-avatar tc1">
                                     <img src="{{ asset($owner->image_url) }}" alt="{{ $owner->name }}">
                                     <div class="ov">
-                                        @if($owner->linkedin)
-                                            <a href="{{ $owner->linkedin }}"><i class="fa-brands fa-linkedin-in"></i></a>
-                                        @endif
-                                        @if($owner->instagram)
-                                            <a href="{{ $owner->instagram }}"><i class="fa-brands fa-instagram"></i></a>
-                                        @endif
+                                        @php
+                                            $socialLinks = [];
+                                            $addLink = function ($url, $icon) use (&$socialLinks) {
+                                                if ($url) {
+                                                    if (!str_starts_with($url, 'http://') && !str_starts_with($url, 'https://')) {
+                                                        $url = 'https://' . $url;
+                                                    }
+                                                    $socialLinks[] = [
+                                                        'url' => $url,
+                                                        'icon' => $icon,
+                                                    ];
+                                                }
+                                            };
+                                            $addLink($owner->linkedin, 'fa-brands fa-linkedin-in');
+                                            $addLink($owner->instagram, 'fa-brands fa-instagram');
+                                            $addLink($owner->twitter, 'fa-brands fa-x-twitter');
+                                            $addLink($owner->github, 'fa-brands fa-github');
+                                            $addLink($owner->telegram, 'fa-brands fa-telegram');
+                                            $addLink($owner->whatsapp, 'fa-brands fa-whatsapp');
+                                            $addLink($owner->website, 'fa-solid fa-globe');
+                                        @endphp
+                                        @foreach(array_slice($socialLinks, 0, 2) as $social)
+                                            <a href="{{ $social['url'] }}" target="_blank" rel="noopener noreferrer">
+                                                <i class="{{ $social['icon'] }}"></i>
+                                            </a>
+                                        @endforeach
                                     </div>
                                 </div>
                             </div>
