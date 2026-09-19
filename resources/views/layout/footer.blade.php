@@ -92,11 +92,12 @@
                     <div class="footer-col footer-center">
 
                         <a href="#home" class="footer-brand">
-                            {{ $siteTexts['footer_brand']->value ?? 'مانا' }}
+                            {{ $setting['site_name']->value ?? 'مانا' }}
                         </a>
 
                         <p class="footer-tag">
-                            {{ $siteTexts['footer_tag']->value ?? 'ارائه‌ی راهکارهای هوشمند دیجیتال؛ از ایده تا اجرا، همراه کسب‌وکار شما برای ساختن آینده‌ای دیجیتال.' }}
+                            {{ $setting['site_description']->value ?? 'ارائه‌ی راهکارهای هوشمند دیجیتال؛ از ایده تا اجرا، همراه کسب‌وکار شما برای ساختن آینده‌ای دیجیتال.' }}
+                            {{ $setting['site_keywords']->value ?? 'ارائه‌ی راهکارهای هوشمند دیجیتال؛ از ایده تا اجرا، همراه کسب‌وکار شما برای ساختن آینده‌ای دیجیتال.' }}
                         </p>
 
                         <div class="footer-social">
@@ -133,7 +134,7 @@
                             <li>
                                 <a href="tel:02117545678">
                                     <i class="fa-solid fa-phone"></i>
-                                    ۰۲۱-۱۷۵۴۵۶۷۸
+                                    {{ $setting['contact_phone']->value  }}
                                 </a>
                             </li>
                         </ul>
