@@ -16,147 +16,166 @@
 
         /* ============ LEAD MODAL (auto-open phone capture) ============ */
         .lead-modal-content {
-        position: relative;
-        overflow: hidden;
-        background: var(--surface);
-        border: 1px solid var(--line);
-        border-radius: 30px;
-        box-shadow: var(--shadow-strong);
-        padding: 8px;
+            position: relative;
+            overflow: hidden;
+            background: var(--surface);
+            border: 1px solid var(--line);
+            border-radius: 30px;
+            box-shadow: var(--shadow-strong);
+            padding: 8px;
         }
+
         .lead-modal-content .blob {
-        position: absolute;
-        border-radius: 50%;
-        filter: blur(60px);
-        opacity: 0.45;
-        z-index: 0;
-        pointer-events: none;
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.45;
+            z-index: 0;
+            pointer-events: none;
         }
+
         .lead-modal-content .blob.b1 {
-        width: 260px;
-        height: 260px;
-        background: var(--brand);
-        top: -110px;
-        right: -80px;
-        animation: blobMove1 16s ease-in-out infinite;
+            width: 260px;
+            height: 260px;
+            background: var(--brand);
+            top: -110px;
+            right: -80px;
+            animation: blobMove1 16s ease-in-out infinite;
         }
+
         .lead-modal-content .blob.b2 {
-        width: 220px;
-        height: 220px;
-        background: var(--accent-2);
-        bottom: -100px;
-        left: -70px;
-        animation: blobMove2 19s ease-in-out infinite;
+            width: 220px;
+            height: 220px;
+            background: var(--accent-2);
+            bottom: -100px;
+            left: -70px;
+            animation: blobMove2 19s ease-in-out infinite;
         }
+
         .lead-modal-close {
-        position: absolute;
-        z-index: 3;
-        top: 18px;
-        left: 18px;
-        width: 38px;
-        height: 38px;
-        border-radius: 12px;
-        border: 1px solid var(--line);
-        background: color-mix(in srgb, var(--text) 4%, transparent);
-        color: var(--text);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1rem;
-        cursor: pointer;
-        transition: 0.25s var(--ease);
+            position: absolute;
+            z-index: 3;
+            top: 18px;
+            left: 18px;
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            border: 1px solid var(--line);
+            background: color-mix(in srgb, var(--text) 4%, transparent);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.25s var(--ease);
         }
+
         .lead-modal-close:hover {
-        border-color: var(--accent-2);
-        color: var(--accent-2);
-        transform: rotate(90deg);
+            border-color: var(--accent-2);
+            color: var(--accent-2);
+            transform: rotate(90deg);
         }
+
         .lead-modal-body {
-        position: relative;
-        z-index: 1;
-        padding: 44px 40px 34px;
-        text-align: center;
+            position: relative;
+            z-index: 1;
+            padding: 44px 40px 34px;
+            text-align: center;
         }
+
         .lead-modal-body .eyebrow {
-        margin-bottom: 14px;
+            margin-bottom: 14px;
         }
+
         .lead-modal-body h3 {
-        font-weight: 800;
-        font-size: 1.5rem;
-        margin-bottom: 12px;
+            font-weight: 800;
+            font-size: 1.5rem;
+            margin-bottom: 12px;
         }
-        .lead-modal-body > p {
-        color: var(--text-dim);
-        font-size: 0.94rem;
-        line-height: 1.9;
-        max-width: 380px;
-        margin: 0 auto 26px;
+
+        .lead-modal-body>p {
+            color: var(--text-dim);
+            font-size: 0.94rem;
+            line-height: 1.9;
+            max-width: 380px;
+            margin: 0 auto 26px;
         }
+
         .lead-modal-body .form-control-x {
-        text-align: center;
-        margin-bottom: 14px;
+            text-align: center;
+            margin-bottom: 14px;
         }
+
         .lead-modal-skip {
-        display: block;
-        margin: 16px auto 4px;
-        background: none;
-        border: none;
-        color: var(--text-dimmer);
-        font-size: 0.82rem;
-        text-decoration: underline;
-        text-underline-offset: 4px;
-        cursor: pointer;
+            display: block;
+            margin: 16px auto 4px;
+            background: none;
+            border: none;
+            color: var(--text-dimmer);
+            font-size: 0.82rem;
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            cursor: pointer;
         }
+
         .lead-modal-success {
-        display: none;
-        padding: 10px 0 6px;
+            display: none;
+            padding: 10px 0 6px;
         }
+
         .lead-modal-success.show {
-        display: block;
-        animation: orderPop 0.5s var(--ease);
+            display: block;
+            animation: orderPop 0.5s var(--ease);
         }
+
         .lead-modal-success i {
-        font-size: 3rem;
-        color: var(--accent-2);
-        margin-bottom: 14px;
+            font-size: 3rem;
+            color: var(--accent-2);
+            margin-bottom: 14px;
         }
+
         .lead-modal-success h4 {
-        font-weight: 800;
-        font-size: 1.2rem;
-        margin-bottom: 8px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
         }
+
         .lead-modal-success p {
-        color: var(--text-dim);
-        font-size: 0.9rem;
-        line-height: 1.8;
-        max-width: 320px;
-        margin: 0 auto;
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            line-height: 1.8;
+            max-width: 320px;
+            margin: 0 auto;
         }
+
         .lead-modal-body .btn-flow {
-        width: 100%;
-        justify-content: center;
-        border: none;
+            width: 100%;
+            justify-content: center;
+            border: none;
         }
+
         @keyframes orderPop {
-        from {
-            opacity: 0;
-            transform: translateY(14px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @media (max-width: 576px) {
-        .lead-modal-body {
-            padding: 38px 22px 28px;
-        }
-        .lead-modal-body h3 {
-            font-size: 1.3rem;
-        }
-        }
+            .lead-modal-body {
+                padding: 38px 22px 28px;
+            }
 
+            .lead-modal-body h3 {
+                font-size: 1.3rem;
+            }
+        }
     </style>
 @endsection
 
@@ -597,6 +616,7 @@
         </div>
     </section>
 
+
     <section class="blog" id="blog">
         <div class="container-x">
             <div class="blog-shell">
@@ -618,76 +638,73 @@
                 </div>
 
                 <div class="blog-layout">
+
+                    {{-- لیست مقالات (۴ مقاله) --}}
                     <div class="blog-list reveal">
-                        @foreach($blogs as $blog)
-                            <a href="/blog/{{ $blog->slug }}" class="blog-list-item">{{ $blog->title }} <span class="arr"><i
-                                        class="fa-solid fa-arrow-up-left"></i></span></a>
+                        @foreach($blogList as $blog)
+                            <a href="{{ url('/blog/' . $blog->slug) }}" class="blog-list-item">
+                                {{ $blog->title }}
+                                <span class="arr"><i class="fa-solid fa-arrow-up-left"></i></span>
+                            </a>
                         @endforeach
                     </div>
 
-                    @php
-                        $featuredBlog = $blogs->first();
-                    @endphp
-
-                    @if($featuredBlog)
+                    {{-- مقاله ویژه (۱ مقاله) --}}
+                    @if($blogFeature)
                         <div class="blog-feature reveal reveal-delay-1">
-                            <div class="deco"><img src="{{ asset('img/mana2.jpg') }}" alt="Blog"></div>
+                            <div class="deco"><img src="{{  asset($blogFeature->image_url)}}" alt="Blog"></div>
                             <div class="blog-feature-inner">
-                                <div class="meta"><i
-                                        class="fa-regular fa-clock"></i>{{ $featuredBlog->read_time ?? $siteTexts['blog_read_time']->value ?? 'زمان مطالعه: ۵ دقیقه' }}
+                                <div class="meta">
+                                    <i class="fa-regular fa-clock"></i>
+                                    {{ $blogFeature->{'reading-time'} ? $blogFeature->{'reading-time'} . ' دقیقه مطالعه' : ($siteTexts['blog_read_time']->value ?? 'زمان مطالعه: ۵ دقیقه') }}
                                 </div>
-                                <h5>{{ $featuredBlog->title }}</h5>
-                                <a href="{{ url('/blog/' . $featuredBlog->slug) }}"
-                                    class="pill">{{ $siteTexts['blog_read_more']->value ?? 'مطالعه مقاله' }} <i
-                                        class="fa-solid fa-arrow-up-left"></i></a>
+                                <h5>{{ $blogFeature->title }}</h5>
+                                <a href="{{ url('/blog/' . $blogFeature->slug) }}" class="pill">
+                                    {{ $siteTexts['blog_read_more']->value ?? 'مطالعه مقاله' }}
+                                    <i class="fa-solid fa-arrow-up-left"></i>
+                                </a>
                             </div>
                         </div>
                     @endif
 
+                    {{-- کارت کناری (۲ مقاله) --}}
                     <div class="blog-side">
-                        @foreach($blogs->skip(1)->take(2) as $blog)
+                        @foreach($blogSide as $blog)
                             <div class="blog-side-card reveal reveal-delay-{{ $loop->iteration + 1 }}">
-                                <div class="thumb {{ $loop->first ? 'a' : 'b' }}"><i
-                                        class="fa-solid {{ $loop->first ? 'fa-robot' : 'fa-mobile-screen' }}"></i></div>
-                                <a href="{{ url('/blog', $blog->slug) }}">
+                                <div class="thumb {{ $loop->first ? 'a' : 'b' }}">
+                                    <i class="fa-solid {{ $loop->first ? 'fa-robot' : 'fa-mobile-screen' }}"></i>
+                                </div>
+                                <a href="{{ url('/blog/' . $blog->slug) }}">
                                     <div>
                                         <span class="tag">{{ $blog->category->name ?? 'مقاله' }}</span>
                                         <h6>{{ $blog->title }}</h6>
-                                        <span class="time">{{ $blog->read_time ?? '۵ دقیقه مطالعه' }}</span>
+                                        <span
+                                            class="time">{{ $blog->{'reading-time'} ? $blog->{'reading-time'} . ' دقیقه مطالعه' : '۵ دقیقه مطالعه' }}</span>
                                     </div>
                                 </a>
                             </div>
                         @endforeach
                     </div>
+
                 </div>
 
                 <div class="blog-more reveal">
-                    <a href="{{ route('blog') }}"
-                        class="btn-ghost">{{ $siteTexts['blog_all']->value ?? 'مشاهده همه مقالات' }} <i
-                            class="fa-solid fa-arrow-left"></i></a>
+                    <a href="{{ route('blog') }}" class="btn-ghost">
+                        {{ $siteTexts['blog_all']->value ?? 'مشاهده همه مقالات' }}
+                        <i class="fa-solid fa-arrow-left"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- ============ LEAD MODAL (بعد از ۱۰ ثانیه خودکار باز می‌شود) ============ -->
-    <div
-        class="modal fade"
-        id="leadModal"
-        tabindex="-1"
-        aria-labelledby="leadModalLabel"
-        aria-hidden="true"
-    >
+    <div class="modal fade" id="leadModal" tabindex="-1" aria-labelledby="leadModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content lead-modal-content">
                 <div class="blob b1"></div>
                 <div class="blob b2"></div>
-                <button
-                    type="button"
-                    class="lead-modal-close"
-                    data-bs-dismiss="modal"
-                    aria-label="بستن"
-                >
+                <button type="button" class="lead-modal-close" data-bs-dismiss="modal" aria-label="بستن">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
                 <div class="lead-modal-body">
@@ -697,18 +714,11 @@
                     <h3 id="leadModalLabel">می‌خوای پروژه‌تو شروع کنی؟</h3>
                     <p>
                         برای ارتباط با پشتیبانی و ثبت سفارش پروژه‌ت، شماره‌تو بذار؛ کارشناس‌های
-        ما کمتر از ۲۴ ساعت باهات تماس می‌گیرن. 🚀
+                        ما کمتر از ۲۴ ساعت باهات تماس می‌گیرن. 🚀
                     </p>
                     <form id="leadForm" onsubmit="return false;" novalidate>
-                        <input
-                            class="form-control-x"
-                            type="tel"
-                            id="leadPhone"
-                            placeholder="مثلاً ۰۹۱۲۳۴۵۶۷۸۹"
-                            required
-                            pattern="^0?9\d{9}$"
-                            inputmode="numeric"
-                        >
+                        <input class="form-control-x" type="tel" id="leadPhone" placeholder="مثلاً ۰۹۱۲۳۴۵۶۷۸۹" required
+                            pattern="^0?9\d{9}$" inputmode="numeric">
                         <button type="submit" class="btn-flow">
                             ثبت شماره و شروع مشاوره رایگان
                             <i class="fa-solid fa-arrow-left"></i>
@@ -997,47 +1007,47 @@
 
             });
 
-        /* ============ LEAD MODAL (بعد از ۱۰ ثانیه خودکار باز می‌شود) ============ */
-        (function () {
-        const leadModalEl = document.getElementById("leadModal");
-        if (!leadModalEl) return;
+            /* ============ LEAD MODAL (بعد از ۱۰ ثانیه خودکار باز می‌شود) ============ */
+            (function () {
+                const leadModalEl = document.getElementById("leadModal");
+                if (!leadModalEl) return;
 
-        const leadModal = new bootstrap.Modal(leadModalEl);
-        const leadForm = document.getElementById("leadForm");
-        const leadPhone = document.getElementById("leadPhone");
-        const leadSuccess = document.getElementById("leadModalSuccess");
+                const leadModal = new bootstrap.Modal(leadModalEl);
+                const leadForm = document.getElementById("leadForm");
+                const leadPhone = document.getElementById("leadPhone");
+                const leadSuccess = document.getElementById("leadModalSuccess");
 
-        // اگر می‌خواهید مودال در هر بار ورود به سایت (هر بار رفرش) نمایش داده شود
-        // خط زیر و شرط «alreadyShown» را حذف کنید و به‌جایش فقط setTimeout را بگذارید.
-        const alreadyShown = sessionStorage.getItem("manaLeadModalShown");
+                // اگر می‌خواهید مودال در هر بار ورود به سایت (هر بار رفرش) نمایش داده شود
+                // خط زیر و شرط «alreadyShown» را حذف کنید و به‌جایش فقط setTimeout را بگذارید.
+                const alreadyShown = sessionStorage.getItem("manaLeadModalShown");
 
-        if (!alreadyShown) {
-            setTimeout(() => {
-            leadModal.show();
-            sessionStorage.setItem("manaLeadModalShown", "1");
-            }, 10000); // 10 ثانیه
-        }
+                if (!alreadyShown) {
+                    setTimeout(() => {
+                        leadModal.show();
+                        sessionStorage.setItem("manaLeadModalShown", "1");
+                    }, 10000); // 10 ثانیه
+                }
 
-        leadForm.addEventListener("submit", (e) => {
-            e.preventDefault();
-            if (!leadForm.checkValidity()) {
-            leadForm.reportValidity();
-            return;
-            }
+                leadForm.addEventListener("submit", (e) => {
+                    e.preventDefault();
+                    if (!leadForm.checkValidity()) {
+                        leadForm.reportValidity();
+                        return;
+                    }
 
-            // بستن خودکار مودال بعد از نمایش پیام موفقیت
-            setTimeout(() => {
-            leadModal.hide();
-            }, 2500);
-        });
+                    // بستن خودکار مودال بعد از نمایش پیام موفقیت
+                    setTimeout(() => {
+                        leadModal.hide();
+                    }, 2500);
+                });
 
-        // ریست فرم هر بار که مودال دوباره بسته/باز شود
-        leadModalEl.addEventListener("hidden.bs.modal", () => {
-            leadForm.reset();
-            leadForm.style.display = "";
-            leadSuccess.classList.remove("show");
-        });
-        })();
+                // ریست فرم هر بار که مودال دوباره بسته/باز شود
+                leadModalEl.addEventListener("hidden.bs.modal", () => {
+                    leadForm.reset();
+                    leadForm.style.display = "";
+                    leadSuccess.classList.remove("show");
+                });
+            })();
 
 
         });

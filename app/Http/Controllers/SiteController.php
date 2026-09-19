@@ -38,9 +38,17 @@ class SiteController extends Controller
 
         $questions = Questions::where('service_id', null)->orderBy('number')->get();
 
-        $blogs = Blogs::orderBy('number', 'asc')
-            ->limit(4)
-            ->get();
+        $blogs = Blogs::where('is_active', true)
+            ->whereNotNull('display_position')
+            ->with('category')
+            ->latest()
+            ->get()
+            ->groupBy('display_position');
+
+        $blogList = $blogs->get('blog-list', collect())->take(4);
+        $blogFeature = $blogs->get('blog-feature', collect())->take(1)->first();
+        $blogSide = $blogs->get('blog-side', collect())->take(2);
+
 
         $comments = Comments::where('is_approved', true)
             ->latest()
@@ -60,7 +68,9 @@ class SiteController extends Controller
             'projects',
             'teams',
             'questions',
-            'blogs',
+            'blogList',
+            'blogFeature',
+            'blogSide',
             'comments',
             'stats',
         ));

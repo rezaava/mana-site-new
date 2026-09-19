@@ -46,6 +46,7 @@
             .btn-add-blog:hover {
                 filter: brightness(1.1);
                 transform: translateY(-1px);
+                color: var(--oncta);
             }
 
             .alert-success-blog {
@@ -68,7 +69,7 @@
             .blog-table {
                 width: 100%;
                 border-collapse: collapse;
-                min-width: 600px;
+                min-width: 900px;
             }
 
             .blog-table th {
@@ -159,6 +160,55 @@
                 color: #fff;
             }
 
+            /* Badge وضعیت */
+            .status-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 5px;
+                padding: 4px 11px;
+                border-radius: 99px;
+                font-size: 0.72rem;
+                font-weight: 700;
+                white-space: nowrap;
+            }
+
+            .status-badge::before {
+                content: '';
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+            }
+
+            .status-active {
+                background: rgba(16, 185, 129, 0.12);
+                color: #10b981;
+            }
+
+            .status-active::before {
+                background: #10b981;
+            }
+
+            .status-inactive {
+                background: rgba(107, 114, 128, 0.12);
+                color: #6b7280;
+            }
+
+            .status-inactive::before {
+                background: #6b7280;
+            }
+
+            /* Badge مکان نمایش */
+            .position-badge {
+                display: inline-flex;
+                align-items: center;
+                padding: 4px 11px;
+                border-radius: 99px;
+                font-size: 0.72rem;
+                font-weight: 700;
+                border: 1px solid;
+                white-space: nowrap;
+            }
+
             .empty-state {
                 text-align: center;
                 padding: 40px;
@@ -237,7 +287,7 @@
                     border-radius: 12px;
                     margin-bottom: 15px;
                     padding: 10px;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
                 }
 
                 .blog-table td {
@@ -317,6 +367,8 @@
                             <th>عنوان</th>
                             <th>زمان مطالعه</th>
                             <th>شماره</th>
+                            <th>وضعیت</th>
+                            <th>مکان نمایش</th>
                             <th>عملیات</th>
                         </tr>
                     </thead>
@@ -326,8 +378,7 @@
                                 <td>{{ $blogs->firstItem() + $index }}</td>
                                 <td>
                                     @if($blog->image_url)
-                                        <img src="{{ asset( $blog->image_url) }}" alt="{{ $blog->title }}"
-                                            class="blog-thumb">
+                                        <img src="{{ asset($blog->image_url) }}" alt="{{ $blog->title }}" class="blog-thumb">
                                     @else
                                         <span style="color: var(--text-dimmer);">بدون تصویر</span>
                                     @endif
@@ -335,6 +386,37 @@
                                 <td>{{ $blog->title }}</td>
                                 <td>{{ $blog->{'reading-time'} ? $blog->{'reading-time'} . ' دقیقه' : '-' }}</td>
                                 <td>{{ $blog->number ?? '-' }}</td>
+
+                                {{-- وضعیت --}}
+                                <td>
+                                    @if($blog->is_active)
+                                        <span class="status-badge status-active">فعال</span>
+                                    @else
+                                        <span class="status-badge status-inactive">غیرفعال</span>
+                                    @endif
+                                </td>
+
+                                {{-- مکان نمایش --}}
+                                <td>
+                                    @php
+                                        $positions = [
+                                            'blog-list' => ['label' => 'لیست مقالات', 'color' => '#3b82f6'],
+                                            'blog-feature' => ['label' => 'مقاله ویژه', 'color' => '#f59e0b'],
+                                            'blog-side' => ['label' => 'کارت کناری', 'color' => '#10b981'],
+                                        ];
+                                        $pos = $blog->display_position;
+                                    @endphp
+
+                                    @if($pos && isset($positions[$pos]))
+                                        <span class="position-badge"
+                                            style="background: {{ $positions[$pos]['color'] }}1a; color: {{ $positions[$pos]['color'] }}; border-color: {{ $positions[$pos]['color'] }}4d;">
+                                            {{ $positions[$pos]['label'] }}
+                                        </span>
+                                    @else
+                                        <span style="color: var(--text-dimmer); font-size: 0.75rem;">—</span>
+                                    @endif
+                                </td>
+
                                 <td>
                                     <div class="blog-actions">
                                         <a href="{{ route('blogs.edit', $blog->id) }}" class="btn-icon btn-icon-edit"
@@ -355,7 +437,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="empty-state">
+                                <td colspan="8" class="empty-state">
                                     <i class="fa-solid fa-inbox"></i> هیچ مقاله‌ای یافت نشد
                                 </td>
                             </tr>
@@ -375,11 +457,9 @@
             const table = document.getElementById('blogTable');
             if (!table) return;
 
-            // استخراج متن هدرها
             const headers = [];
             table.querySelectorAll('thead th').forEach(th => headers.push(th.textContent.trim()));
 
-            // افزودن data-label به هر td بر اساس ایندکس ستون
             table.querySelectorAll('tbody tr').forEach(row => {
                 row.querySelectorAll('td').forEach((td, index) => {
                     if (headers[index]) {

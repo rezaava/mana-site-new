@@ -56,6 +56,8 @@ class BlogsController extends Controller
                 'tags.*' => 'nullable|string|max:255',
                 'services' => 'nullable|array',
                 'services.*' => 'integer|exists:services,id',
+                'is_active' => 'nullable|boolean',                      // ← اضافه کنید
+                'display_position' => 'nullable|in:blog-list,blog-feature,blog-side', // ← اضافه کنید
             ]);
             DB::beginTransaction();
             if ($request->hasFile('image')) {
@@ -69,6 +71,8 @@ class BlogsController extends Controller
             unset($validated['image']);
             unset($validated['tags']);
             unset($validated['services']);
+            $validated['is_active'] = $request->boolean('is_active');
+            $validated['display_position'] = $request->input('display_position', null);
             $blog = Blogs::create($validated);
             if ($request->has('tags') && is_array($request->tags)) {
                 foreach ($request->tags as $tag) {
@@ -149,6 +153,8 @@ class BlogsController extends Controller
             'services' => 'nullable|array',
             'services.*' => 'integer|exists:services,id',
             'slug' => 'required|string|max:255|unique:blogs,slug,' . $blog->id,
+            'is_active' => 'nullable|boolean',
+            'display_position' => 'nullable|in:blog-list,blog-feature,blog-side',
         ]);
         $oldImage = $blog->image_url;
         $blog->title = $validated['title'];
@@ -159,6 +165,8 @@ class BlogsController extends Controller
         $blog->slug = $validated['slug'];
         $blog->meta = $validated['meta'] ?? null;
         $blog->title_head = $validated['title_head'] ?? null;
+        $blog->is_active = $request->boolean('is_active');
+        $blog->display_position = $request->input('display_position', null);
         if ($request->hasFile('image')) {
             $file = $request->file('image');
             $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();

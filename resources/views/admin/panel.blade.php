@@ -35,7 +35,7 @@
             <div class="menu-label">منوی اصلی</div>
 
             <!-- داشبورد -->
-            <a href="{{ url('/admin/2') }}" class="nav-item active">
+            <a href="{{ url('/admin') }}" class="nav-item active">
                 <i class="fa-solid fa-gauge-high"></i>
                 داشبورد
             </a>
@@ -96,7 +96,7 @@
 
             <a href="{{ url('/admin/orders') }}" class="nav-item">
                 <i class="fa-solid fa-question-circle"></i>
-               سفارش پروژه ها
+                سفارش پروژه ها
                 <span class="badge-dot"></span>
             </a>
 
@@ -104,6 +104,13 @@
             <a href="{{ url('/admin/team') }}" class="nav-item">
                 <i class="fa-solid fa-users"></i>
                 تیم
+                <span class="badge-dot"></span>
+            </a>
+
+
+            <a href="{{route('settings.index')}}" class="nav-item">
+                <i class="fa-solid fa-settings"></i>
+                تنظیمات
                 <span class="badge-dot"></span>
             </a>
 
@@ -129,6 +136,14 @@
                     <h6>رضا آواره</h6>
                     <span>مدیر سیستم</span>
                 </div>
+
+                <!-- دکمه خروج -->
+                <form action="{{ route('logout') }}" method="POST" class="logout-form">
+                    @csrf
+                    <button type="submit" class="logout-btn" title="خروج از حساب" aria-label="خروج از حساب">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </button>
+                </form>
             </div>
         </aside>
         <!-- ===== MAIN CONTENT ===== -->

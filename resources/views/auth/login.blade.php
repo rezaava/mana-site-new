@@ -8,8 +8,6 @@
     <title>ورود به حساب کاربری</title>
 
     <link rel="stylesheet" href="{{ asset('css/login.css') }}">
-
-    {{-- Font Awesome برای آیکون‌ها --}}
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
@@ -39,12 +37,13 @@
     <script>
         document.addEventListener('DOMContentLoaded', function () {
 
+            // ===== گرفتن المان‌ها =====
             const identifierInput = document.getElementById('loginIdentifier');
             const passwordInput = document.getElementById('loginPassword');
             const loginBtn = document.getElementById('loginBtn');
             const errorBox = document.getElementById('loginError');
 
-            // نمایش پیام خطا
+            // ===== توابع خطا =====
             function showError(message) {
                 errorBox.textContent = message;
                 errorBox.style.display = 'block';
@@ -55,14 +54,13 @@
                 errorBox.textContent = '';
             }
 
-            // تابع ورود
+            // ===== تابع ورود =====
             async function doLogin() {
                 hideError();
 
                 const identifier = identifierInput.value.trim();
                 const password = passwordInput.value;
 
-                // اعتبارسنجی اولیه
                 if (!identifier) {
                     showError('لطفاً نام کاربری یا ایمیل را وارد کنید.');
                     identifierInput.focus();
@@ -75,13 +73,12 @@
                     return;
                 }
 
-                // غیرفعال کردن دکمه
                 const originalValue = loginBtn.value;
                 loginBtn.disabled = true;
                 loginBtn.value = 'در حال ورود...';
 
                 try {
-                    const response = await fetch('{{ route('login') }}', {
+                    const response = await fetch('{{ route('loginPost') }}', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -90,15 +87,27 @@
                             'X-Requested-With': 'XMLHttpRequest'
                         },
                         body: JSON.stringify({
-                            email: identifier,   // یا email بسته به بک‌اند
+                            identifier: identifier,
                             password: password
                         })
                     });
 
-                    const data = await response.json();
+                    // مدیریت پاسخ غیر JSON
+                    const contentType = response.headers.get('content-type');
+                    let data = {};
+
+                    if (contentType && contentType.includes('application/json')) {
+                        data = await response.json();
+                    } else {
+                        const text = await response.text();
+                        console.error('Non-JSON response:', text);
+                        showError('خطای غیرمنتظره از سرور. لاگ سرور را بررسی کنید.');
+                        loginBtn.disabled = false;
+                        loginBtn.value = originalValue;
+                        return;
+                    }
 
                     if (!response.ok) {
-                        // خطاهای اعتبارسنجی Laravel
                         if (data.errors) {
                             const firstError = Object.values(data.errors)[0];
                             showError(Array.isArray(firstError) ? firstError[0] : firstError);
@@ -111,25 +120,20 @@
                         return;
                     }
 
-                    // ورود موفق
                     loginBtn.value = 'ورود موفق...';
-
-                    // هدایت به داشبورد
-                    window.location.href = data.redirect || '{{ url('/admin/2') }}';
+                    window.location.href = data.redirect || '{{ url('/admin/dashboard') }}';
 
                 } catch (err) {
                     console.error('Login error:', err);
                     showError('خطا در ارتباط با سرور. لطفاً دوباره تلاش کنید.');
-
                     loginBtn.disabled = false;
                     loginBtn.value = originalValue;
                 }
             }
 
-            // کلیک روی دکمه ورود
+            // ===== اتصال Event Listener =====
             loginBtn.addEventListener('click', doLogin);
 
-            // فشردن Enter در فیلدها
             identifierInput.addEventListener('keydown', function (e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
@@ -148,4 +152,4 @@
     </script>
 </body>
 
-</html>
+</html>إ

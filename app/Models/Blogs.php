@@ -16,6 +16,8 @@ class Blogs extends Model
         'title_head',
         'cat_id',
         'slug',
+        'is_active',         
+        'display_position',  
     ];
     public function category()
     {

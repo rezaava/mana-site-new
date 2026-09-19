@@ -346,6 +346,82 @@ body.has-cursor * {
   color: var(--text-dimmer);
 }
 
+/* ===== Logout Button in User Card ===== */
+.sidebar .user-card {
+  position: relative;
+}
+
+.sidebar .user-card .logout-form {
+  margin-right: auto;
+  flex: none;
+}
+
+.sidebar .user-card .logout-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--text-dimmer);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.3s var(--ease);
+  position: relative;
+  overflow: hidden;
+}
+
+.sidebar .user-card .logout-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  opacity: 0;
+  transition: opacity 0.3s var(--ease);
+  z-index: -1;
+}
+
+.sidebar .user-card .logout-btn:hover {
+  border-color: transparent;
+  color: #fff;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -6px rgba(239, 68, 68, 0.5);
+}
+
+.sidebar .user-card .logout-btn:hover::before {
+  opacity: 1;
+}
+
+.sidebar .user-card .logout-btn:active {
+  transform: translateY(0);
+}
+
+.sidebar .user-card .logout-btn i {
+  transition: transform 0.3s var(--ease);
+  position: relative;
+  z-index: 1;
+}
+
+.sidebar .user-card .logout-btn:hover i {
+  transform: translateX(-3px);
+}
+
+/* عرض ثابت برای info تا با logout تداخل نکند */
+.sidebar .user-card .info {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.sidebar .user-card .info h6,
+.sidebar .user-card .info span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 /* ===== MAIN CONTENT ===== */
 .main-content {
   flex: 1;

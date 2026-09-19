@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     public function up(): void
     {
         Schema::create('blogs', function (Blueprint $table) {
@@ -19,6 +18,8 @@ return new class extends Migration
             $table->tinyInteger('number')->comment('برای مرتب سازی');
             $table->foreignId('cat_id')->constrained('categories')->onDelete('cascade');
             $table->text('slug')->unique();
+            $table->boolean('is_active')->default(true);
+            $table->string('display_position')->nullable();
             $table->timestamps();
         });
     }

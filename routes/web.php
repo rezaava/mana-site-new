@@ -57,6 +57,7 @@ Route::prefix('/student')->middleware(['role:student|admin'])->group(function ()
 
 
 Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
+
     Route::prefix('/cat-imgs')->group(function () {
         Route::get('/', [CatImgController::class, 'index'])->name('cat-imgs.index');
         Route::post('/', [CatImgController::class, 'store'])->name('cat-imgs.store');
@@ -100,6 +101,12 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/categories/{id}/edit', [CategoryController::class, 'edit'])->name('categories.edit');
     Route::post('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
+
+
+    // تنظیمات
+    // تنظیمات
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');
 
     // Projects
     Route::prefix('/projects')->group(function () {
