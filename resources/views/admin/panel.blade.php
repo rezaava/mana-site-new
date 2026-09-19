@@ -109,7 +109,7 @@
 
 
             <a href="{{route('settings.index')}}" class="nav-item">
-                <i class="fa-solid fa-settings"></i>
+                <i class="fa-solid fa-gear"></i>
                 تنظیمات
                 <span class="badge-dot"></span>
             </a>
