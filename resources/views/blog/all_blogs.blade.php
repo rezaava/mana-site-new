@@ -246,6 +246,7 @@
 
                     @php
                         $categories = \App\Models\Categories::withCount('blogs')
+                            ->where('type',2)
                             ->orderBy('name')
                             ->get();
                     @endphp
