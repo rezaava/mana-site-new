@@ -42,6 +42,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/blog', [BlogsController::class, 'blog'])->name('blog');
 Route::get('/blog/{slug}', [BlogsController::class, 'singleBlog'])->name('singleBlog');
+Route::post('/blog/view/{id}', [BlogsController::class, 'view'])->name('blog.view');
 
 Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
 

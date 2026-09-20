@@ -20,6 +20,7 @@ return new class extends Migration {
             $table->text('slug')->unique();
             $table->boolean('is_active')->default(true);
             $table->string('display_position')->nullable();
+            $table->integer('view')->nullable();
             $table->timestamps();
         });
     }

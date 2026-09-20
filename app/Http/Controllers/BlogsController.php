@@ -218,4 +218,21 @@ class BlogsController extends Controller
                 ->withErrors(['error' => 'خطا در حذف مقاله: ' . $e->getMessage()]);
         }
     }
+
+    public function view(Request $request, $id)
+    {
+        $blog = Blogs::find($id);
+
+        if (!$blog) {
+            return response()->json(['ok' => false, 'message' => 'not found'], 404);
+        }
+
+        $blog->view = ((int) $blog->view) + 1;
+        $blog->save();
+
+        return response()->json([
+            'ok' => true,
+            'view' => (int) $blog->view,
+        ]);
+    }
 }
