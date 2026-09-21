@@ -169,75 +169,131 @@ if (likeBtn) {
   });
 }
 
-// ===== نظر جدید =====
-const submitBtn = document.getElementById("submitComment");
-const commentList = document.getElementById("commentList");
-const commentCount = document.getElementById("commentCount");
-const successMsg = document.getElementById("commentSuccess");
+// ===== نظر جدید (AJAX) =====
+// ===== نظر جدید (AJAX) =====
+document.addEventListener("DOMContentLoaded", function () {
+  const commentForm = document.getElementById("commentForm");
+  const submitBtn = commentForm?.querySelector('button[type="submit"]');
+  const commentList = document.getElementById("commentList");
+  const commentCount = document.getElementById("commentCount");
 
-if (submitBtn && commentList && commentCount && successMsg) {
-  submitBtn.addEventListener("click", () => {
-    const name = document.getElementById("commentName").value.trim();
-    const text = document.getElementById("commentText").value.trim();
+  // جلوگیری از XSS
+  function escapeHtml(str) {
+    if (!str) return "";
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
 
-    if (!name || !text) {
-      alert("لطفاً نام و متن نظر را وارد کنید.");
-      return;
-    }
+  // تبدیل اعداد فارسی/عربی به عدد صحیح
+  function parsePersianNumber(str) {
+    if (!str) return 0;
+    const persianDigits = "۰۱۲۳۴۵۶۷۸۹";
+    const arabicDigits = "٠١٢٣٤٥٦٧٨٩";
+    const normalized = str
+      .replace(/[۰-۹]/g, (d) => persianDigits.indexOf(d))
+      .replace(/[٠-٩]/g, (d) => arabicDigits.indexOf(d))
+      .replace(/[^0-9]/g, "");
+    return parseInt(normalized, 10) || 0;
+  }
 
-    const colors = [
-      "linear-gradient(135deg, var(--brand), var(--accent-2))",
-      "linear-gradient(135deg, var(--accent), var(--brand))",
-      "linear-gradient(135deg, var(--accent-2), var(--brand))",
-    ];
-    const randomColor = colors[Math.floor(Math.random() * colors.length)];
-    const initial = name.charAt(0).toUpperCase();
+  if (commentForm && submitBtn && commentList) {
+    commentForm.addEventListener("submit", function (e) {
+      e.preventDefault();
 
-    const newComment = document.createElement("div");
-    newComment.className = "comment-item";
-    newComment.style.opacity = "0";
-    newComment.style.transform = "translateY(20px)";
-    newComment.innerHTML = `
-      <div class="cav" style="background: ${randomColor}">${initial}</div>
-      <div class="cbody">
-        <h6>${name}</h6>
-        <span class="date">همین الان</span>
-        <p>${text}</p>
-        <span class="reply-btn"><i class="fa-regular fa-reply"></i> پاسخ</span>
-      </div>
-    `;
+      const name = document.getElementById("commentName").value.trim();
+      const text = document.getElementById("commentText").value.trim();
 
-    commentList.appendChild(newComment);
+      if (!name || !text) {
+        alert("لطفاً نام و متن نظر را وارد کنید.");
+        return;
+      }
 
-    requestAnimationFrame(() => {
-      newComment.style.transition = "all 0.5s var(--ease)";
-      newComment.style.opacity = "1";
-      newComment.style.transform = "translateY(0)";
+      submitBtn.disabled = true;
+      const originalBtnText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> در حال ارسال...';
+
+      const formData = new FormData(commentForm);
+      const csrfMeta = document.querySelector('meta[name="csrf-token"]');
+
+      fetch(commentForm.action, {
+        method: "POST",
+        headers: {
+          "X-CSRF-TOKEN": csrfMeta ? csrfMeta.content : "",
+          "Accept": "application/json",
+          "X-Requested-With": "XMLHttpRequest",
+        },
+        body: formData,
+      })
+        .then(async (res) => {
+          const data = await res.json().catch(() => null);
+          return { status: res.status, data };
+        })
+        .then(({ status, data }) => {
+          // خطای اعتبارسنجی
+          if (status === 422 && data && data.errors) {
+            const errorMessages = Object.values(data.errors).flat().join("\n");
+            alert("خطا در اعتبارسنجی:\n" + errorMessages);
+            return;
+          }
+
+          if (!data || !data.ok) {
+            alert((data && data.message) || "خطا در ثبت نظر");
+            return;
+          }
+
+          // ── حذف پیام "هنوز نظری ثبت نشده" ──
+          const emptyMsg = commentList.querySelector(".comment-item .cbody h6");
+          if (emptyMsg && emptyMsg.textContent.includes("هنوز نظری ثبت نشده")) {
+            emptyMsg.closest(".comment-item")?.remove();
+          }
+
+          // ── افزودن نظر جدید بدون رفرش ──
+          const safeName = escapeHtml(name);
+          const safeText = escapeHtml(text);
+          const initial = escapeHtml(name.charAt(0).toUpperCase());
+
+          const newComment = document.createElement("div");
+          newComment.className = "comment-item";
+          newComment.style.opacity = "0";
+          newComment.style.transform = "translateY(20px)";
+          newComment.innerHTML = `
+            <div class="cav" style="background: linear-gradient(135deg, var(--brand), var(--accent-2))">${initial}</div>
+            <div class="cbody">
+              <h6>${safeName}</h6>
+              <span class="date">همین الان</span>
+              <p>${safeText}</p>
+            </div>
+          `;
+          commentList.appendChild(newComment);
+
+          requestAnimationFrame(() => {
+            newComment.style.transition = "all 0.5s var(--ease)";
+            newComment.style.opacity = "1";
+            newComment.style.transform = "translateY(0)";
+          });
+
+          // ── آپدیت شمارنده ──
+          if (commentCount) {
+            const current = parsePersianNumber(commentCount.textContent);
+            commentCount.textContent = current + 1;
+          }
+
+          // ── پاک کردن فرم ──
+          commentForm.reset();
+        })
+        .catch((err) => {
+          console.error("Comment error:", err);
+          alert("ارتباط با سرور برقرار نشد. لطفاً دوباره تلاش کنید.");
+        })
+        .finally(() => {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = originalBtnText;
+        });
     });
+  }
+});
 
-    const currentCount = parseInt(commentCount.textContent) || 0;
-    commentCount.textContent = currentCount + 1;
-
-    successMsg.style.display = "block";
-    successMsg.style.opacity = "0";
-    successMsg.style.transform = "translateY(10px)";
-    requestAnimationFrame(() => {
-      successMsg.style.transition = "all 0.4s var(--ease)";
-      successMsg.style.opacity = "1";
-      successMsg.style.transform = "translateY(0)";
-    });
-
-    document.getElementById("commentName").value = "";
-    document.getElementById("commentEmail").value = "";
-    document.getElementById("commentText").value = "";
-
-    setTimeout(() => {
-      successMsg.style.opacity = "0";
-      successMsg.style.transform = "translateY(10px)";
-      setTimeout(() => { successMsg.style.display = "none"; }, 400);
-    }, 4000);
-  });
-}
 
 // ===== کاستم کرسر =====
 if (window.matchMedia("(pointer:fine)").matches) {

@@ -235,104 +235,82 @@
                         <div class="comments-section" id="comments">
 
                             <div class="section-title-sm">
-
                                 <i class="fa-regular fa-comment-dots"></i>
-
                                 نظرات
-
-                                (<span id="commentCount">۰</span>)
-
+                                (<span id="commentCount">{{ count($Comments) }}</span>)
                             </div>
-
 
                             <div id="commentList">
-
-                                <div class="comment-item">
-
-                                    <div class="cav" style="
-                                                                background: linear-gradient(
-                                                                    135deg,
-                                                                    var(--brand),
-                                                                    var(--accent-2)
-                                                                );
-                                                            ">
-                                        م
+                                @if($Comments->isEmpty())
+                                    <div class="comment-item">
+                                        <div class="cav"
+                                            style="background: linear-gradient(135deg, var(--brand), var(--accent-2));">
+                                            م
+                                        </div>
+                                        <div class="cbody">
+                                            <h6>هنوز نظری ثبت نشده است</h6>
+                                            <p>اولین نفری باشید که درباره این مقاله نظر می‌دهد.</p>
+                                        </div>
                                     </div>
-
-                                    <div class="cbody">
-
-                                        <h6>
-                                            هنوز نظری ثبت نشده است
-                                        </h6>
-
-                                        <p>
-                                            اولین نفری باشید که درباره این مقاله نظر می‌دهد.
-                                        </p>
-
-                                    </div>
-
-                                </div>
-
+                                @else
+                                    @foreach ($Comments as $Comment)
+                                        <div class="comment-item">
+                                            <div class="cav"
+                                                style="background: linear-gradient(135deg, var(--brand), var(--accent-2));">
+                                                {{ mb_substr($Comment->fullname, 0, 1) }}
+                                            </div>
+                                            <div class="cbody">
+                                                <h6>{{ $Comment->fullname }}</h6>
+                                                <p>{{ $Comment->text }}</p>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>
 
-
                             <!-- ===== فرم نظر ===== -->
-                            <div class="comment-form" id="commentForm">
+                            <div class="comment-form">
 
                                 <h5 style="font-weight: 700; margin-bottom: 20px">
-
                                     <i class="fa-regular fa-pen-to-square" style="color: var(--accent-2)"></i>
-
                                     نظر خود را بنویسید
-
                                 </h5>
 
+                               
 
-                                <form onsubmit="return false;">
+                                {{-- خطاهای اعتبارسنجی --}}
+                                @if($errors->any())
+                                        <div style="padding:12px 16px; background:#FDECEA; color:#C0392B;
+                                    border:1px solid #C0392B; border-radius:8px;
+                                    margin-bottom:16px; font-weight:700;">
+                                            @foreach($errors->all() as $error)
+                                                <div>⚠️ {{ $error }}</div>
+                                            @endforeach
+                                        </div>
+                                @endif
+
+                                <form id="commentForm" action="{{ route('blog.Comments', $blog->id) }}" method="POST">
+                                    @csrf
 
                                     <div class="row">
-
                                         <div class="col-sm-6">
-
-                                            <input type="text" id="commentName" placeholder="نام و نام‌خانوادگی" required>
-
+                                            <input type="text" id="commentName" name="fullname"
+                                                value="{{ old('fullname') }}" placeholder="نام و نام‌خانوادگی" required>
                                         </div>
-
-
                                         <div class="col-sm-6">
-
-                                            <input type="email" id="commentEmail" placeholder="ایمیل" required>
-
+                                            <input type="email" id="commentEmail" name="email" value="{{ old('email') }}"
+                                                placeholder="ایمیل (اختیاری)">
                                         </div>
-
                                     </div>
 
+                                    <textarea id="commentText" name="text" placeholder="متن نظر شما..."
+                                        required>{{ old('text') }}</textarea>
 
-                                    <textarea id="commentText" placeholder="متن نظر شما..." required></textarea>
-
-
-                                    <button class="btn-flow mt-3" id="submitComment" style="border: none">
+                                    <button type="submit" class="btn-flow mt-3" style="border: none">
                                         ارسال نظر
-
                                         <i class="fa-solid fa-arrow-left"></i>
-
                                     </button>
-
                                 </form>
-
-
-                                <div id="commentSuccess" style="
-                                                            display: none;
-                                                            margin-top: 16px;
-                                                            color: var(--accent-2);
-                                                            font-weight: 600;
-                                                        ">
-
-                                    <i class="fa-regular fa-circle-check"></i>
-
-                                    نظر شما با موفقیت ثبت شد!
-
-                                </div>
 
                             </div>
 
@@ -475,23 +453,24 @@
 
 
                             <div class="tag-cloud" style="
-                                                        display: flex;
-                                                        flex-wrap: wrap;
-                                                        gap: 8px;
-                                                    ">
+                                                                                display: flex;
+                                                                                flex-wrap: wrap;
+                                                                                gap: 8px;
+                                                                            ">
 
                                 @forelse($blog->tags as $tag)
 
-                                    <a href="#" style="
-                                                                                    padding: 8px 15px;
-                                                                                    border-radius: 99px;
-                                                                                    background: var(--surface-2);
-                                                                                    border: 1px solid var(--line);
-                                                                                    font-size: 0.78rem;
-                                                                                    color: var(--text-dim);
-                                                                                    text-decoration: none;
-                                                                                    transition: 0.3s;
-                                                                                ">
+                                    <a href="#"
+                                        style="
+                                                                                                                                    padding: 8px 15px;
+                                                                                                                                    border-radius: 99px;
+                                                                                                                                    background: var(--surface-2);
+                                                                                                                                    border: 1px solid var(--line);
+                                                                                                                                    font-size: 0.78rem;
+                                                                                                                                    color: var(--text-dim);
+                                                                                                                                    text-decoration: none;
+                                                                                                                                    transition: 0.3s;
+                                                                                                                                ">
                                         {{ $tag->text }}
                                     </a>
 
@@ -510,18 +489,18 @@
 
                         <!-- ===== خبرنامه ===== -->
                         <div class="sidebar-card reveal reveal-delay-3" style="
-                                                    background: linear-gradient(
-                                                        135deg,
-                                                        color-mix(in srgb, var(--brand) 15%, transparent),
-                                                        color-mix(in srgb, var(--accent-2) 10%, transparent)
-                                                    );
+                                                                            background: linear-gradient(
+                                                                                135deg,
+                                                                                color-mix(in srgb, var(--brand) 15%, transparent),
+                                                                                color-mix(in srgb, var(--accent-2) 10%, transparent)
+                                                                            );
 
-                                                    border-color: color-mix(
-                                                        in srgb,
-                                                        var(--accent-2) 30%,
-                                                        transparent
-                                                    );
-                                                ">
+                                                                            border-color: color-mix(
+                                                                                in srgb,
+                                                                                var(--accent-2) 30%,
+                                                                                transparent
+                                                                            );
+                                                                        ">
 
                             <h5>
 
@@ -533,10 +512,10 @@
 
 
                             <p style="
-                                                        font-size: 0.85rem;
-                                                        color: var(--text-dim);
-                                                        margin-bottom: 16px;
-                                                    ">
+                                                                                font-size: 0.85rem;
+                                                                                color: var(--text-dim);
+                                                                                margin-bottom: 16px;
+                                                                            ">
                                 جدیدترین مقالات رو یک‌بار در هفته دریافت کن.
                             </p>
 
@@ -544,27 +523,27 @@
                             <form onsubmit="return false;" style="display: flex; gap: 8px">
 
                                 <input type="email" placeholder="ایمیل شما" style="
-                                                            flex: 1;
-                                                            background: var(--bg);
-                                                            border: 1px solid var(--line);
-                                                            border-radius: 99px;
-                                                            padding: 10px 16px;
-                                                            color: var(--text);
-                                                            font-family: inherit;
-                                                            font-size: 0.82rem;
-                                                        ">
+                                                                                    flex: 1;
+                                                                                    background: var(--bg);
+                                                                                    border: 1px solid var(--line);
+                                                                                    border-radius: 99px;
+                                                                                    padding: 10px 16px;
+                                                                                    color: var(--text);
+                                                                                    font-family: inherit;
+                                                                                    font-size: 0.82rem;
+                                                                                ">
 
 
                                 <button style="
-                                                            background: var(--accent-2);
-                                                            color: var(--oncta);
-                                                            border: none;
-                                                            border-radius: 99px;
-                                                            padding: 10px 16px;
-                                                            font-weight: 700;
-                                                            font-size: 0.82rem;
-                                                            white-space: nowrap;
-                                                        ">
+                                                                                    background: var(--accent-2);
+                                                                                    color: var(--oncta);
+                                                                                    border: none;
+                                                                                    border-radius: 99px;
+                                                                                    padding: 10px 16px;
+                                                                                    font-weight: 700;
+                                                                                    font-size: 0.82rem;
+                                                                                    white-space: nowrap;
+                                                                                ">
                                     عضویت
                                 </button>
 

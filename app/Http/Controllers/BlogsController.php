@@ -3,7 +3,10 @@ namespace App\Http\Controllers;
 use App\Models\Blogs;
 use App\Models\BlogTag;
 use App\Models\Categories;
+use App\Models\Commentsـblogs;
 use App\Models\Services;
+use Egulias\EmailValidator\Result\Reason\CommentsInIDRight;
+use Illuminate\Auth\Events\Validated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -15,7 +18,10 @@ class BlogsController extends Controller
         $blog = Blogs::where('slug', $slug)
             ->with(['category', 'tags', 'services'])
             ->firstOrFail();
-        return view('blog.singleblog', compact('blog'));
+
+        $Comments = Commentsـblogs::where('blog_id', $blog->id)->get();
+
+        return view('blog.singleblog', compact('blog', 'Comments'));
     }
     public function blog()
     {
@@ -23,6 +29,9 @@ class BlogsController extends Controller
             ->latest()
             ->get();
         $popularTags = BlogTag::get();
+
+
+
         return view('blog.all_blogs', compact('blogs', 'popularTags'));
     }
     public function index()
@@ -234,5 +243,31 @@ class BlogsController extends Controller
             'ok' => true,
             'view' => (int) $blog->view,
         ]);
+    }
+
+    public function Comments(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'fullname' => 'required|string|max:255',
+            'email' => 'nullable|email|max:255',
+            'text' => 'required|string|max:5000',
+        ]);
+
+        $comment = new Commentsـblogs();
+        $comment->fullname = $validated['fullname'];
+        $comment->email = $validated['email'] ?? null;
+        $comment->text = $validated['text'];
+        $comment->blog_id = $id;
+        $comment->save();
+
+        return response()->json([
+            'ok' => true,          // ✅ این خط اضافه شد
+            'status' => 1,
+            'message' => 'نظر با موفقیت ثبت شد',
+            'comment' => [
+                'fullname' => $comment->fullname,
+                'text' => $comment->text,
+            ],
+        ], 200, [], JSON_UNESCAPED_UNICODE);
     }
 }
