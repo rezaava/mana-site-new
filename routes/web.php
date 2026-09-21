@@ -30,7 +30,7 @@ use App\Http\Controllers\UploadController;
 Route::get('/', [SiteController::class, 'index'])->name('home');
 Route::get('/services/{slug}', [SiteController::class, 'servise'])->name('servise');
 
-Route::get('/order/{id}', [SiteController::class, 'orderForm'])->name('order');
+Route::get('/order/{id}/{slug}', [SiteController::class, 'orderForm'])->name('order');
 Route::post('/order', [SiteController::class, 'orderStore'])->name('order.store');
 
 Route::post('/upload/video', [UploadController::class, 'uploadVideo'])->name('upload.video');

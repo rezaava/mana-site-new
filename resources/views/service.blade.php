@@ -110,7 +110,7 @@
 
                     <div class="case-hero-btns reveal in reveal-delay-3">
 
-                        <a href="/order/{{$service->id}}" class="btn-flow">
+                        <a href="/order/{{$service->id}}/{{$service->slug}}" class="btn-flow">
                             دریافت مشاوره رایگان
 
                             <i class="fa-solid fa-arrow-left"></i>
