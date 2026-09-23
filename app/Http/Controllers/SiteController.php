@@ -30,13 +30,26 @@ class SiteController extends Controller
             ->limit(6)
             ->get();
 
+        $categoryIds = $projects
+            ->pluck('cat_id')
+            ->filter()
+            ->unique()
+            ->values();
+
+        $categories = Categories::whereIn('id', $categoryIds)
+            ->where('type', 1)
+            ->get()
+            ->keyBy('id');
+
         foreach ($projects as $project) {
-            $project['category'] = Categories::where('id', $project->cat_id)->first();
+            $project->category = $categories->get($project->cat_id);
         }
 
         $teams = Team::inRandomOrder()->get();
 
-        $questions = Questions::where('service_id', null)->orderBy('number')->get();
+        $questions = Questions::where('service_id', null)
+            ->orderBy('number')
+            ->get();
 
         $blogs = Blogs::where('is_active', true)
             ->whereNotNull('display_position')
@@ -49,7 +62,6 @@ class SiteController extends Controller
         $blogFeature = $blogs->get('blog-feature', collect())->take(1)->first();
         $blogSide = $blogs->get('blog-side', collect())->take(2);
 
-
         $comments = Comments::where('is_approved', true)
             ->latest()
             ->limit(6)
@@ -58,10 +70,21 @@ class SiteController extends Controller
         $siteTexts = SiteText::get()->keyBy('key');
 
         $stats = [
-            'projects_count' => $siteTexts->has('stat1_num') ? $siteTexts['stat1_num']->value : Projects::count(),
-            'customers_count' => $siteTexts->has('stat3_num') ? $siteTexts['stat3_num']->value : '۵۰+',
-            'support_hours' => $siteTexts->has('stat4_num') ? $siteTexts['stat4_num']->value : '۲۴/۷',
-            'satisfaction' => $siteTexts->has('stat2_num') ? $siteTexts['stat2_num']->value : '۹۸%',
+            'projects_count' => $siteTexts->has('stat1_num')
+                ? $siteTexts['stat1_num']->value
+                : Projects::count(),
+
+            'customers_count' => $siteTexts->has('stat3_num')
+                ? $siteTexts['stat3_num']->value
+                : '۵۰+',
+
+            'support_hours' => $siteTexts->has('stat4_num')
+                ? $siteTexts['stat4_num']->value
+                : '۲۴/۷',
+
+            'satisfaction' => $siteTexts->has('stat2_num')
+                ? $siteTexts['stat2_num']->value
+                : '۹۸%',
         ];
 
         return view('index', compact(
@@ -75,7 +98,6 @@ class SiteController extends Controller
             'stats',
         ));
     }
-
     public function index_admin()
     {
         $projectsCount = Projects::count();

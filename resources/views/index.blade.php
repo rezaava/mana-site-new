@@ -377,71 +377,160 @@
 
     <section class="folio" id="folio">
         <div class="container-x">
+
             <div class="row align-items-end mb-4 reveal">
                 <div class="col-md-8">
-                    <span class="eyebrow"><i
-                            class="fa-solid fa-briefcase"></i>{{ $siteTexts['folio_badge']->value ?? 'نمونه‌کارها' }}</span>
-                    <h2 class="section-title">{{ $siteTexts['folio_title']->value ?? 'بخشی از پروژه‌های موفق ما' }}</h2>
+                    <span class="eyebrow">
+                        <i class="fa-solid fa-briefcase"></i>
+                        {{ $siteTexts['folio_badge']->value ?? 'نمونه‌کارها' }}
+                    </span>
+
+                    <h2 class="section-title">
+                        {{ $siteTexts['folio_title']->value ?? 'بخشی از پروژه‌های موفق ما' }}
+                    </h2>
                 </div>
+
                 <div class="col-md-4">
                     <p class="section-sub" style="margin-top:12px">
                         {{ $siteTexts['folio_desc']->value ?? 'روی هر مورد کلیک کنید تا جزئیات پروژه را ببینید.' }}
                     </p>
                 </div>
             </div>
+
             <div class="folio-shell reveal">
+
                 <div class="folio-side">
+
+                    {{-- دسته‌بندی‌ها --}}
                     <div class="folio-mobile-tabs" id="folioMobileTabs">
-                        @foreach($projects as $i => $project)
-                            <div class="fmt-chip {{ $i === 0 ? 'active' : '' }}" data-category="{{ $project->category->id }}">
+
+                        @php
+                            $projectCategories = $projects
+                                ->filter(fn($project) => $project->category)
+                                ->unique('cat_id')
+                                ->values();
+                        @endphp
+
+                        @foreach($projectCategories as $i => $project)
+
+                            <div
+                                class="fmt-chip {{ $i === 0 ? 'active' : '' }}"
+                                data-category="{{ $project->category->id }}"
+                            >
                                 {{ $project->category->name }}
                             </div>
+
                         @endforeach
+
                     </div>
+
 
                     {{-- لیست پروژه‌ها --}}
                     <div class="folio-tabs" id="folioTabs">
+
                         @foreach($projects as $index => $project)
-                            <div class="folio-tab {{ $index === 0 ? 'active' : '' }}" data-index="{{ $index }}"
-                                data-category="{{ $project->category->id ?? '' }}" data-project="{{ $project->id }}"
-                                data-description="{{ $project->description }}" data-from="{{ $project->from ?? '#1d2a6b' }}"
-                                data-to="{{ $project->to ?? '#0b1030' }}" data-image="{{ asset($project->image_url) }}"
-                                data-url="{{ route('projects.show', ['slug' => $project->slug]) }}">
-                                <div class="ft-ic"><i class="{{ $project->icon ?? 'fa-solid fa-briefcase' }}"></i></div>
-                                <div>
-                                    <h5>{{ $project->title }}</h5>
-                                    <span>{{ $project->category->name ?? 'پروژه' }}</span>
+
+                            <div
+                                class="folio-tab {{ $index === 0 ? 'active' : '' }}"
+                                data-index="{{ $index }}"
+                                data-category="{{ $project->category->id ?? '' }}"
+                                data-project="{{ $project->id }}"
+                                data-description="{{ $project->description }}"
+                                data-from="{{ $project->from ?? '#1d2a6b' }}"
+                                data-to="{{ $project->to ?? '#0b1030' }}"
+                                data-image="{{ asset($project->image_url) }}"
+                                data-url="{{ route('projects.show', ['slug' => $project->slug]) }}"
+                            >
+
+                                <div class="ft-ic">
+                                    <i class="{{ $project->icon ?? 'fa-solid fa-briefcase' }}"></i>
                                 </div>
+
+                                <div>
+                                    <h5>
+                                        {{ $project->title }}
+                                    </h5>
+
+                                    <span>
+                                        {{ $project->category->name ?? 'پروژه' }}
+                                    </span>
+                                </div>
+
                             </div>
+
                         @endforeach
+
                     </div>
+
                 </div>
 
+
+                {{-- Preview --}}
                 <div class="folio-preview" id="folioPreview">
-                    <div class="fp-dots" id="fpDots">
-                        @foreach($projects as $index => $project)
-                            <span class="{{ $index === 0 ? 'active' : '' }}"></span>
-                        @endforeach
-                    </div>
+
+                    <div
+                        class="fp-dots"
+                        id="fpDots"
+                    ></div>
+
                     @php
                         $firstProject = $projects->first();
                     @endphp
+
                     @if($firstProject)
-                        <img class="fp-bg" id="fpBg" src="{{ asset($firstProject->image) }}"
-                            alt="{{ $firstProject->title }}">
-                        <div class="fp-content" id="fpContent">
-                            <span class="tag">{{ $firstProject->category->name ?? 'پروژه' }}</span>
-                            <h4>{{ $firstProject->title }}</h4>
-                            <p>{{ $firstProject->description }}</p>
-                            <a href="{{ route('projects.show', ['slug' => $firstProject->slug]) }}" class="pill">مشاهده جزئیات
-                                <i class="fa-solid fa-arrow-up-left"></i></a>
+
+                        <img
+                            class="fp-bg"
+                            id="fpBg"
+                            src="{{ asset($firstProject->image_url) }}"
+                            alt="{{ $firstProject->title }}"
+                        >
+
+                        <div
+                            class="fp-content"
+                            id="fpContent"
+                        >
+
+                            <span class="tag">
+                                {{ $firstProject->category->name ?? 'پروژه' }}
+                            </span>
+
+                            <h4>
+                                {{ $firstProject->title }}
+                            </h4>
+
+                            <p>
+                                {{ $firstProject->description }}
+                            </p>
+
+                            <a
+                                href="{{ route('projects.show', ['slug' => $firstProject->slug]) }}"
+                                class="pill"
+                            >
+                                مشاهده جزئیات
+                                <i class="fa-solid fa-arrow-up-left"></i>
+                            </a>
+
                         </div>
+
                     @else
-                        <div class="fp-bg" id="fpBg"></div>
-                        <div class="fp-content" id="fpContent"></div>
+
+                        <div
+                            class="fp-bg"
+                            id="fpBg"
+                        ></div>
+
+                        <div
+                            class="fp-content"
+                            id="fpContent"
+                        ></div>
+
                     @endif
+
                 </div>
+
             </div>
+
         </div>
     </section>
 
@@ -696,7 +785,7 @@
                     {{-- مقاله ویژه (۱ مقاله) --}}
                     @if($blogFeature)
                         <div class="blog-feature reveal reveal-delay-1">
-                            <div class="deco"><img src="{{ asset('img/mana2.jpg') }}" alt="Blog"></div>
+                            <div class="deco"><img src="{{ asset($blogFeature->image_url) }}" alt="Blog"></div>
                             <div class="blog-feature-inner">
                                 <div class="meta">
                                     <i class="fa-regular fa-clock"></i>
