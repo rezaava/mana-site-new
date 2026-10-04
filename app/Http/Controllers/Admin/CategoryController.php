@@ -10,7 +10,8 @@ class CategoryController extends Controller
 {
     public function index()
     {
-        $categories = Categories::latest()->paginate(10);
+        $categories = Categories::orderBy('order', 'asc');
+return $categories;
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -24,11 +25,13 @@ class CategoryController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'type' => 'required|in:1,2',
+            'order' => 'required|integer|min:0',
         ]);
 
         $category = new Categories();
         $category->name = $request->name;
         $category->type = $request->type;
+        $category->order = $request->order;
         $category->save();
 
         return redirect()
@@ -39,16 +42,28 @@ class CategoryController extends Controller
     public function edit($id)
     {
         $category = Categories::findOrFail($id);
+
         return view('admin.categories.edit', compact('category'));
     }
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'type' => 'required|in:1,2',
+            'order' => 'required|integer|min:0',
+        ]);
+
         $category = Categories::findOrFail($id);
+
         $category->name = $request->name;
         $category->type = $request->type;
+        $category->order = $request->order;
         $category->save();
-        return redirect()->route('categories.index')->with('success', 'دسته‌بندی بروزرسانی شد.');
+
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'دسته‌بندی بروزرسانی شد.');
     }
 
     public function destroy($id)
@@ -56,6 +71,8 @@ class CategoryController extends Controller
         $category = Categories::findOrFail($id);
         $category->delete();
 
-        return redirect()->route('categories.index')->with('success', 'دسته‌بندی حذف شد.');
+        return redirect()
+            ->route('categories.index')
+            ->with('success', 'دسته‌بندی حذف شد.');
     }
 }

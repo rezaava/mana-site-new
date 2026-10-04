@@ -3,8 +3,6 @@
 @section('content')
 
 <style>
-    /* ===== استایل فرم افزودن دسته‌بندی ===== */
-
     .category-form-card {
         background: var(--surface);
         border: 1px solid var(--line);
@@ -101,8 +99,6 @@
         transform: translateY(-1px);
     }
 
-    /* ===== ریسپانسیو ===== */
-
     @media (max-width: 768px) {
         .category-form-card {
             padding: 15px;
@@ -114,7 +110,6 @@
     <div class="category-form-card">
 
         <div class="category-form-header">
-
             <h5 class="category-form-title">
                 <i class="fa-solid fa-plus-circle"></i>
                 افزودن دسته‌بندی
@@ -124,15 +119,12 @@
                 <i class="fa-solid fa-arrow-right"></i>
                 بازگشت
             </a>
-
         </div>
 
         <form action="{{ route('categories.store') }}" method="POST">
-
             @csrf
 
             <div class="form-group">
-
                 <label class="form-label">
                     نام
                 </label>
@@ -140,14 +132,13 @@
                 <input
                     type="text"
                     name="name"
+                    value="{{ old('name') }}"
                     required
                     class="form-input"
                     placeholder="نام دسته‌بندی">
-
             </div>
 
             <div class="form-group">
-
                 <label class="form-label">
                     نوع دسته‌بندی
                 </label>
@@ -157,18 +148,39 @@
                     required
                     class="form-input">
 
-                    <option value="1">پروژه</option>
-                    <option value="2">بلاگ</option>
+                    <option value="1" {{ old('type', 1) == 1 ? 'selected' : '' }}>
+                        پروژه
+                    </option>
+
+                    <option value="2" {{ old('type') == 2 ? 'selected' : '' }}>
+                        بلاگ
+                    </option>
 
                 </select>
+            </div>
 
+            <div class="form-group">
+                <label class="form-label">
+                    ترتیب نمایش
+                </label>
+
+                <input
+                    type="number"
+                    name="order"
+                    value="{{ old('order', 0) }}"
+                    min="0"
+                    required
+                    class="form-input"
+                    placeholder="مثلاً 1">
+
+                <small style="color: var(--text-dimmer);">
+                    عدد کمتر یعنی نمایش بالاتر
+                </small>
             </div>
 
             <button type="submit" class="btn-submit-form">
-
                 <i class="fa-solid fa-check"></i>
                 ذخیره
-
             </button>
 
         </form>

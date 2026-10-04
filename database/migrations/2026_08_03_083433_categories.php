@@ -12,6 +12,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->integer('type')->comment('1 proj 2 blogs');
+            $table->integer('order')->default(0);
             $table->timestamps();
         });
     }

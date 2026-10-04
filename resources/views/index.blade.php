@@ -408,6 +408,7 @@
                             $projectCategories = $projects
                                 ->filter(fn($project) => $project->category)
                                 ->unique('cat_id')
+                                ->sortBy(fn($project) => $project->category->order)
                                 ->values();
                         @endphp
 

@@ -252,8 +252,8 @@
                 <table class="category-table" id="categoryTable">
                     <thead>
                         <tr>
-                            <th>#</th>
                             <th>نام</th>
+                            <th>اولویت</th>
                             <th>نوع</th>
                             <th>عملیات</th>
                         </tr>
@@ -261,8 +261,8 @@
                     <tbody>
                         @forelse($categories as $i => $category)
                             <tr>
-                                <td>{{ $categories->firstItem() + $i }}</td>
                                 <td>{{ $category->name ?? $category->title }}</td>
+                                <td>{{ $category->order }}</td>
                                 <td>
                                     @if ($category->type==1)
                                         پروژه
