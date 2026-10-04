@@ -438,7 +438,7 @@
                                 data-description="{{ $project->description }}"
                                 data-from="{{ $project->from ?? '#1d2a6b' }}"
                                 data-to="{{ $project->to ?? '#0b1030' }}"
-                                data-image="{{ asset($project->image_url) }}"
+                                data-image="{{ asset($project->image_index) }}"
                                 data-url="{{ route('projects.show', ['slug' => $project->slug]) }}"
                             >
 
