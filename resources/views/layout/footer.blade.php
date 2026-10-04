@@ -132,7 +132,7 @@
                             @endforeach
 
                             <li>
-                                <a href="tel:02117545678">
+                                <a href="tel:{{ $setting['contact_phone']->value }}">
                                     <i class="fa-solid fa-phone"></i>
                                     {{ $setting['contact_phone']->value  }}
                                 </a>
