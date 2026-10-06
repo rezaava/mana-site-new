@@ -32,6 +32,7 @@ Route::get('/services/{slug}', [SiteController::class, 'servise'])->name('servis
 
 Route::get('/order/{id}/{slug}', [SiteController::class, 'orderForm'])->name('order');
 Route::post('/order', [SiteController::class, 'orderStore'])->name('order.store');
+Route::post('/orders/lead', [OrderController::class, 'lead'])->name('orders.lead');
 
 Route::post('/upload/video', [UploadController::class, 'uploadVideo'])->name('upload.video');
 Route::post('/upload/image', [UploadController::class, 'uploadImage'])->name('upload.image');
@@ -46,17 +47,6 @@ Route::post('/blog/view/{id}', [BlogsController::class, 'view'])->name('blog.vie
 Route::post('/blog/Comments/{id}', [BlogsController::class, 'Comments'])->name('blog.Comments');
 
 Route::post('/tickets', [TicketController::class, 'store'])->name('tickets.store');
-
-Route::get('/role', [AuthController::class, 'roleFun']);
-
-Route::prefix('/teacher')->middleware(['role:teacher|admin'])->group(function () {
-    Route::get('/', [TeacherSiteController::class, 'index'])->name('index_teacher');
-});
-
-Route::prefix('/student')->middleware(['role:student|admin'])->group(function () {
-    Route::get('/', [StudentSiteController::class, 'index'])->name('index_student');
-});
-
 
 Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
 
@@ -104,8 +94,6 @@ Route::prefix('/admin')->middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/categories/{id}', [CategoryController::class, 'update'])->name('categories.update');
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('categories.destroy');
 
-
-    // تنظیمات
     // تنظیمات
     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'update'])->name('settings.update');

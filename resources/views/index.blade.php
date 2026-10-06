@@ -850,12 +850,30 @@
                         برای ارتباط با پشتیبانی و ثبت سفارش پروژه‌ت، شماره‌تو بذار؛ کارشناس‌های
                         ما کمتر از ۲۴ ساعت باهات تماس می‌گیرن. 🚀
                     </p>
-                    <form id="leadForm" onsubmit="return false;" novalidate>
-                        <input class="form-control-x" type="tel" id="leadPhone" placeholder="مثلاً ۰۹۱۲۳۴۵۶۷۸۹" required
-                            pattern="^0?9\d{9}$" inputmode="numeric">
-                        <button type="submit" class="btn-flow">
-                            ثبت شماره و شروع مشاوره رایگان
-                            <i class="fa-solid fa-arrow-left"></i>
+                    <form id="leadForm" novalidate>
+                        @csrf
+
+                        <input
+                            class="form-control-x"
+                            type="tel"
+                            id="leadPhone"
+                            name="phone"
+                            placeholder="مثلاً ۰۹۱۲۳۴۵۶۷۸۹"
+                            required
+                            pattern="^0?9\d{9}$"
+                            inputmode="numeric"
+                        >
+
+                        <button type="submit" class="btn-flow" id="leadSubmit">
+                            <span id="leadSubmitText">
+                                ثبت شماره و شروع مشاوره رایگان
+                                <i class="fa-solid fa-arrow-left"></i>
+                            </span>
+
+                            <span id="leadSubmitLoading" style="display:none;">
+                                در حال ثبت...
+                                <i class="fa-solid fa-spinner fa-spin"></i>
+                            </span>
                         </button>
                     </form>
                     <div class="lead-modal-success" id="leadModalSuccess">
@@ -1162,17 +1180,65 @@
                     }, 10000); // 10 ثانیه
                 }
 
-                leadForm.addEventListener("submit", (e) => {
+                const leadSubmit = document.getElementById("leadSubmit");
+                const leadSubmitText = document.getElementById("leadSubmitText");
+                const leadSubmitLoading = document.getElementById("leadSubmitLoading");
+
+                leadForm.addEventListener("submit", async (e) => {
                     e.preventDefault();
+
                     if (!leadForm.checkValidity()) {
                         leadForm.reportValidity();
                         return;
                     }
 
-                    // بستن خودکار مودال بعد از نمایش پیام موفقیت
-                    setTimeout(() => {
-                        leadModal.hide();
-                    }, 2500);
+                    leadSubmit.disabled = true;
+                    leadSubmitText.style.display = "none";
+                    leadSubmitLoading.style.display = "inline";
+
+                    const formData = new FormData(leadForm);
+
+                    try {
+                        const response = await fetch("{{ route('orders.lead') }}", {
+                            method: "POST",
+                            headers: {
+                                "Accept": "application/json",
+                                "X-Requested-With": "XMLHttpRequest"
+                            },
+                            body: formData
+                        });
+
+                        const data = await response.json();
+
+                        if (!response.ok) {
+                            throw data;
+                        }
+
+                        leadForm.style.display = "none";
+                        leadSuccess.classList.add("show");
+
+                        setTimeout(() => {
+                            leadModal.hide();
+                        }, 2500);
+
+                    } catch (error) {
+                        let message = "ثبت شماره با خطا مواجه شد. لطفاً دوباره تلاش کنید.";
+
+                        if (error.errors) {
+                            const firstError = Object.values(error.errors)[0];
+
+                            if (firstError && firstError.length) {
+                                message = firstError[0];
+                            }
+                        }
+
+                        alert(message);
+
+                    } finally {
+                        leadSubmit.disabled = false;
+                        leadSubmitText.style.display = "inline";
+                        leadSubmitLoading.style.display = "none";
+                    }
                 });
 
                 // ریست فرم هر بار که مودال دوباره بسته/باز شود

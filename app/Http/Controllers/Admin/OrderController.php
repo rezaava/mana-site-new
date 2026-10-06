@@ -38,4 +38,19 @@ class OrderController extends Controller
             ->route('orders.index')
             ->with('success', 'تیکت با موفقیت حذف شد.');
     }
+    public function lead(Request $request)
+    {
+        $request->validate([
+            'phone' => ['required'],
+        ]);
+
+        $order = new Order();
+        $order->phone = $request->phone;
+        $order->save();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'شماره شما با موفقیت ثبت شد.'
+        ]);
+    }
 }

@@ -27,7 +27,6 @@ class SiteController extends Controller
     public function index()
     {
         $projects = Projects::orderBy('number', 'asc')
-            ->limit(6)
             ->get();
 
         $categoryIds = $projects
@@ -86,7 +85,6 @@ class SiteController extends Controller
                 ? $siteTexts['stat2_num']->value
                 : '۹۸%',
         ];
-
         return view('index', compact(
             'projects',
             'teams',
