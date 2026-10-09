@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Images;
 
 class Projects extends Model
 {
@@ -22,6 +21,7 @@ class Projects extends Model
         'image_url',
         'number',
         'challenge',
+        'service_id',
         'solution',
         'client_name',
         'client_role',
@@ -34,7 +34,8 @@ class Projects extends Model
 
     public $casts = [
         'cat_id' => 'integer',
-        'number' => 'integer'
+        'service_id' => 'integer',
+        'number' => 'integer',
     ];
 
     // دسته‌بندی پروژه
@@ -79,5 +80,10 @@ class Projects extends Model
     public function features()
     {
         return $this->hasMany(ProjectFeature::class, 'project_id', 'id');
+    }
+
+    public function service()
+    {
+        return $this->belongsTo(Services::class, 'service_id', 'id');
     }
 }

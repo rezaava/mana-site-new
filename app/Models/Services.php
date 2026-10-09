@@ -67,4 +67,8 @@ class Services extends Model
     {
         return $this->belongsToMany(Blogs::class, 'blog_service', 'service_id', 'blog_id');
     }
+    public function projects()
+    {
+        return $this->hasMany(Projects::class, 'service_id', 'id');
+    }
 }

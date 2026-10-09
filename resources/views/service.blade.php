@@ -44,7 +44,7 @@
 
                     <span class="eyebrow reveal in">
 
-                        @if($service->icon)
+                        @if ($service->icon)
                             <i class="fa-solid {{ $service->icon }}"></i>
                         @else
                             <i class="fa-solid fa-layer-group"></i>
@@ -67,8 +67,7 @@
 
                     <div class="case-meta-row reveal in reveal-delay-2">
 
-                        @if($service->delivery_time)
-
+                        @if ($service->delivery_time)
                             <div class="case-meta-chip">
 
                                 <i class="fa-regular fa-clock"></i>
@@ -76,12 +75,10 @@
                                 {{ $service->delivery_time }}
 
                             </div>
-
                         @endif
 
 
-                        @if($service->price_text)
-
+                        @if ($service->price_text)
                             <div class="case-meta-chip">
 
                                 <i class="fa-solid fa-tags"></i>
@@ -89,12 +86,10 @@
                                 {{ $service->price_text }}
 
                             </div>
-
                         @endif
 
 
-                        @if($service->support)
-
+                        @if ($service->support)
                             <div class="case-meta-chip">
 
                                 <i class="fa-solid fa-headset"></i>
@@ -102,7 +97,6 @@
                                 {{ $service->support }}
 
                             </div>
-
                         @endif
 
                     </div>
@@ -110,7 +104,7 @@
 
                     <div class="case-hero-btns reveal in reveal-delay-3">
 
-                        <a href="/order/{{$service->id}}/{{$service->slug}}" class="btn-flow">
+                        <a href="/order/{{ $service->id }}/{{ $service->slug }}" class="btn-flow">
                             دریافت مشاوره رایگان
 
                             <i class="fa-solid fa-arrow-left"></i>
@@ -133,18 +127,16 @@
 
                     <div class="ss-hero-visual reveal in reveal-delay-1">
 
-                        @if($service->image_url)
-
-                            <img src="{{ asset($service->image_url) }}" alt="{{ $service->title }}" style="
+                        @if ($service->image_url)
+                            <img src="{{ asset($service->image_url) }}" alt="{{ $service->title }}"
+                                style="
                                                                                                                 max-width:100%;
                                                                                                                 max-height:400px;
                                                                                                                 object-fit:contain;
                                                                                                                 position:relative;
                                                                                                                 z-index:5;
                                                                                                             ">
-
                         @else
-
                             <div class="blob"></div>
 
                             <div class="orbit"></div>
@@ -168,7 +160,6 @@
                                 <i class="fa-solid fa-chart-line"></i>
 
                             </div>
-
                         @endif
 
                     </div>
@@ -186,8 +177,7 @@
     <!-- STATES -->
     <!-- ========================================================= -->
 
-    @if($state)
-
+    @if ($state)
         <div class="stat-strip-outer mt-5">
 
             <div class="container-x">
@@ -196,8 +186,7 @@
 
                     <div class="row g-3">
 
-                        @if($state->text_1 || $state->value_1)
-
+                        @if ($state->text_1 || $state->value_1)
                             <div class="col-6 col-md-3 stat-item">
 
                                 <h6>
@@ -209,12 +198,10 @@
                                 </span>
 
                             </div>
-
                         @endif
 
 
-                        @if($state->text_2 || $state->value_2)
-
+                        @if ($state->text_2 || $state->value_2)
                             <div class="col-6 col-md-3 stat-item">
 
                                 <h6>
@@ -226,12 +213,10 @@
                                 </span>
 
                             </div>
-
                         @endif
 
 
-                        @if($state->text_3 || $state->value_3)
-
+                        @if ($state->text_3 || $state->value_3)
                             <div class="col-6 col-md-3 stat-item">
 
                                 <h6>
@@ -243,12 +228,10 @@
                                 </span>
 
                             </div>
-
                         @endif
 
 
-                        @if($state->text_4 || $state->value_4)
-
+                        @if ($state->text_4 || $state->value_4)
                             <div class="col-6 col-md-3 stat-item">
 
                                 <h6>
@@ -260,7 +243,6 @@
                                 </span>
 
                             </div>
-
                         @endif
 
                     </div>
@@ -270,7 +252,6 @@
             </div>
 
         </div>
-
     @endif
 
 
@@ -287,7 +268,7 @@
             {{-- اگر نقل قول وجود داشته باشد --}}
             {{-- ===================================================== --}}
 
-            @if($service->quote_text || $service->quote_person || $service->quote_role)
+            @if ($service->quote_text || $service->quote_person || $service->quote_role)
 
                 <div class="row g-5">
 
@@ -295,8 +276,7 @@
 
                     <div class="col-lg-7">
 
-                        @if($service->overview)
-
+                        @if ($service->overview)
                             <span class="eyebrow reveal">
 
                                 <i class="fa-solid fa-circle-info"></i>
@@ -311,14 +291,12 @@
                                 {!! $service->overview !!}
 
                             </div>
-
                         @endif
 
 
                         <div class="cs-cards reveal reveal-delay-2">
 
-                            @if($service->challenge_title || $service->challenge_text)
-
+                            @if ($service->challenge_title || $service->challenge_text)
                                 <div class="cs-card challenge">
 
                                     <div class="ic">
@@ -328,28 +306,22 @@
                                     </div>
 
 
-                                    @if($service->challenge_title)
-
+                                    @if ($service->challenge_title)
                                         <h4>
                                             {{ $service->challenge_title }}
                                         </h4>
-
                                     @endif
 
 
-                                    @if($service->challenge_text)
-
+                                    @if ($service->challenge_text)
                                         {!! $service->challenge_text !!}
-
                                     @endif
 
                                 </div>
-
                             @endif
 
 
-                            @if($service->solution_title || $service->solution_text)
-
+                            @if ($service->solution_title || $service->solution_text)
                                 <div class="cs-card solution">
 
                                     <div class="ic">
@@ -359,23 +331,18 @@
                                     </div>
 
 
-                                    @if($service->solution_title)
-
+                                    @if ($service->solution_title)
                                         <h4>
                                             {{ $service->solution_title }}
                                         </h4>
-
                                     @endif
 
 
-                                    @if($service->solution_text)
-
+                                    @if ($service->solution_text)
                                         {!! $service->solution_text !!}
-
                                     @endif
 
                                 </div>
-
                             @endif
 
                         </div>
@@ -393,12 +360,10 @@
 
                             <div>
 
-                                @if($service->quote_text)
-
+                                @if ($service->quote_text)
                                     <p>
                                         {{ $service->quote_text }}
                                     </p>
-
                                 @endif
 
 
@@ -406,14 +371,10 @@
 
                                     <div class="av">
 
-                                        @if($service->quote_person)
-
+                                        @if ($service->quote_person)
                                             {{ mb_substr($service->quote_person, 0, 2) }}
-
                                         @else
-
                                             --
-
                                         @endif
 
                                     </div>
@@ -421,21 +382,17 @@
 
                                     <div>
 
-                                        @if($service->quote_person)
-
+                                        @if ($service->quote_person)
                                             <h6>
                                                 {{ $service->quote_person }}
                                             </h6>
-
                                         @endif
 
 
-                                        @if($service->quote_role)
-
+                                        @if ($service->quote_role)
                                             <span>
                                                 {{ $service->quote_role }}
                                             </span>
-
                                         @endif
 
                                     </div>
@@ -454,13 +411,10 @@
                 {{-- ===================================================== --}}
                 {{-- اگر نقل قول وجود نداشته باشد --}}
                 {{-- ===================================================== --}}
-
             @else
-
                 <!-- معرفی خدمت تمام عرض -->
 
-                @if($service->overview)
-
+                @if ($service->overview)
                     <div class="row">
 
                         <div class="col-12">
@@ -483,7 +437,6 @@
                         </div>
 
                     </div>
-
                 @endif
 
 
@@ -491,8 +444,7 @@
 
                 <div class="row g-4 mt-2">
 
-                    @if($service->challenge_title || $service->challenge_text)
-
+                    @if ($service->challenge_title || $service->challenge_text)
                         <div class="col-12 col-lg-6">
 
                             <div class="cs-card challenge reveal reveal-delay-1">
@@ -504,30 +456,24 @@
                                 </div>
 
 
-                                @if($service->challenge_title)
-
+                                @if ($service->challenge_title)
                                     <h4>
                                         {{ $service->challenge_title }}
                                     </h4>
-
                                 @endif
 
 
-                                @if($service->challenge_text)
-
+                                @if ($service->challenge_text)
                                     {!! $service->challenge_text !!}
-
                                 @endif
 
                             </div>
 
                         </div>
-
                     @endif
 
 
-                    @if($service->solution_title || $service->solution_text)
-
+                    @if ($service->solution_title || $service->solution_text)
                         <div class="col-12 col-lg-6">
 
                             <div class="cs-card solution reveal reveal-delay-2">
@@ -539,25 +485,20 @@
                                 </div>
 
 
-                                @if($service->solution_title)
-
+                                @if ($service->solution_title)
                                     <h4>
                                         {{ $service->solution_title }}
                                     </h4>
-
                                 @endif
 
 
-                                @if($service->solution_text)
-
+                                @if ($service->solution_text)
                                     {!! $service->solution_text !!}
-
                                 @endif
 
                             </div>
 
                         </div>
-
                     @endif
 
                 </div>
@@ -599,8 +540,7 @@
 
             <div class="incl-grid">
 
-                @foreach($whatReceives as $index => $item)
-
+                @foreach ($whatReceives as $index => $item)
                     <div class="incl-card reveal reveal-delay-{{ ($index % 3) + 1 }}" data-tilt>
 
                         <span class="incl-index">
@@ -630,7 +570,6 @@
                         </div>
 
                     </div>
-
                 @endforeach
 
             </div>
@@ -670,8 +609,7 @@
 
             <div class="tech-row reveal reveal-delay-1">
 
-                @foreach($techs as $tech)
-
+                @foreach ($techs as $tech)
                     <div class="tech-pill">
 
                         <i class="fa-solid {{ $tech->icon ?? 'fa-microchip' }}"></i>
@@ -679,7 +617,6 @@
                         {{ $tech->text }}
 
                     </div>
-
                 @endforeach
 
             </div>
@@ -719,8 +656,7 @@
 
             <div class="pinfo-grid reveal reveal-delay-1">
 
-                @if($service->delivery_time)
-
+                @if ($service->delivery_time)
                     <div class="pinfo-card">
 
                         <i class="fa-regular fa-clock"></i>
@@ -734,12 +670,10 @@
                         </p>
 
                     </div>
-
                 @endif
 
 
-                @if($service->suitable_for)
-
+                @if ($service->suitable_for)
                     <div class="pinfo-card">
 
                         <i class="fa-solid fa-users"></i>
@@ -753,12 +687,10 @@
                         </p>
 
                     </div>
-
                 @endif
 
 
-                @if($service->support)
-
+                @if ($service->support)
                     <div class="pinfo-card">
 
                         <i class="fa-solid fa-headset"></i>
@@ -772,12 +704,10 @@
                         </p>
 
                     </div>
-
                 @endif
 
 
-                @if($service->contract)
-
+                @if ($service->contract)
                     <div class="pinfo-card">
 
                         <i class="fa-solid fa-shield-halved"></i>
@@ -791,26 +721,21 @@
                         </p>
 
                     </div>
-
                 @endif
 
             </div>
 
 
-            @if($whatReceives->count())
-
+            @if ($whatReceives->count())
                 <div class="pinfo-services reveal reveal-delay-2">
 
-                    @foreach($whatReceives as $item)
-
+                    @foreach ($whatReceives as $item)
                         <span>
                             {{ $item->title }}
                         </span>
-
                     @endforeach
 
                 </div>
-
             @endif
 
         </div>
@@ -818,7 +743,7 @@
     </section>
 
 
-    @if($questions->count() > 0)
+    @if ($questions->count() > 0)
         <section class="faqc" id="contact">
             <div class="container-x">
                 <div class="row g-4">
@@ -835,9 +760,9 @@
 
                         <div class="acc-list">
 
-                            @foreach($questions as $index => $question)
-
-                                <div class="acc-item {{ $index === 0 ? 'open' : '' }} reveal reveal-delay-{{ ($index % 4) + 1 }}">
+                            @foreach ($questions as $index => $question)
+                                <div
+                                    class="acc-item {{ $index === 0 ? 'open' : '' }} reveal reveal-delay-{{ ($index % 4) + 1 }}">
 
                                     <button type="button" class="acc-btn">
                                         <h3 class="h5">{{ $question->title }}</h3>
@@ -849,12 +774,46 @@
                                     </div>
 
                                 </div>
-
                             @endforeach
 
                         </div>
 
                     </div>
+                </div>
+            </div>
+        </section>
+    @endif
+
+    @if ($service->projects->isNotEmpty())
+        <section class="projects">
+            <div class="container-x">
+                <div class="text-center mb-5 reveal">
+                    <span class="eyebrow">
+                        <i class="fa-solid fa-layer-group"></i>
+                        پروژه مرتبط
+                    </span>
+                    <h2 class="section-title">
+                        شاید این پروژه هم به کارتان بیایند
+                    </h2>
+                </div>
+                <div class="sim-grid">
+                    @foreach ($service->projects as $index => $related)
+                        <div class="sim-card reveal reveal-delay-{{ $index + 1 }}">
+                            <div class="sim-thumb t{{ $index + 1 }}">
+                                <img src="{{ asset($related->image_index) }}" class="w-100 h-100 object-fit-cover">
+                            </div>
+                            <div class="sim-body">
+                                <span class="tag">{{ $related->title }}</span>
+                                <h4 style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                    {{ $related->brief }}
+                                </h4>
+                                <a href="{{ route('projects.show', ['slug' => $related->slug]) }}">
+                                    مشاهده جزئیات
+                                    <i class="fa-solid fa-arrow-up-left"></i>
+                                </a>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
         </section>
@@ -893,11 +852,7 @@
 
                 @php
 
-                    $relatedServices = \App\Models\Services::where(
-                        'id',
-                        '!=',
-                        $service->id
-                    )
+                    $relatedServices = \App\Models\Services::where('id', '!=', $service->id)
                         ->orderBy('number', 'asc')
                         ->limit(3)
                         ->get();
@@ -905,8 +860,7 @@
                 @endphp
 
 
-                @foreach($relatedServices as $index => $related)
-
+                @foreach ($relatedServices as $index => $related)
                     <div class="sim-card reveal reveal-delay-{{ $index + 1 }}">
 
                         <div class="sim-thumb t{{ $index + 1 }}">
@@ -939,7 +893,6 @@
                         </div>
 
                     </div>
-
                 @endforeach
 
             </div>
@@ -959,21 +912,17 @@
 
             <div class="cta-banner reveal">
 
-                @if($service->cta_title)
-
+                @if ($service->cta_title)
                     <h2>
                         {{ $service->cta_title }}
                     </h2>
-
                 @endif
 
 
-                @if($service->cta_text)
-
+                @if ($service->cta_text)
                     <p>
                         {{ $service->cta_text }}
                     </p>
-
                 @endif
 
 

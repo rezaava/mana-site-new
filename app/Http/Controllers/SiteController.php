@@ -167,7 +167,7 @@ class SiteController extends Controller
 
     public function servise($slug)
     {
-        $service = Services::where('slug', $slug)->firstOrFail();
+        $service = Services::where('slug', $slug)->with('projects')->firstOrFail();
 
         $questions = Questions::where('service_id', $service->id)->orderBy('number')->get();
 

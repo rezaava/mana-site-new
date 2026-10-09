@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Questions;
 use App\Models\Services;
 use App\Models\ServiceState;
-use App\Models\ServiceWhatReceive;
 use App\Models\ServiceTech;
+use App\Models\ServiceWhatReceive;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -27,7 +27,6 @@ class ServiceController extends Controller
         return view('admin.pages.index', compact('services'));
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | CREATE
@@ -38,7 +37,6 @@ class ServiceController extends Controller
     {
         return view('admin.pages.create');
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -159,7 +157,6 @@ class ServiceController extends Controller
             'faqs.*.answer' => 'nullable|string',
         ]);
 
-
         DB::beginTransaction();
 
         try {
@@ -179,14 +176,13 @@ class ServiceController extends Controller
                     ->store('services', 'public');
             }
 
-
             /*
             |--------------------------------------------------------------------------
             | Service
             |--------------------------------------------------------------------------
             */
 
-            $service = new Services();
+            $service = new Services;
 
             $service->title = $validated['title'];
             $service->text = $validated['text'] ?? null;
@@ -204,7 +200,6 @@ class ServiceController extends Controller
             $service->meta = $validated['meta'];
 
             $service->title_head = $validated['title_head'] ?? null;
-
 
             $service->receives_title = $validated['receives_title'];
 
@@ -264,7 +259,6 @@ class ServiceController extends Controller
 
             $service->save();
 
-
             /*
             |--------------------------------------------------------------------------
             | State
@@ -272,19 +266,18 @@ class ServiceController extends Controller
             */
 
             $hasState =
-                !empty($validated['state_text_1']) ||
-                !empty($validated['state_value_1']) ||
-                !empty($validated['state_text_2']) ||
-                !empty($validated['state_value_2']) ||
-                !empty($validated['state_text_3']) ||
-                !empty($validated['state_value_3']) ||
-                !empty($validated['state_text_4']) ||
-                !empty($validated['state_value_4']);
-
+                ! empty($validated['state_text_1']) ||
+                ! empty($validated['state_value_1']) ||
+                ! empty($validated['state_text_2']) ||
+                ! empty($validated['state_value_2']) ||
+                ! empty($validated['state_text_3']) ||
+                ! empty($validated['state_value_3']) ||
+                ! empty($validated['state_text_4']) ||
+                ! empty($validated['state_value_4']);
 
             if ($hasState) {
 
-                $state = new ServiceState();
+                $state = new ServiceState;
 
                 $state->service_id = $service->id;
 
@@ -303,14 +296,13 @@ class ServiceController extends Controller
                 $state->save();
             }
 
-
             /*
             |--------------------------------------------------------------------------
             | What Receive
             |--------------------------------------------------------------------------
             */
 
-            if (!empty($validated['what_receive'])) {
+            if (! empty($validated['what_receive'])) {
 
                 foreach ($validated['what_receive'] as $index => $item) {
 
@@ -322,7 +314,7 @@ class ServiceController extends Controller
                         continue;
                     }
 
-                    $whatReceive = new ServiceWhatReceive();
+                    $whatReceive = new ServiceWhatReceive;
 
                     $whatReceive->service_id = $service->id;
                     $whatReceive->title = $item['title'] ?? null;
@@ -334,14 +326,13 @@ class ServiceController extends Controller
                 }
             }
 
-
             /*
             |--------------------------------------------------------------------------
             | Technologies
             |--------------------------------------------------------------------------
             */
 
-            if (!empty($validated['techs'])) {
+            if (! empty($validated['techs'])) {
 
                 foreach ($validated['techs'] as $index => $item) {
 
@@ -352,7 +343,7 @@ class ServiceController extends Controller
                         continue;
                     }
 
-                    $serviceTech = new ServiceTech();
+                    $serviceTech = new ServiceTech;
 
                     $serviceTech->service_id = $service->id;
                     $serviceTech->text = $item['text'] ?? null;
@@ -362,7 +353,6 @@ class ServiceController extends Controller
                     $serviceTech->save();
                 }
             }
-
 
             /*
             |--------------------------------------------------------------------------
@@ -376,13 +366,13 @@ class ServiceController extends Controller
 |--------------------------------------------------------------------------
 */
 
-            if (!empty($validated['faqs'])) {
+            if (! empty($validated['faqs'])) {
                 foreach ($validated['faqs'] as $item) {
                     if (empty($item['question']) && empty($item['answer'])) {
                         continue;
                     }
 
-                    $faq = new Questions();
+                    $faq = new Questions;
                     $faq->service_id = $service->id;
                     $faq->number = $item['number'] ?? 0;
                     $faq->title = $item['question'] ?? null;
@@ -404,11 +394,10 @@ class ServiceController extends Controller
             return back()
                 ->withInput()
                 ->withErrors([
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
         }
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -448,7 +437,6 @@ class ServiceController extends Controller
         ));
     }
 
-
     /*
     |--------------------------------------------------------------------------
     | UPDATE
@@ -483,7 +471,6 @@ class ServiceController extends Controller
             'receives_title' => 'required',
             'techs_title' => 'required',
             'information_title' => 'required',
-
 
             'faqs' => 'nullable|array',
             'faqs.*.number' => 'nullable|integer',
@@ -563,13 +550,11 @@ class ServiceController extends Controller
             'techs.*.number' => 'nullable|integer',
         ]);
 
-
         DB::beginTransaction();
 
         try {
 
             $service = Services::findOrFail($id);
-
 
             /*
             |--------------------------------------------------------------------------
@@ -594,7 +579,7 @@ class ServiceController extends Controller
 
                 $service->icon = null;
 
-            } elseif (!empty($validated['icon'])) {
+            } elseif (! empty($validated['icon'])) {
 
                 if (
                     $service->image_url &&
@@ -609,7 +594,6 @@ class ServiceController extends Controller
                 $service->icon = $validated['icon'];
 
             }
-
 
             /*
             |--------------------------------------------------------------------------
@@ -638,7 +622,6 @@ class ServiceController extends Controller
 
             $service->techs_title = $validated['techs_title'];
 
-
             $service->price_text =
                 $validated['price_text'] ?? null;
 
@@ -651,7 +634,6 @@ class ServiceController extends Controller
             $service->contract =
                 $validated['contract'] ?? null;
 
-
             /*
             |--------------------------------------------------------------------------
             | Overview
@@ -660,7 +642,6 @@ class ServiceController extends Controller
 
             $service->overview =
                 $validated['overview'] ?? null;
-
 
             /*
             |--------------------------------------------------------------------------
@@ -674,7 +655,6 @@ class ServiceController extends Controller
             $service->challenge_text =
                 $validated['challenge_text'] ?? null;
 
-
             /*
             |--------------------------------------------------------------------------
             | Solution
@@ -686,7 +666,6 @@ class ServiceController extends Controller
 
             $service->solution_text =
                 $validated['solution_text'] ?? null;
-
 
             /*
             |--------------------------------------------------------------------------
@@ -703,7 +682,6 @@ class ServiceController extends Controller
             $service->quote_role =
                 $validated['quote_role'] ?? null;
 
-
             /*
             |--------------------------------------------------------------------------
             | CTA
@@ -716,13 +694,10 @@ class ServiceController extends Controller
             $service->cta_text =
                 $validated['cta_text'] ?? null;
 
-
             $service->number =
                 $validated['number'] ?? 0;
 
-
             $service->save();
-
 
             /*
             |--------------------------------------------------------------------------
@@ -731,27 +706,25 @@ class ServiceController extends Controller
             */
 
             $hasState =
-                !empty($validated['state_text_1']) ||
-                !empty($validated['state_value_1']) ||
-                !empty($validated['state_text_2']) ||
-                !empty($validated['state_value_2']) ||
-                !empty($validated['state_text_3']) ||
-                !empty($validated['state_value_3']) ||
-                !empty($validated['state_text_4']) ||
-                !empty($validated['state_value_4']);
-
+                ! empty($validated['state_text_1']) ||
+                ! empty($validated['state_value_1']) ||
+                ! empty($validated['state_text_2']) ||
+                ! empty($validated['state_value_2']) ||
+                ! empty($validated['state_text_3']) ||
+                ! empty($validated['state_value_3']) ||
+                ! empty($validated['state_text_4']) ||
+                ! empty($validated['state_value_4']);
 
             $state = ServiceState::where(
                 'service_id',
                 $service->id
             )->first();
 
-
             if ($hasState) {
 
-                if (!$state) {
+                if (! $state) {
 
-                    $state = new ServiceState();
+                    $state = new ServiceState;
 
                     $state->service_id = $service->id;
                 }
@@ -787,7 +760,6 @@ class ServiceController extends Controller
                 $state->delete();
             }
 
-
             /*
             |--------------------------------------------------------------------------
             | What Receive
@@ -799,12 +771,10 @@ class ServiceController extends Controller
                 $service->id
             )->delete();
 
-
-            if (!empty($validated['what_receive'])) {
+            if (! empty($validated['what_receive'])) {
 
                 foreach (
-                    $validated['what_receive']
-                    as $index => $item
+                    $validated['what_receive'] as $index => $item
                 ) {
 
                     if (
@@ -815,7 +785,7 @@ class ServiceController extends Controller
                         continue;
                     }
 
-                    $whatReceive = new ServiceWhatReceive();
+                    $whatReceive = new ServiceWhatReceive;
 
                     $whatReceive->service_id =
                         $service->id;
@@ -836,7 +806,6 @@ class ServiceController extends Controller
                 }
             }
 
-
             /*
             |--------------------------------------------------------------------------
             | Technologies
@@ -848,12 +817,10 @@ class ServiceController extends Controller
                 $service->id
             )->delete();
 
-
-            if (!empty($validated['techs'])) {
+            if (! empty($validated['techs'])) {
 
                 foreach (
-                    $validated['techs']
-                    as $index => $item
+                    $validated['techs'] as $index => $item
                 ) {
 
                     if (
@@ -863,7 +830,7 @@ class ServiceController extends Controller
                         continue;
                     }
 
-                    $serviceTech = new ServiceTech();
+                    $serviceTech = new ServiceTech;
 
                     $serviceTech->service_id =
                         $service->id;
@@ -881,7 +848,6 @@ class ServiceController extends Controller
                 }
             }
 
-
             /*
             |--------------------------------------------------------------------------
             | Commit
@@ -896,7 +862,7 @@ class ServiceController extends Controller
 
             Questions::where('service_id', $service->id)->delete();
 
-            if (!empty($validated['faqs'])) {
+            if (! empty($validated['faqs'])) {
 
                 foreach ($validated['faqs'] as $item) {
 
@@ -907,7 +873,7 @@ class ServiceController extends Controller
                         continue;
                     }
 
-                    $faq = new Questions();
+                    $faq = new Questions;
 
                     $faq->service_id = $service->id;
                     $faq->number = $item['number'] ?? 0;
@@ -934,11 +900,10 @@ class ServiceController extends Controller
             return back()
                 ->withInput()
                 ->withErrors([
-                    'error' => $e->getMessage()
+                    'error' => $e->getMessage(),
                 ]);
         }
     }
-
 
     /*
     |--------------------------------------------------------------------------
@@ -950,7 +915,6 @@ class ServiceController extends Controller
     {
         $service = Services::findOrFail($id);
 
-
         if (
             $service->image_url &&
             Storage::disk('public')->exists(
@@ -961,7 +925,6 @@ class ServiceController extends Controller
                 $service->image_url
             );
         }
-
 
         /*
         |--------------------------------------------------------------------------
@@ -984,9 +947,7 @@ class ServiceController extends Controller
             $service->id
         )->delete();
 
-
         $service->delete();
-
 
         return redirect()
             ->route('pages.index')

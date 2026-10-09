@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Facades\DB;
-use App\Models\Projects;
-use App\Models\Images;
 use App\Models\Categories;
 use App\Models\CatImg;
-use App\Models\ProjectStat;
-use App\Models\ProjectGallery;
-use App\Models\ProjectService;
-use App\Models\ProjectTechnology;
+use App\Models\Images;
 use App\Models\ProjectFeature;
+use App\Models\ProjectGallery;
+use App\Models\Projects;
+use App\Models\ProjectService;
+use App\Models\ProjectStat;
+use App\Models\ProjectTechnology;
+use App\Models\Services;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class ProjectController extends Controller
 {
@@ -37,11 +38,11 @@ class ProjectController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
-                'success' => false
+                'success' => false,
             ], 422);
         }
 
-        $project = new Projects();
+        $project = new Projects;
 
         $maxNumber = Projects::max('number');
 
@@ -84,7 +85,7 @@ class ProjectController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
-                'success' => false
+                'success' => false,
             ], 422);
         }
 
@@ -124,7 +125,7 @@ class ProjectController extends Controller
 
         return response()->json([
             'projects' => $projects,
-            'success' => true
+            'success' => true,
         ], 200);
     }
 
@@ -135,7 +136,7 @@ class ProjectController extends Controller
             'galleries.category',
             'technologies',
             'services',
-            'features'
+            'features',
         ])->findOrFail($id);
 
         $project_images = Images::where('type', 1)
@@ -145,7 +146,7 @@ class ProjectController extends Controller
         return response()->json([
             'project' => $project,
             'images' => $project_images,
-            'success' => true
+            'success' => true,
         ], 200);
     }
 
@@ -158,11 +159,11 @@ class ProjectController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
-                'success' => false
+                'success' => false,
             ], 422);
         }
 
-        $image = new Images();
+        $image = new Images;
 
         $image->type = 1;
         $image->url = $request->input('url');
@@ -181,7 +182,7 @@ class ProjectController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'تصویر با موفقیت حذف شد.'
+            'message' => 'تصویر با موفقیت حذف شد.',
         ]);
     }
 
@@ -194,7 +195,7 @@ class ProjectController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
-                'success' => false
+                'success' => false,
             ], 422);
         }
 
@@ -213,7 +214,8 @@ class ProjectController extends Controller
             'stats',
             'technologies',
             'services',
-            'features'
+            'features',
+            'service',
         ])->latest()->paginate(10);
 
         return view('admin.projects.index', compact('projects'));
@@ -222,15 +224,10 @@ class ProjectController extends Controller
     public function create()
     {
         $categories = Categories::where('type', 1)->get();
+        $galleryCategories = CatImg::orderBy('number')->orderBy('id')->get();
+        $services = Services::orderBy('number', 'asc')->get();
 
-        $galleryCategories = CatImg::orderBy('number')
-            ->orderBy('id')
-            ->get();
-
-        return view('admin.projects.create', compact(
-            'categories',
-            'galleryCategories'
-        ));
+        return view('admin.projects.create', compact('categories', 'galleryCategories', 'services'));
     }
 
     public function store(Request $request)
@@ -244,65 +241,44 @@ class ProjectController extends Controller
             'challenge' => 'nullable|string',
             'solution' => 'nullable|string',
             'cat_id' => 'nullable|integer',
+            'service_id' => 'nullable|exists:services,id',
             'client_name' => 'nullable|string|max:100',
             'client_role' => 'nullable|string|max:100',
             'launch_year' => 'nullable|string|max:50',
             'duration' => 'nullable|string|max:50',
             'project_link' => 'nullable|string|max:255',
             'testimonial' => 'nullable|string',
-
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'image_mobile' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'image_index' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-
             'feature_title' => 'nullable|array',
             'feature_title.*' => 'nullable|string|max:255',
-
             'feature_text' => 'nullable|array',
             'feature_text.*' => 'nullable|string',
-
             'feature_icon' => 'nullable|array',
             'feature_icon.*' => 'nullable|string|max:255',
-
             'technology_name' => 'nullable|array',
             'technology_name.*' => 'nullable|string|max:255',
-
             'technology_icon' => 'nullable|array',
             'technology_icon.*' => 'nullable|string|max:255',
-
             'technology_order' => 'nullable|array',
             'technology_order.*' => 'nullable|integer|min:0',
-
             'stats_value' => 'nullable|array',
             'stats_value.*' => 'nullable|string|max:50',
-
             'stats_label' => 'nullable|array',
             'stats_label.*' => 'nullable|string|max:100',
-
             'service_name' => 'nullable|array',
             'service_name.*' => 'nullable|string|max:255',
-
             'gallery_images' => 'nullable|array',
             'gallery_images.*' => 'nullable|array',
             'gallery_images.*.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
-
             'slug' => 'required|string|max:255',
-
             'number' => 'required|integer|min:0',
-
-
         ]);
-
         $uploadedFiles = [];
-
         try {
             DB::beginTransaction();
-
-            $maxNumber = Projects::max('number');
-            $number = ($maxNumber ?? 0) + 1;
-
-            $project = new Projects();
-
+            $project = new Projects;
             $project->title = $validated['title'];
             $project->subtitle = $validated['subtitle'] ?? null;
             $project->brief = $validated['brief'] ?? null;
@@ -311,297 +287,142 @@ class ProjectController extends Controller
             $project->challenge = $validated['challenge'] ?? null;
             $project->solution = $validated['solution'] ?? null;
             $project->cat_id = $validated['cat_id'] ?? null;
+            $project->service_id = $validated['service_id'] ?? null;
             $project->client_name = $validated['client_name'] ?? null;
             $project->client_role = $validated['client_role'] ?? null;
             $project->launch_year = $validated['launch_year'] ?? null;
             $project->duration = $validated['duration'] ?? null;
             $project->project_link = $validated['project_link'] ?? null;
             $project->testimonial = $validated['testimonial'] ?? null;
-            $project->number = $number;
             $project->slug = $validated['slug'];
             $project->number = $validated['number'];
-
-            /*
-             * ==========================
-             * MAIN IMAGE
-             * ==========================
-             */
-
             if ($request->hasFile('image')) {
-
                 $file = $request->file('image');
-
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-                $file->move(
-                    'projects',
-                    $fileName
-                );
-
-                $imagePath = 'projects/' . $fileName;
-
+                $fileName = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
+                $file->move('projects', $fileName);
+                $imagePath = 'projects/'.$fileName;
                 $project->image_url = $imagePath;
-
                 $uploadedFiles[] = $imagePath;
-
             } else {
-
                 $project->image_url = 'default.jpg';
-
             }
-
-            /*
-             * ==========================
-             * MOBILE IMAGE
-             * ==========================
-             */
-
             if ($request->hasFile('image_mobile')) {
-
                 $file = $request->file('image_mobile');
-
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-                $file->move(
-                    'projects',
-                    $fileName
-                );
-
-                $imageMobilePath = 'projects/' . $fileName;
-
+                $fileName = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
+                $file->move('projects', $fileName);
+                $imageMobilePath = 'projects/'.$fileName;
                 $project->image_mobile_url = $imageMobilePath;
-
                 $uploadedFiles[] = $imageMobilePath;
-
             } else {
-
                 $project->image_mobile_url = null;
-
             }
-
-
             if ($request->hasFile('image_index')) {
-
                 $file = $request->file('image_index');
-
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-                $file->move(
-                    'projects',
-                    $fileName
-                );
-
-                $imageIndexPath = 'projects/' . $fileName;
-
-                $project->image_Index = $imageIndexPath;
-
+                $fileName = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
+                $file->move('projects', $fileName);
+                $imageIndexPath = 'projects/'.$fileName;
+                $project->image_index = $imageIndexPath;
                 $uploadedFiles[] = $imageIndexPath;
-
             } else {
-
-                $project->image_Index = null;
-
+                $project->image_index = null;
             }
-
             $project->save();
-
-            /*
-             * ==========================
-             * FEATURES
-             * ==========================
-             */
-
             $featureTitles = $request->input('feature_title', []);
             $featureTexts = $request->input('feature_text', []);
             $featureIcons = $request->input('feature_icon', []);
-
             foreach ($featureTitles as $index => $title) {
-
-                $title = trim($title);
-
-                $text = isset($featureTexts[$index])
-                    ? trim($featureTexts[$index])
-                    : '';
-
-                $icon = isset($featureIcons[$index])
-                    ? trim($featureIcons[$index])
-                    : '';
-
+                $title = trim($title ?? '');
+                $text = isset($featureTexts[$index]) ? trim($featureTexts[$index]) : '';
+                $icon = isset($featureIcons[$index]) ? trim($featureIcons[$index]) : '';
                 if ($title === '' && $text === '' && $icon === '') {
                     continue;
                 }
-
-                $feature = new ProjectFeature();
-
+                $feature = new ProjectFeature;
                 $feature->project_id = $project->id;
                 $feature->title = $title;
                 $feature->text = $text;
                 $feature->icon = $icon;
-
                 $feature->save();
             }
-
-            /*
-             * ==========================
-             * STATS
-             * ==========================
-             */
-
             $statsValues = $request->input('stats_value', []);
             $statsLabels = $request->input('stats_label', []);
-
             foreach ($statsValues as $index => $value) {
-
-                $value = trim($value);
-
-                $label = isset($statsLabels[$index])
-                    ? trim($statsLabels[$index])
-                    : '';
-
+                $value = trim($value ?? '');
+                $label = isset($statsLabels[$index]) ? trim($statsLabels[$index]) : '';
                 if ($value === '' || $label === '') {
                     continue;
                 }
-
-                $stat = new ProjectStat();
-
+                $stat = new ProjectStat;
                 $stat->project_id = $project->id;
                 $stat->value = $value;
                 $stat->label = $label;
-
                 $stat->save();
             }
-
-            /*
-             * ==========================
-             * TECHNOLOGIES
-             * ==========================
-             */
-
             $technologyNames = $request->input('technology_name', []);
             $technologyIcons = $request->input('technology_icon', []);
             $technologyOrders = $request->input('technology_order', []);
-
             foreach ($technologyNames as $index => $name) {
-
-                $name = trim($name);
-
-                $icon = isset($technologyIcons[$index])
-                    ? trim($technologyIcons[$index])
-                    : '';
-
-                $order = isset($technologyOrders[$index])
-                    ? (int) $technologyOrders[$index]
-                    : 0;
-
+                $name = trim($name ?? '');
+                $icon = isset($technologyIcons[$index]) ? trim($technologyIcons[$index]) : '';
+                $order = isset($technologyOrders[$index]) ? (int) $technologyOrders[$index] : 0;
                 if ($name === '') {
                     continue;
                 }
-
-                $technology = new ProjectTechnology();
-
+                $technology = new ProjectTechnology;
                 $technology->project_id = $project->id;
                 $technology->name = $name;
                 $technology->icon = $icon !== '' ? $icon : null;
                 $technology->order = $order;
-
                 $technology->save();
             }
-
-            /*
-             * ==========================
-             * SERVICES
-             * ==========================
-             */
-
             $serviceNames = $request->input('service_name', []);
-
             foreach ($serviceNames as $index => $name) {
-
-                $name = trim($name);
-
+                $name = trim($name ?? '');
                 if ($name === '') {
                     continue;
                 }
-
-                $service = new ProjectService();
-
-                $service->project_id = $project->id;
-                $service->name = $name;
-                $service->order = $index;
-
-                $service->save();
+                $projectService = new ProjectService;
+                $projectService->project_id = $project->id;
+                $projectService->name = $name;
+                $projectService->order = $index;
+                $projectService->save();
             }
-
-            /*
-             * ==========================
-             * GALLERY
-             * ==========================
-             */
-
             $galleryImages = $request->file('gallery_images', []);
-
             foreach ($galleryImages as $catImgId => $files) {
-
-                if (!is_array($files)) {
+                if (! is_array($files)) {
                     $files = [$files];
                 }
-
                 $category = CatImg::find($catImgId);
-
-                if (!$category) {
+                if (! $category) {
                     continue;
                 }
-
                 foreach ($files as $file) {
-
-                    if (!$file || !$file->isValid()) {
+                    if (! $file || ! $file->isValid()) {
                         continue;
                     }
-
-                    $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-                    $file->move(
-                        'projects',
-                        $fileName
-                    );
-
-                    $path = 'projects/' . $fileName;
-
+                    $fileName = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
+                    $file->move('projects', $fileName);
+                    $path = 'projects/'.$fileName;
                     $uploadedFiles[] = $path;
-
-                    $gallery = new ProjectGallery();
-
+                    $gallery = new ProjectGallery;
                     $gallery->project_id = $project->id;
                     $gallery->cat_img_id = $category->id;
                     $gallery->image_url = $path;
-
                     $gallery->save();
                 }
             }
-
             DB::commit();
 
-            return redirect()
-                ->route('projects.index')
-                ->with('success', 'پروژه با موفقیت ایجاد شد.');
-
+            return redirect()->route('projects.index')->with('success', 'پروژه با موفقیت ایجاد شد.');
         } catch (\Throwable $e) {
-
             DB::rollBack();
-
             foreach ($uploadedFiles as $file) {
-
                 if (file_exists($file)) {
                     @unlink($file);
                 }
             }
 
-            return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors([
-                    'error' => 'خطا در ایجاد پروژه: ' . $e->getMessage()
-                ]);
+            return redirect()->back()->withInput()->withErrors(['error' => 'خطا در ایجاد پروژه: '.$e->getMessage()]);
         }
     }
 
@@ -612,26 +433,19 @@ class ProjectController extends Controller
             'technologies',
             'services',
             'galleries',
-            'features'
+            'features',
+            'service',
         ])->findOrFail($id);
-
         $categories = Categories::where('type', 1)->get();
+        $galleryCategories = CatImg::orderBy('number')->orderBy('id')->get();
+        $services = Services::orderBy('number', 'asc')->get();
 
-        $galleryCategories = CatImg::orderBy('number')
-            ->orderBy('id')
-            ->get();
-
-        return view('admin.projects.edit', compact(
-            'project',
-            'categories',
-            'galleryCategories'
-        ));
+        return view('admin.projects.edit', compact('project', 'categories', 'galleryCategories', 'services'));
     }
 
     public function update(Request $request, $id)
     {
         $project = Projects::findOrFail($id);
-
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'subtitle' => 'nullable|string|max:255',
@@ -641,142 +455,70 @@ class ProjectController extends Controller
             'challenge' => 'nullable|string',
             'solution' => 'nullable|string',
             'cat_id' => 'nullable|integer',
+            'service_id' => 'nullable|exists:services,id',
             'client_name' => 'nullable|string|max:100',
             'client_role' => 'nullable|string|max:100',
             'launch_year' => 'nullable|string|max:50',
             'duration' => 'nullable|string|max:50',
             'project_link' => 'nullable|string|max:255',
             'testimonial' => 'nullable|string',
-
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'image_mobile' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
-
+            'image_index' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
             'feature_title' => 'nullable|array',
             'feature_title.*' => 'nullable|string|max:255',
-
             'feature_text' => 'nullable|array',
             'feature_text.*' => 'nullable|string',
-
             'feature_icon' => 'nullable|array',
             'feature_icon.*' => 'nullable|string|max:255',
-
             'technology_name' => 'nullable|array',
             'technology_name.*' => 'nullable|string|max:255',
-
             'technology_icon' => 'nullable|array',
             'technology_icon.*' => 'nullable|string|max:255',
-
             'technology_order' => 'nullable|array',
             'technology_order.*' => 'nullable|integer|min:0',
-
             'stats_value' => 'nullable|array',
             'stats_value.*' => 'nullable|string|max:50',
-
             'stats_label' => 'nullable|array',
             'stats_label.*' => 'nullable|string|max:100',
-
             'service_name' => 'nullable|array',
             'service_name.*' => 'nullable|string|max:255',
-
             'gallery_images' => 'nullable|array',
             'gallery_images.*' => 'nullable|array',
             'gallery_images.*.*' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:5120',
-
             'slug' => 'required|string|max:255',
-
             'number' => 'required|integer|min:0',
         ]);
-
         $uploadedFiles = [];
-
         $oldImage = $project->image_url;
         $oldMobileImage = $project->image_mobile_url;
-
+        $oldIndexImage = $project->image_index;
         try {
-
             DB::beginTransaction();
-
-            /*
-             * ==========================
-             * MAIN IMAGE
-             * ==========================
-             */
-
             if ($request->hasFile('image')) {
-
                 $file = $request->file('image');
-
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-                $file->move(
-                    'projects',
-                    $fileName
-                );
-
-                $imagePath = 'projects/' . $fileName;
-
+                $fileName = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
+                $file->move('projects', $fileName);
+                $imagePath = 'projects/'.$fileName;
                 $project->image_url = $imagePath;
-
                 $uploadedFiles[] = $imagePath;
             }
-
-            /*
-             * ==========================
-             * MOBILE IMAGE
-             * ==========================
-             */
-
             if ($request->hasFile('image_mobile')) {
-
                 $file = $request->file('image_mobile');
-
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-                $file->move(
-                    'projects',
-                    $fileName
-                );
-
-                $imageMobilePath = 'projects/' . $fileName;
-
+                $fileName = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
+                $file->move('projects', $fileName);
+                $imageMobilePath = 'projects/'.$fileName;
                 $project->image_mobile_url = $imageMobilePath;
-
                 $uploadedFiles[] = $imageMobilePath;
             }
-
-
-
-            /*
-             * ==========================
-             * index IMAGE
-             * ==========================
-             */
-
             if ($request->hasFile('image_index')) {
-
                 $file = $request->file('image_index');
-
-                $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-                $file->move(
-                    'projects',
-                    $fileName
-                );
-
-                $imageIndexPath = 'projects/' . $fileName;
-
-                $project->image_Index = $imageIndexPath;
-
+                $fileName = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
+                $file->move('projects', $fileName);
+                $imageIndexPath = 'projects/'.$fileName;
+                $project->image_index = $imageIndexPath;
                 $uploadedFiles[] = $imageIndexPath;
             }
-
-
-            /*
-             * ==========================
-             * PROJECT DATA
-             * ==========================
-             */
-
             $project->title = $validated['title'];
             $project->subtitle = $validated['subtitle'] ?? null;
             $project->brief = $validated['brief'] ?? null;
@@ -785,6 +527,7 @@ class ProjectController extends Controller
             $project->challenge = $validated['challenge'] ?? null;
             $project->solution = $validated['solution'] ?? null;
             $project->cat_id = $validated['cat_id'] ?? null;
+            $project->service_id = $validated['service_id'] ?? null;
             $project->client_name = $validated['client_name'] ?? null;
             $project->client_role = $validated['client_role'] ?? null;
             $project->launch_year = $validated['launch_year'] ?? null;
@@ -793,271 +536,116 @@ class ProjectController extends Controller
             $project->testimonial = $validated['testimonial'] ?? null;
             $project->slug = $validated['slug'];
             $project->number = $validated['number'];
-
             $project->save();
-
-            /*
-             * ==========================
-             * FEATURES
-             * ==========================
-             */
-
-            ProjectFeature::where(
-                'project_id',
-                $project->id
-            )->delete();
-
+            ProjectFeature::where('project_id', $project->id)->delete();
             $featureTitles = $request->input('feature_title', []);
             $featureTexts = $request->input('feature_text', []);
             $featureIcons = $request->input('feature_icon', []);
-
             foreach ($featureTitles as $index => $title) {
-
-                $title = trim($title);
-
-                $text = isset($featureTexts[$index])
-                    ? trim($featureTexts[$index])
-                    : '';
-
-                $icon = isset($featureIcons[$index])
-                    ? trim($featureIcons[$index])
-                    : '';
-
+                $title = trim($title ?? '');
+                $text = isset($featureTexts[$index]) ? trim($featureTexts[$index]) : '';
+                $icon = isset($featureIcons[$index]) ? trim($featureIcons[$index]) : '';
                 if ($title === '' && $text === '' && $icon === '') {
                     continue;
                 }
-
-                $feature = new ProjectFeature();
-
+                $feature = new ProjectFeature;
                 $feature->project_id = $project->id;
                 $feature->title = $title;
                 $feature->text = $text;
                 $feature->icon = $icon;
-
                 $feature->save();
             }
-
-            /*
-             * ==========================
-             * STATS
-             * ==========================
-             */
-
             $project->stats()->delete();
-
             $statsValues = $request->input('stats_value', []);
             $statsLabels = $request->input('stats_label', []);
-
             foreach ($statsValues as $index => $value) {
-
-                $value = trim($value);
-
-                $label = isset($statsLabels[$index])
-                    ? trim($statsLabels[$index])
-                    : '';
-
+                $value = trim($value ?? '');
+                $label = isset($statsLabels[$index]) ? trim($statsLabels[$index]) : '';
                 if ($value === '' || $label === '') {
                     continue;
                 }
-
-                $stat = new ProjectStat();
-
+                $stat = new ProjectStat;
                 $stat->project_id = $project->id;
                 $stat->value = $value;
                 $stat->label = $label;
-
                 $stat->save();
             }
-
-            /*
-             * ==========================
-             * TECHNOLOGIES
-             * ==========================
-             */
-
             $project->technologies()->delete();
-
-            $technologyNames = $request->input(
-                'technology_name',
-                []
-            );
-
-            $technologyIcons = $request->input(
-                'technology_icon',
-                []
-            );
-
-            $technologyOrders = $request->input(
-                'technology_order',
-                []
-            );
-
+            $technologyNames = $request->input('technology_name', []);
+            $technologyIcons = $request->input('technology_icon', []);
+            $technologyOrders = $request->input('technology_order', []);
             foreach ($technologyNames as $index => $name) {
-
-                $name = trim($name);
-
-                $icon = isset($technologyIcons[$index])
-                    ? trim($technologyIcons[$index])
-                    : '';
-
-                $order = isset($technologyOrders[$index])
-                    ? (int) $technologyOrders[$index]
-                    : 0;
-
+                $name = trim($name ?? '');
+                $icon = isset($technologyIcons[$index]) ? trim($technologyIcons[$index]) : '';
+                $order = isset($technologyOrders[$index]) ? (int) $technologyOrders[$index] : 0;
                 if ($name === '') {
                     continue;
                 }
-
-                $technology = new ProjectTechnology();
-
+                $technology = new ProjectTechnology;
                 $technology->project_id = $project->id;
                 $technology->name = $name;
-                $technology->icon = $icon !== ''
-                    ? $icon
-                    : null;
+                $technology->icon = $icon !== '' ? $icon : null;
                 $technology->order = $order;
-
                 $technology->save();
             }
-
-            /*
-             * ==========================
-             * SERVICES
-             * ==========================
-             */
-
             $project->services()->delete();
-
-            $serviceNames = $request->input(
-                'service_name',
-                []
-            );
-
+            $serviceNames = $request->input('service_name', []);
             foreach ($serviceNames as $index => $name) {
-
-                $name = trim($name);
-
+                $name = trim($name ?? '');
                 if ($name === '') {
                     continue;
                 }
-
-                $service = new ProjectService();
-
-                $service->project_id = $project->id;
-                $service->name = $name;
-                $service->order = $index;
-
-                $service->save();
+                $projectService = new ProjectService;
+                $projectService->project_id = $project->id;
+                $projectService->name = $name;
+                $projectService->order = $index;
+                $projectService->save();
             }
-
-            /*
-             * ==========================
-             * GALLERY
-             * ==========================
-             */
-
             $galleryImages = $request->file('gallery_images', []);
-
             foreach ($galleryImages as $catImgId => $files) {
-
-                if (!is_array($files)) {
+                if (! is_array($files)) {
                     $files = [$files];
                 }
-
                 $category = CatImg::find($catImgId);
-
-                if (!$category) {
+                if (! $category) {
                     continue;
                 }
-
                 foreach ($files as $file) {
-
-                    if (!$file || !$file->isValid()) {
+                    if (! $file || ! $file->isValid()) {
                         continue;
                     }
-
-                    $fileName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
-
-                    $file->move(
-                        'projects',
-                        $fileName
-                    );
-
-                    $path = 'projects/' . $fileName;
-
+                    $fileName = time().'_'.uniqid().'.'.$file->getClientOriginalExtension();
+                    $file->move('projects', $fileName);
+                    $path = 'projects/'.$fileName;
                     $uploadedFiles[] = $path;
-
-                    $gallery = new ProjectGallery();
-
+                    $gallery = new ProjectGallery;
                     $gallery->project_id = $project->id;
                     $gallery->cat_img_id = $category->id;
                     $gallery->image_url = $path;
-
                     $gallery->save();
                 }
             }
-
             DB::commit();
-
-            /*
-             * ==========================
-             * DELETE OLD MAIN IMAGE
-             * ==========================
-             */
-
-            if (
-                $request->hasFile('image') &&
-                $oldImage &&
-                $oldImage !== 'default.jpg'
-            ) {
-
-                if (file_exists($oldImage)) {
-                    @unlink($oldImage);
-                }
+            if ($request->hasFile('image') && $oldImage && $oldImage !== 'default.jpg' && file_exists($oldImage)) {
+                @unlink($oldImage);
+            }
+            if ($request->hasFile('image_mobile') && $oldMobileImage && file_exists($oldMobileImage)) {
+                @unlink($oldMobileImage);
+            }
+            if ($request->hasFile('image_index') && $oldIndexImage && file_exists($oldIndexImage)) {
+                @unlink($oldIndexImage);
             }
 
-            /*
-             * ==========================
-             * DELETE OLD MOBILE IMAGE
-             * ==========================
-             */
-
-            if (
-                $request->hasFile('image_mobile') &&
-                $oldMobileImage
-            ) {
-
-                if (file_exists($oldMobileImage)) {
-                    @unlink($oldMobileImage);
-                }
-            }
-
-            return redirect()
-                ->route('projects.index')
-                ->with(
-                    'success',
-                    'پروژه با موفقیت بروزرسانی شد.'
-                );
-
+            return redirect()->route('projects.index')->with('success', 'پروژه با موفقیت بروزرسانی شد.');
         } catch (\Throwable $e) {
-
             DB::rollBack();
-
             foreach ($uploadedFiles as $file) {
-
                 if (file_exists($file)) {
                     @unlink($file);
                 }
             }
 
-            return redirect()
-                ->back()
-                ->withInput()
-                ->withErrors([
-                    'error' =>
-                        'خطا در بروزرسانی پروژه: ' .
-                        $e->getMessage()
-                ]);
+            return redirect()->back()->withInput()->withErrors(['error' => 'خطا در بروزرسانی پروژه: '.$e->getMessage()]);
         }
     }
 
@@ -1183,9 +771,8 @@ class ProjectController extends Controller
             return redirect()
                 ->back()
                 ->withErrors([
-                    'error' =>
-                        'خطا در حذف پروژه: ' .
-                        $e->getMessage()
+                    'error' => 'خطا در حذف پروژه: '.
+                        $e->getMessage(),
                 ]);
         }
     }
@@ -1198,7 +785,7 @@ class ProjectController extends Controller
                 'galleries.category',
                 'features',
                 'technologies',
-                'services'
+                'services',
             ])
             ->firstOrFail();
 
@@ -1210,7 +797,7 @@ class ProjectController extends Controller
                         'project_id',
                         $project->id
                     );
-                }
+                },
             ])
             ->get()
             ->filter(function ($category) {
@@ -1252,7 +839,7 @@ class ProjectController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
-                'success' => false
+                'success' => false,
             ], 422);
         }
 
@@ -1293,7 +880,7 @@ class ProjectController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'errors' => $validator->errors(),
-                'success' => false
+                'success' => false,
             ], 422);
         }
 

@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->text('brief', 500);
             $table->text('desc')->nullable();
             $table->tinyInteger('cat_id')->nullable();
+            $table->foreignId('service_id')->nullable()->constrained('services')->nullOnDelete();
             $table->string('image_url')->nullable();
             $table->string('image_index')->nullable();
             $table->string('image_mobile_url')->nullable();
