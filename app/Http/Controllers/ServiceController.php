@@ -56,7 +56,7 @@ class ServiceController extends Controller
 
             'title' => 'required|string|max:255',
             'text' => 'nullable|string',
-            'description' => 'nullable|string',
+            'why' => 'nullable|string',            'description' => 'nullable|string',
 
             'delivery_time' => 'nullable|string|max:255',
             'price_text' => 'nullable|string|max:255',
@@ -186,6 +186,7 @@ class ServiceController extends Controller
 
             $service->title = $validated['title'];
             $service->text = $validated['text'] ?? null;
+            $service->why = $validated['why'] ?? null;
             $service->description = $validated['description'] ?? null;
 
             $service->delivery_time = $validated['delivery_time'] ?? null;
@@ -455,7 +456,7 @@ class ServiceController extends Controller
 
             'title' => 'required|string|max:255',
             'text' => 'nullable|string',
-            'description' => 'nullable|string',
+            'why' => 'nullable|string',            'description' => 'nullable|string',
 
             'delivery_time' => 'nullable|string|max:255',
             'price_text' => 'nullable|string|max:255',
@@ -603,6 +604,7 @@ class ServiceController extends Controller
 
             $service->title = $validated['title'];
             $service->text = $validated['text'] ?? null;
+            $service->why = $validated['why'] ?? null;
             $service->description = $validated['description'] ?? null;
 
             $service->delivery_time =

@@ -292,6 +292,11 @@
                         <input type="number" name="number" value="{{ old('number', $service->number) }}" class="form-input">
                     </div>
                 </div>
+                
+                <div class="form-group" style="margin-top:15px;">
+                    <label for="why">چرا ما؟</label>
+                    <textarea name="why" id="why" class="form-control" rows="5">{{ old('why', $service->why ?? '') }}</textarea>
+                </div>
 
                 <div class="form-group" style="margin-top:15px;">
                     <label class="form-label">متن کوتاه</label>

@@ -10,6 +10,7 @@ class Services extends Model
     protected $fillable = [
         'title',
         'text',
+        'why',
         'description',
         'number',
         'icon',
