@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('blogs', function (Blueprint $table) {
             $table->id();
             $table->string('title', 200);
-            $table->text('text');
+            $table->longText('text');
             $table->text('meta')->nullable();
             $table->text('title_head')->nullable();
             $table->string('image_url')->nullable();
