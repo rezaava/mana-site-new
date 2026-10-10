@@ -130,12 +130,12 @@
                         @if ($service->image_url)
                             <img src="{{ asset($service->image_url) }}" alt="{{ $service->title }}"
                                 style="
-                                                                                                                max-width:100%;
-                                                                                                                max-height:400px;
-                                                                                                                object-fit:contain;
-                                                                                                                position:relative;
-                                                                                                                z-index:5;
-                                                                                                            ">
+                                                                                                                                                                                        max-width:100%;
+                                                                                                                                                                                        max-height:400px;
+                                                                                                                                                                                        object-fit:contain;
+                                                                                                                                                                                        position:relative;
+                                                                                                                                                                                        z-index:5;
+                                                                                                                                                                                    ">
                         @else
                             <div class="blob"></div>
 
@@ -268,7 +268,6 @@
             {{-- اگر نقل قول وجود داشته باشد --}}
             {{-- ===================================================== --}}
             @if ($service->quote_text || $service->quote_person || $service->quote_role)
-            <p>{!! $service->why !!}</p>
                 <div class="row g-5">
 
                     <!-- معرفی + چالش + راهکار -->
@@ -573,6 +572,36 @@
 
             </div>
 
+
+            {{-- WHY US — چرا ما --}}
+            {{-- ===================================================== --}}
+
+            @if ($service->why || $service->why_title)
+                <div class="why-block">
+
+                    <div class="text-center reveal">
+                        <span class="eyebrow">
+                            <i class="fa-solid fa-star"></i>
+                            چرا مانا
+                        </span>
+                    </div>
+
+                    @if ($service->why_title)
+                        <div class="text-center reveal reveal-delay-1">
+                            <h2 class="section-title">
+                                {{ $service->why_title }}
+                            </h2>
+                        </div>
+                    @endif
+
+                    @if ($service->why)
+                        <div class="cs-block reveal reveal-delay-2">
+                            {!! $service->why !!}
+                        </div>
+                    @endif
+
+                </div>
+            @endif
         </div>
 
     </section>
@@ -760,8 +789,7 @@
                         <div class="acc-list">
 
                             @foreach ($questions as $index => $question)
-                                <div
-                                    class="acc-item {{ $index === 0 ? 'open' : '' }} reveal reveal-delay-{{ ($index % 4) + 1 }}">
+                                <div class="acc-item {{ $index === 0 ? 'open' : '' }} reveal reveal-delay-{{ ($index % 4) + 1 }}">
 
                                     <button type="button" class="acc-btn">
                                         <h3 class="h5">{{ $question->title }}</h3>
@@ -784,7 +812,7 @@
     @endif
 
     @if ($service->projects->isNotEmpty())
-        <section class="projects">
+        <section class="projects mb-5">
             <div class="container-x">
                 <div class="text-center mb-5 reveal">
                     <span class="eyebrow">
@@ -803,7 +831,8 @@
                             </div>
                             <div class="sim-body">
                                 <span class="tag">{{ $related->title }}</span>
-                                <h4 style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
+                                <h4
+                                    style="display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">
                                     {{ $related->brief }}
                                 </h4>
                                 <a href="{{ route('projects.show', ['slug' => $related->slug]) }}">

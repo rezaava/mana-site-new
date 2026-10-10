@@ -292,10 +292,17 @@
                         <input type="number" name="number" value="{{ old('number', $service->number) }}" class="form-input">
                     </div>
                 </div>
-                
+
                 <div class="form-group" style="margin-top:15px;">
-                    <label for="why">چرا ما؟</label>
-                    <textarea name="why" id="why" class="form-control" rows="5">{{ old('why', $service->why ?? '') }}</textarea>
+                    <label class="form-label">عنوان بخش چرا ما</label>
+                    <input type="text" name="why_title" value="{{ old('why_title', $service->why_title) }}"
+                        placeholder="مثلاً چرا ما را انتخاب کنید؟" class="form-input">
+                </div>
+
+                <div class="form-group" style="margin-top:15px;">
+                    <label class="form-label">چرا ما؟ (متن)</label>
+                    <textarea name="why" id="why" class="form-textarea"
+                        rows="5">{{ old('why', $service->why ?? '') }}</textarea>
                 </div>
 
                 <div class="form-group" style="margin-top:15px;">
@@ -352,7 +359,7 @@
                             accept="image/jpeg,image/png,image/jpg,image/webp,image/svg+xml" class="form-file">
                         @if($service->image_url)
                             <div style="margin-top:10px;">
-                                <img src="{{ asset( $service->image_url) }}" alt="{{ $service->title }}"
+                                <img src="{{ asset($service->image_url) }}" alt="{{ $service->title }}"
                                     style="width:100px; height:100px; object-fit:cover; border-radius:8px; border:1px solid var(--line);">
                             </div>
                         @endif
@@ -854,19 +861,19 @@
                 const item = document.createElement('div');
                 item.className = 'dynamic-item';
                 item.innerHTML = `
-                            <div class="dynamic-item-header">
-                                <strong>مورد ${whatReceiveIndex + 1}</strong>
-                                <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
-                                    <i class="fa-solid fa-trash"></i> حذف
-                                </button>
-                            </div>
-                            <div class="form-grid form-grid-3">
-                                <input type="text" name="what_receive[${whatReceiveIndex}][title]" placeholder="عنوان" class="form-input">
-                                <input type="text" name="what_receive[${whatReceiveIndex}][icon]" placeholder="fa-comments" class="form-input">
-                                <input type="number" name="what_receive[${whatReceiveIndex}][number]" value="${whatReceiveIndex}" placeholder="اولویت" class="form-input">
-                            </div>
-                            <textarea name="what_receive[${whatReceiveIndex}][text]" rows="3" placeholder="توضیحات" class="form-textarea" style="margin-top:10px;"></textarea>
-                        `;
+                        <div class="dynamic-item-header">
+                            <strong>مورد ${whatReceiveIndex + 1}</strong>
+                            <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
+                                <i class="fa-solid fa-trash"></i> حذف
+                            </button>
+                        </div>
+                        <div class="form-grid form-grid-3">
+                            <input type="text" name="what_receive[${whatReceiveIndex}][title]" placeholder="عنوان" class="form-input">
+                            <input type="text" name="what_receive[${whatReceiveIndex}][icon]" placeholder="fa-comments" class="form-input">
+                            <input type="number" name="what_receive[${whatReceiveIndex}][number]" value="${whatReceiveIndex}" placeholder="اولویت" class="form-input">
+                        </div>
+                        <textarea name="what_receive[${whatReceiveIndex}][text]" rows="3" placeholder="توضیحات" class="form-textarea" style="margin-top:10px;"></textarea>
+                    `;
                 container.appendChild(item);
                 whatReceiveIndex++;
             });
@@ -878,18 +885,18 @@
                 const item = document.createElement('div');
                 item.className = 'dynamic-item';
                 item.innerHTML = `
-                            <div class="dynamic-item-header">
-                                <strong>تکنولوژی ${techIndex + 1}</strong>
-                                <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
-                                    <i class="fa-solid fa-trash"></i> حذف
-                                </button>
-                            </div>
-                            <div class="form-grid form-grid-3">
-                                <input type="text" name="techs[${techIndex}][text]" placeholder="مثلاً Laravel" class="form-input">
-                                <input type="text" name="techs[${techIndex}][icon]" placeholder="fa-code" class="form-input">
-                                <input type="number" name="techs[${techIndex}][number]" value="${techIndex}" placeholder="اولویت" class="form-input">
-                            </div>
-                        `;
+                        <div class="dynamic-item-header">
+                            <strong>تکنولوژی ${techIndex + 1}</strong>
+                            <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
+                                <i class="fa-solid fa-trash"></i> حذف
+                            </button>
+                        </div>
+                        <div class="form-grid form-grid-3">
+                            <input type="text" name="techs[${techIndex}][text]" placeholder="مثلاً Laravel" class="form-input">
+                            <input type="text" name="techs[${techIndex}][icon]" placeholder="fa-code" class="form-input">
+                            <input type="number" name="techs[${techIndex}][number]" value="${techIndex}" placeholder="اولویت" class="form-input">
+                        </div>
+                    `;
                 container.appendChild(item);
                 techIndex++;
             });
@@ -901,27 +908,27 @@
                 const item = document.createElement('div');
                 item.className = 'dynamic-item';
                 item.innerHTML = `
-                            <div class="dynamic-item-header">
-                                <strong>سوال ${faqIndex + 1}</strong>
-                                <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
-                                    <i class="fa-solid fa-trash"></i> حذف
-                                </button>
+                        <div class="dynamic-item-header">
+                            <strong>سوال ${faqIndex + 1}</strong>
+                            <button type="button" class="btn-remove-dynamic" onclick="removeDynamic(this)">
+                                <i class="fa-solid fa-trash"></i> حذف
+                            </button>
+                        </div>
+                        <div class="faq-row">
+                            <div class="form-group">
+                                <label class="form-label">شماره ترتیب</label>
+                                <input type="number" name="faqs[${faqIndex}][number]" value="${faqIndex + 1}" required min="1" class="form-input">
                             </div>
-                            <div class="faq-row">
-                                <div class="form-group">
-                                    <label class="form-label">شماره ترتیب</label>
-                                    <input type="number" name="faqs[${faqIndex}][number]" value="${faqIndex + 1}" required min="1" class="form-input">
-                                </div>
-                                <div class="form-group">
-                                    <label class="form-label">صورت سوال</label>
-                                    <input type="text" name="faqs[${faqIndex}][question]" placeholder="مثلاً نحوه ثبت‌نام به چه صورت است؟" class="form-input">
-                                </div>
+                            <div class="form-group">
+                                <label class="form-label">صورت سوال</label>
+                                <input type="text" name="faqs[${faqIndex}][question]" placeholder="مثلاً نحوه ثبت‌نام به چه صورت است؟" class="form-input">
                             </div>
-                            <div class="form-group" style="margin-top:15px;">
-                                <label class="form-label">پاسخ سوال</label>
-                                <textarea name="faqs[${faqIndex}][answer]" rows="5" placeholder="پاسخ کامل سوال را بنویسید..." class="form-textarea" style="resize: vertical;"></textarea>
-                            </div>
-                        `;
+                        </div>
+                        <div class="form-group" style="margin-top:15px;">
+                            <label class="form-label">پاسخ سوال</label>
+                            <textarea name="faqs[${faqIndex}][answer]" rows="5" placeholder="پاسخ کامل سوال را بنویسید..." class="form-textarea" style="resize: vertical;"></textarea>
+                        </div>
+                    `;
                 container.appendChild(item);
                 faqIndex++;
             });

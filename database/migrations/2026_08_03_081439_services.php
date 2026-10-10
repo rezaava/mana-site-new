@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->text('meta')->nullable();
             $table->text('title_head')->nullable();
             $table->text('receives_title')->nullable();
+            $table->text('why_title')->nullable();
             $table->text('techs_title')->nullable();
             $table->text('information_title')->nullable();
             $table->timestamps();

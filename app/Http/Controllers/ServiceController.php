@@ -56,7 +56,9 @@ class ServiceController extends Controller
 
             'title' => 'required|string|max:255',
             'text' => 'nullable|string',
-            'why' => 'nullable|string',            'description' => 'nullable|string',
+            'why' => 'nullable|string',
+            'why_title' => 'nullable|string',
+            'description' => 'nullable|string',
 
             'delivery_time' => 'nullable|string|max:255',
             'price_text' => 'nullable|string|max:255',
@@ -187,6 +189,7 @@ class ServiceController extends Controller
             $service->title = $validated['title'];
             $service->text = $validated['text'] ?? null;
             $service->why = $validated['why'] ?? null;
+            $service->why_title = $validated['why_title'] ?? null;
             $service->description = $validated['description'] ?? null;
 
             $service->delivery_time = $validated['delivery_time'] ?? null;
@@ -267,14 +270,14 @@ class ServiceController extends Controller
             */
 
             $hasState =
-                ! empty($validated['state_text_1']) ||
-                ! empty($validated['state_value_1']) ||
-                ! empty($validated['state_text_2']) ||
-                ! empty($validated['state_value_2']) ||
-                ! empty($validated['state_text_3']) ||
-                ! empty($validated['state_value_3']) ||
-                ! empty($validated['state_text_4']) ||
-                ! empty($validated['state_value_4']);
+                !empty($validated['state_text_1']) ||
+                !empty($validated['state_value_1']) ||
+                !empty($validated['state_text_2']) ||
+                !empty($validated['state_value_2']) ||
+                !empty($validated['state_text_3']) ||
+                !empty($validated['state_value_3']) ||
+                !empty($validated['state_text_4']) ||
+                !empty($validated['state_value_4']);
 
             if ($hasState) {
 
@@ -303,7 +306,7 @@ class ServiceController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            if (! empty($validated['what_receive'])) {
+            if (!empty($validated['what_receive'])) {
 
                 foreach ($validated['what_receive'] as $index => $item) {
 
@@ -333,7 +336,7 @@ class ServiceController extends Controller
             |--------------------------------------------------------------------------
             */
 
-            if (! empty($validated['techs'])) {
+            if (!empty($validated['techs'])) {
 
                 foreach ($validated['techs'] as $index => $item) {
 
@@ -367,7 +370,7 @@ class ServiceController extends Controller
 |--------------------------------------------------------------------------
 */
 
-            if (! empty($validated['faqs'])) {
+            if (!empty($validated['faqs'])) {
                 foreach ($validated['faqs'] as $item) {
                     if (empty($item['question']) && empty($item['answer'])) {
                         continue;
@@ -456,7 +459,9 @@ class ServiceController extends Controller
 
             'title' => 'required|string|max:255',
             'text' => 'nullable|string',
-            'why' => 'nullable|string',            'description' => 'nullable|string',
+            'why' => 'nullable|string',
+            'why_title' => 'nullable|string',
+            'description' => 'nullable|string',
 
             'delivery_time' => 'nullable|string|max:255',
             'price_text' => 'nullable|string|max:255',
@@ -469,9 +474,9 @@ class ServiceController extends Controller
             'meta' => 'nullable',
             'title_head' => 'nullable|string|max:255',
 
-            'receives_title' => 'required',
-            'techs_title' => 'required',
-            'information_title' => 'required',
+            'receives_title' => 'nullable',
+            'techs_title' => 'nullable',
+            'information_title' => 'nullable',
 
             'faqs' => 'nullable|array',
             'faqs.*.number' => 'nullable|integer',
@@ -580,7 +585,7 @@ class ServiceController extends Controller
 
                 $service->icon = null;
 
-            } elseif (! empty($validated['icon'])) {
+            } elseif (!empty($validated['icon'])) {
 
                 if (
                     $service->image_url &&
@@ -605,6 +610,7 @@ class ServiceController extends Controller
             $service->title = $validated['title'];
             $service->text = $validated['text'] ?? null;
             $service->why = $validated['why'] ?? null;
+            $service->why_title = $validated['why_title'] ?? null;
             $service->description = $validated['description'] ?? null;
 
             $service->delivery_time =
@@ -708,14 +714,14 @@ class ServiceController extends Controller
             */
 
             $hasState =
-                ! empty($validated['state_text_1']) ||
-                ! empty($validated['state_value_1']) ||
-                ! empty($validated['state_text_2']) ||
-                ! empty($validated['state_value_2']) ||
-                ! empty($validated['state_text_3']) ||
-                ! empty($validated['state_value_3']) ||
-                ! empty($validated['state_text_4']) ||
-                ! empty($validated['state_value_4']);
+                !empty($validated['state_text_1']) ||
+                !empty($validated['state_value_1']) ||
+                !empty($validated['state_text_2']) ||
+                !empty($validated['state_value_2']) ||
+                !empty($validated['state_text_3']) ||
+                !empty($validated['state_value_3']) ||
+                !empty($validated['state_text_4']) ||
+                !empty($validated['state_value_4']);
 
             $state = ServiceState::where(
                 'service_id',
@@ -724,7 +730,7 @@ class ServiceController extends Controller
 
             if ($hasState) {
 
-                if (! $state) {
+                if (!$state) {
 
                     $state = new ServiceState;
 
@@ -773,7 +779,7 @@ class ServiceController extends Controller
                 $service->id
             )->delete();
 
-            if (! empty($validated['what_receive'])) {
+            if (!empty($validated['what_receive'])) {
 
                 foreach (
                     $validated['what_receive'] as $index => $item
@@ -819,7 +825,7 @@ class ServiceController extends Controller
                 $service->id
             )->delete();
 
-            if (! empty($validated['techs'])) {
+            if (!empty($validated['techs'])) {
 
                 foreach (
                     $validated['techs'] as $index => $item
@@ -864,7 +870,7 @@ class ServiceController extends Controller
 
             Questions::where('service_id', $service->id)->delete();
 
-            if (! empty($validated['faqs'])) {
+            if (!empty($validated['faqs'])) {
 
                 foreach ($validated['faqs'] as $item) {
 
